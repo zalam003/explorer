@@ -1,0 +1,95 @@
+// general
+$primary: #00E676;
+$secondary: #263238;
+$tertiary: #BDBDBD;
+$additional-font: #fff;
+
+//header
+$header-background-color: #263238;
+$header-links-color: #f4f4f6;
+$header-links-color-active: #f4f4f6;
+$header-icon-color-hover: $primary;
+$header-icon-border-color-hover: $primary;
+
+// footer
+$footer-background-color: $header-background-color;
+$footer-title-color: $header-links-color;
+$footer-text-color: $header-links-color;
+$footer-item-disc-color: $primary;
+//.footer-logo { filter: brightness(0) invert(1); }
+
+// dashboard
+//$dashboard-banner-chart-legend-label-color: $header-links-color;
+$dashboard-banner-network-plain-container-background-color: $header-background-color; // stats bg
+$dashboard-banner-gradient-start: #212121; // gradient begin
+$dashboard-banner-gradient-end: lighten(#212121, 5); // gradient end
+$dashboard-banner-chart-legend-value-color: $header-links-color; // chart labels
+$dashboard-banner-chart-legend-label-color: $header-links-color;
+$dashboard-line-color-price: $primary; // price left border
+$dashboard-line-color-market: #4B89FB; // price left border
+$dashboard-stats-item-border-color: $primary; // stat border
+$dashboard-stats-item-label-color: $primary;
+$dashboard-stats-item-value-color: $header-links-color; // stat values
+
+.dashboard-banner-container {
+  background-color: #212121;
+  background-image:none;
+  margin-bottom: 3rem;
+  overflow: hidden;
+  padding: 0;
+  position: relative;
+}
+
+.layout-container {
+	.dashboard-banner-container {
+	  background-image: linear-gradient(
+	    to bottom,
+	    $dashboard-banner-gradient-start,
+	    $dashboard-banner-gradient-end
+	  );
+	}
+}
+
+// navigation
+//.navbar { box-shadow: 0px 0px 30px 0px rgba(21, 53, 80, 0.12); } // header shadow
+$dropdown-menu-item-hover-color: $primary !default;
+$dropdown-menu-item-hover-background: rgba($primary, .1) !default;
+$dropdown-menu-item-color: $secondary;
+
+// buttons
+$btn-line-bg: #fff; // button bg
+$btn-line-color: $primary; // button border and font color && hover bg color
+$btn-copy-color: $primary; // btn copy
+$btn-qr-color: $primary; // btn qr-code
+$btn-address-card-icon-color: $primary; // btn address color
+
+//links & tile
+$tile-body-a-color: $primary;
+$tile-type-block-color: $primary;
+$tile-type-progress-bar-color: $primary;
+a.tile-title { color: $primary !important; }
+$tile-type-transaction-color: $primary;
+.tile.tile-type-transaction .tile-label {
+  color: #212121 !important;
+}
+
+// card
+$card-background-1: $primary;
+$card-tab-active: $primary;
+
+// Badges
+$badge-neutral-color: $primary;
+$badge-neutral-background-color: rgba($primary, .1);
+$api-text-monospace-color: $primary;
+
+// Tokens dropdown
+.token-balance-dropdown[aria-labelledby="dropdown-tokens"] {
+  .dropdown-items .dropdown-item:hover {
+    color: $primary !important;
+  }
+}
+
+// Dark theme
+$dark-primary: #9b62ff;
+$dark-secondary: #87e1a9;
+$dark-primary-alternate: #7e50d0; 

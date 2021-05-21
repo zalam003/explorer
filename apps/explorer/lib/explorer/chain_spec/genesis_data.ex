@@ -9,6 +9,7 @@ defmodule Explorer.ChainSpec.GenesisData do
 
   alias Explorer.ChainSpec.Geth.Importer, as: GethImporter
   alias Explorer.ChainSpec.Parity.Importer
+  alias Explorer.ChainSpec.Energi.EnergiImporter
   alias HTTPoison.Response
 
   @interval :timer.minutes(2)
@@ -56,9 +57,12 @@ defmodule Explorer.ChainSpec.GenesisData do
   end
 
   def fetch_genesis_data do
-    path = Application.get_env(:explorer, __MODULE__)[:chain_spec_path]
+    chain_spec_path = Application.get_env(:explorer, __MODULE__)[:chain_spec_path]
 
-    if path do
+    if chain_spec_path do
+      path = Application.app_dir(:explorer, "/priv/chain_spec/" <> chain_spec_path)
+
+      Logger.info(fn -> "Fetching genesis data from " <> path end)
       json_rpc_named_arguments = Application.fetch_env!(:indexer, :json_rpc_named_arguments)
       variant = Keyword.fetch!(json_rpc_named_arguments, :variant)
 
@@ -72,6 +76,7 @@ defmodule Explorer.ChainSpec.GenesisData do
 
               EthereumJSONRPC.Geth ->
                 {:ok, _} = GethImporter.import_genesis_accounts(chain_spec)
+                EnergiImporter.import_genesis_smart_contracts(chain_spec)
 
               _ ->
                 Importer.import_emission_rewards(chain_spec)

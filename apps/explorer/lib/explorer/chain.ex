@@ -3441,7 +3441,7 @@ defmodule Explorer.Chain do
 
     find_or_insert_address_from_hash(address_hash)
 
-    contract_bytecode = Changeset.get_field(smart_contract_changeset, :contract_bytecode)
+    {:ok, contract_bytecode} = Explorer.Chain.Data.load(attrs.contract_bytecode)
 
     # Enforce ShareLocks tables order (see docs: sharelocks.md)
     insert_result =

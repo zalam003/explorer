@@ -108,7 +108,11 @@
                   "data-test": "transaction_hash_link"
                 ) %>
               <% else %>
-                <p class="alert alert-danger" role="alert"><%= gettext("Error: Could not determine contract creator.") %></p>
+                <%= if genesis_contract_address?(@address) do %>
+                  <%= gettext "Energi Governance Smart Contract" %>
+                 <% else %>
+                    <p class="alert alert-danger" role="alert"><%= gettext("Error: Could not determine contract creator.") %></p>
+                 <% end %>
               <% end %>
             </span>
           <% end %>

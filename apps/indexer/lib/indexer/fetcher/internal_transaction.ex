@@ -14,7 +14,7 @@ defmodule Indexer.Fetcher.InternalTransaction do
 
   alias Explorer.Chain
   alias Explorer.Chain.Block
-  alias Explorer.Chain.Cache.{Accounts, Blocks}
+  alias Explorer.Chain.Cache.{Accounts, Blocks, BlockNumber}
   alias Indexer.{BufferedTask, Tracer}
   alias Indexer.Transform.Addresses
 
@@ -191,8 +191,8 @@ defmodule Indexer.Fetcher.InternalTransaction do
       })
 
     address_hash_to_block_number =
-      Enum.into(addresses_params, %{}, fn %{fetched_coin_balance_block_number: block_number, hash: hash} ->
-        {hash, block_number}
+      Enum.into(addresses_params, %{}, fn %{hash: hash} ->
+        {hash, latest_block}
       end)
 
     empty_block_numbers =
@@ -263,5 +263,9 @@ defmodule Indexer.Fetcher.InternalTransaction do
         internal_transaction_param
       end
     end)
+  end
+
+  defp latest_block_number do
+    BlockNumber.get_max()
   end
 end

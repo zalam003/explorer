@@ -294,6 +294,18 @@ defmodule BlockScoutWeb.AddressView do
 
   def from_address_hash(_address), do: nil
 
+  def genesis_contract_address?(
+        %Address{contracts_creation_transaction: nil,
+          contracts_creation_internal_transaction: nil,
+          contract_code: _
+        }), do: true
+
+  def genesis_contract_address?(
+        %Address{contracts_creation_transaction: _,
+          contracts_creation_internal_transaction: _,
+          contract_code: _
+        }), do: false
+
   def address_link_to_other_explorer(link, address, full) do
     if full do
       link <> to_string(address)

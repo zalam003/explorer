@@ -427,7 +427,7 @@ defmodule Explorer.Chain.Transaction do
   # Because there is no contract association, we know the contract was not verified
   def decoded_input_data(%__MODULE__{to_address: nil}), do: {:error, :no_to_address}
   def decoded_input_data(%__MODULE__{input: %{bytes: bytes}}) when bytes in [nil, <<>>], do: {:error, :no_input_data}
-  def decoded_input_data(%__MODULE__{to_address: %{contract_code: nil}}), do: {:error, :not_a_contract_call}
+  def decoded_input_data(%__MODULE__{to_address: %{contract_code: nil, smart_contract: nil}}), do: {:error, :not_a_contract_call}
 
   def decoded_input_data(%__MODULE__{
         to_address: %{smart_contract: nil},

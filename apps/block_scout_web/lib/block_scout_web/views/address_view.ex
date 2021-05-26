@@ -115,7 +115,7 @@ defmodule BlockScoutWeb.AddressView do
     |> Wei.to(:ether)
     |> Decimal.round(2)
     |> Decimal.to_string(:normal)
-    |> Kernel.<>("% #{gettext("ETH")}")
+    |> Kernel.<>(" #{gettext("ETH")}")
   end
 
   def balance_percentage_enabled?(total_supply) do

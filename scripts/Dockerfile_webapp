@@ -2,9 +2,6 @@ FROM bitwalker/alpine-elixir-phoenix:1.11.4
 
 RUN apk --no-cache --update add alpine-sdk make gcc gmp-dev automake libtool inotify-tools autoconf python3 file openjdk11
 
-# Nodejs
-#RUN apk update && apk add nodejs
-
 # Get Rust
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 
@@ -19,7 +16,7 @@ ENV LIBPATH="$LD_LIBRARY_PATH"
 EXPOSE 4000
 ENV PORT=4000
 
-ARG SECRET_KEY_BASE="IWTVkfnfrKBta0U6p4UUbajb44wu5lYcrK0B6drT+dvnuTvSN18vliy3cxUnLXt3"
+ARG SECRET_KEY_BASE=IWTVkfnfrKBta0U6p4UUbajb44wu5lYcrK0B6drT+dvnuTvSN18vliy3cxUnLXt3
 
 # wobserver interface
 ARG WOBSERVER_ENABLED=false
@@ -70,18 +67,9 @@ RUN mix local.rebar --force && echo "rebar installed"
 # Get dependencies
 RUN mix deps.get
 
-# Ensure NIF is compiled for libsecp256k1
-RUN mix deps.update libsecp256k1
-RUN cd deps/libsecp256k1; ./c_src/build_deps.sh; cd -
-RUN cd deps/libsecp256k1/c_src/secp256k1; make install; cd -
-RUN if [[ ! -f deps/libsecp256k1/priv/libsecp256k1_nif.so ]]; then \
-    cp scripts/libsecp256k1_nif.so /usr/local/lib/.; \
-    mv scripts/libsecp256k1_nif.so deps/libsecp256k1/priv/.; \
-    echo "copied libsecp256k1_nif.so"; \
-    else \
-    cp deps/libsecp256k1/priv/libsecp256k1_nif.so /usr/local/lib/.; \
-    rm scripts/libsecp256k1_nif.so; fi
-RUN echo "libsecp256k1 installed"
+# Add rebar3.config
+RUN mv scripts/rebar3.config deps/libsecp256k1/.
+RUN cd deps/libsecp256k1 && ln -s rebar3.config rebar.config && rebar compile && cd -
 
 # Compile dependencies
 RUN mix deps.compile
@@ -100,6 +88,13 @@ RUN cd apps/block_scout_web/assets/ && \
 RUN cd apps/explorer/ && \
     npm install && \
     cd -
+
+# Update hostname
+RUN cp /etc/hosts /tmp/hosts.new
+RUN sed -i 's/localhost/localhost mainnet.energi.cloudns.cl blockscout blockscout.local/g' /tmp/hosts.new
+RUN cat /tmp/hosts.new > /etc/hosts
+RUN rm -f /tmp/hosts.new
+
 
 # Remove dev packages
 RUN apk update && apk del --force-broken-world alpine-sdk make gcc gmp-dev automake libtool inotify-tools autoconf python3

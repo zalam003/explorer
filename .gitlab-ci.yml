@@ -3,6 +3,7 @@ variables:
   AWS_REGION: us-west-2
   SBX_SERVER_IP: 172.31.77.59
   SERVER_USER: ubuntu
+  SERVER_HOST: explorer.develop.energi.network
   APP_DIR: /home/$SERVER_USER
   APP1_NAME: explorer_indexer
   APP2_NAME: explorer_webapp
@@ -18,7 +19,6 @@ stages:
 .sbx_triggers: &sbx_triggers
   refs:
     - sandbox
-    - 3.7.0/fix-libsecp256k1_nif-compile
 
 .runner:
   tags: [docker_runner]
@@ -29,7 +29,8 @@ build-webapp:
     - docker_runner
   script:
     - cd scripts
-    - docker build -f ./Dockerfile_webapp -t $TAG2_COMMIT -t $TAG2_LATEST ../
+    - aws ecr create-repository --repository-name $APP2_NAME || true
+    - docker build --cache-from $TAG2_LATEST -f ./Dockerfile_webapp -t $TAG2_COMMIT -t $TAG2_LATEST ../
     - docker push $TAG2_COMMIT
     - docker push $TAG2_LATEST
   only:
@@ -43,8 +44,9 @@ deploy-sbx:
   tags:
     - docker_runner
   script:
-    - apk add --no-cache git curl build-base autoconf automake linux-headers openssl-dev openssh
+    - apk add --no-cache git curl build-base autoconf automake linux-headers openssl-dev openssh bash
     - chmod og= $ID_RSA
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP "aws ecr create-repository --repository-name $APP2_NAME || true"
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP "aws ecr get-login-password | docker login --username AWS --password-stdin $CONTAINER_REGISTRY"
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP 'export AWS_REGION=$AWS_REGION'
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP 'if [[ -d $APP_DIR/scripts ]]; then rm -rf $APP_DIR/scripts; fi'
@@ -52,8 +54,6 @@ deploy-sbx:
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP "if [[ ! -d $APP_DIR/logs ]]; then mkdir $APP_DIR/logs; chmod 777 $APP_DIR/logs; fi"
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP "docker pull $TAG2_LATEST"
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP "docker container rm -f $APP2_NAME || true"
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP "docker run --rm --name CREATE_SCHEMA --env-file $APP_DIR/scripts/sandbox.env --network host --volume $APP_DIR/logs:/opt/app/logs $TAG2_LATEST /bin/sh -c mix do ecto.create, ecto.migrate"
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP "docker run -d --name $APP2_NAME --env-file $APP_DIR/scripts/sandbox.env --network host --volume $APP_DIR/logs:/opt/app/logs $TAG2_LATEST /bin/sh -c mix phx.server"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP "cd $APP_DIR/scripts && ./start_sandbox.sh run_webapp"
   only:
     <<: *sbx_triggers
-

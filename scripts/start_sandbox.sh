@@ -6,6 +6,7 @@ CURRENTDIR=$(pwd)
 APPDIR=$(dirname $CURRENTDIR)
 INDEXER="explorer_indexer"
 WEBAPP="explorer_webapp"
+WEBAPPIMAGE="769325152790.dkr.ecr.us-west-2.amazonaws.com/${WEBAPP}"
 if [[ -z $CI_COMMIT_SHA ]]
 then
     CI_COMMIT_SHA=bs123456
@@ -69,8 +70,8 @@ case $1 in
         docker run -d --name ${WEBAPP} \
             --env-file ${APPDIR}/scripts/sandbox.env \
             --volume ${APPDIR}/logs:/opt/app/logs \
-            -p 4000:4000 \
-            ${WEBAPP}:latest /bin/sh -c "mix phx.server" \
+            --network host \
+            ${WEBAPPIMAGE}:latest /bin/sh -c "mix phx.server" \
             DISABLE_WEBAPP=false
         ;;
 
@@ -203,6 +204,4 @@ case $1 in
         echo
         exit
         ;;
-
 esac
-

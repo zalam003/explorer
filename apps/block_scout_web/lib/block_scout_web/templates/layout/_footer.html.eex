@@ -19,39 +19,75 @@
       <div class="col-xs-12 col-lg-3">
         <p class="footer-info-text"><%= gettext("Blockscout is a tool for inspecting and analyzing EVM based blockchains. Blockchain explorer for Ethereum Networks.") %></p>
         <div class="footer-social-icons">
-          <a href="https://twitter.com/Energicrypto/" rel="noreferrer" target="_blank" class="footer-social-icon" title='<%= gettext("Twitter") %>'>
+          <a href="https://twitter.com/Energicrypto/" rel="noreferrer noopener" target="_blank" class="footer-social-icon" title='<%= gettext("Twitter") %>'>
             <i class="fab fa-twitter"></i>
           </a>
-          <a href="https://discordapp.com/invite/sCtgNC3" rel="noreferrer" target="_blank" class="footer-social-icon" title='<%= gettext("Discord") %>'>
+          <a href="https://discordapp.com/invite/sCtgNC3/" rel="noreferrer noopener" target="_blank" class="footer-social-icon" title='<%= gettext("Discord") %>'>
             <i class="fab fa-discord"></i>
           </a>
-          <a href="https://t.me/energicrypto" rel="noreferrer" target="_blank" class="footer-social-icon" title='<%= gettext("Telegram") %>'>
+          <a href="https://t.me/energicrypto/" rel="noreferrer noopener" target="_blank" class="footer-social-icon" title='<%= gettext("Telegram") %>'>
             <i class="fab fa-telegram-plane"></i>
           </a>
-          <a href="https://www.reddit.com/r/energicryptocurrency" rel="noreferrer" target="_blank" class="footer-social-icon" title='<%= gettext("Reddit") %>'>
+          <a href="https://reddit.com/r/energicryptocurrency" rel="noreferrer noopener" target="_blank" class="footer-social-icon" title='<%= gettext("Reddit") %>'>
             <i class="fab fa-reddit"></i>
           </a>
-          <a href="https://github.com/energicryptocurrency" rel="noreferrer" target="_blank" class="footer-social-icon" title='<%= gettext("Github") %>'>
+          <a href="https://github.com/energicryptocurrency/" rel="noreferrer noopener" target="_blank" class="footer-social-icon" title='<%= gettext("Github") %>'>
             <i class="fab fa-github"></i>
           </a>
-          <a href="https://www.facebook.com/Energi-Cryptocurrency-195355164580336/" rel="noreferrer" target="_blank" class="footer-social-icon" title='<%= gettext("Facebook") %>'>
+          <a href="https://facebook.com/Energi-Cryptocurrency-195355164580336/" rel="noreferrer noopener" target="_blank" class="footer-social-icon" title='<%= gettext("Facebook") %>'>
             <i class="fab fa-facebook"></i>
           </a>
-          <a href="https://medium.com/energi" rel="noreferrer" target="_blank" class="footer-social-icon" title='<%= gettext("Medium") %>'>
+          <a href="https://medium.com/energi/" rel="noreferrer noopener" target="_blank" class="footer-social-icon" title='<%= gettext("Medium") %>'>
             <i class="fab fa-medium"></i>
           </a>
         </div>
       </div>
 
-      <div class="col-xs-12 col-md-4 col-lg-<%= col_size %> footer-list">
-        <h3>Energi Core</h3>
+      <div class="col-xs-12 col-md-auto col-lg-auto footer-list">
+        <h3>About Energi</h3>
         <ul>
-          <li><a href="<%= issue_link(@conn) %>" rel="noreferrer" class="footer-link" target="_blank"><%= gettext("Submit an Issue") %></a></li>
-          <li><a href="https://www.energi.world/contact-us/" rel="noreferrer" class="footer-link"><%= gettext("Contact") %></a></li>
-          <li><a href="https://defi.support.energi.world/" rel="noreferrer" class="footer-link"><%= gettext("Support") %></a></li>
-          <li><a href="https://github.com/energicryptocurrency/energi3-blockscout" rel="noreferrer" class="footer-link"><%= gettext("Contribute") %></a></li>
+          <li><a href="https://energi.world/" rel="noreferrer noopener" target="_blank" class="footer-link"><%= gettext("Energi Website") %></a></li>
+          <li><a href="https://energiswap.exchange/" rel="noreferrer noopener" target="_blank" class="footer-link"><%= gettext("Energiswap Website") %></a></li>
+          <li><a href="https://energi.world/join-our-team/" rel="noreferrer noopener" target="_blank" class="footer-link"><%= gettext("Join Our Team") %></a></li>
         </ul>
       </div>
+
+      <div class="col-xs-12 col-md-auto col-lg-auto footer-list">
+        <h3>Products</h3>
+        <ul>
+          <li><a href="https://app.energiswap.exchange/" rel="noreferrer noopener" target="_blank" class="footer-link"><%= gettext("Energiswap App") %></a></li>
+          <li><a href="https://info.energiswap.exchange/" rel="noreferrer noopener" target="_blank" class="footer-link"><%= gettext("Energiswap Analytics") %></a></li>
+          <li><a href="https://bridge.energi.network/" rel="noreferrer noopener" target="_blank" class="footer-link"><%= gettext("Energi Bridge") %></a></li>
+          <li><a href="https://wallet.energi.network/" rel="noreferrer noopener" target="_blank" class="footer-link"><%= gettext("MyEnergiWallet") %></a></li>
+          <li><a href="https://nexus.energi.network/" rel="noreferrer noopener" target="_blank" class="footer-link"><%= gettext("Energi Nexus") %></a></li>
+          <li><a href="https://explorer.gen2.energi.network/" rel="noreferrer noopener" target="_blank" class="footer-link"><%= gettext("Gen2 Explorer") %></a></li>
+        </ul>
+      </div>
+
+      <div class="col-xs-12 col-md-auto col-lg-auto footer-list">
+        <h3>Support</h3>
+        <ul>
+          <li><a href="https://energi.world/contact-us/" rel="noreferrer noopener" target="_blank" class="footer-link"><%= gettext("Contact Us") %></a></li>
+          <li><a href="https://wiki.energi.world/" rel="noreferrer noopener" target="_blank" class="footer-link"><%= gettext("Energi Wiki") %></a></li>
+          <li><a href="https://stats.energi.network/" rel="noreferrer noopener" target="_blank" class="footer-link"><%= gettext("Network Monitor") %></a></li>
+          <li><a href="https://github.com/energicryptocurrency/" rel="noreferrer noopener" target="_blank" class="footer-link"><%= gettext("GitHub") %></a></li>
+          <li><a href="https://energiswap.exchange/bug-bounty/" rel="noreferrer noopener" target="_blank" class="footer-link"><%= gettext("Bug Bounty") %></a></li>
+        </ul>
+      </div>
+
+      <div class="col-xs-12 col-md-auto col-lg-auto footer-list">
+        <h3>Testnet</h3>
+        <ul>
+          <li><a href="https://explorer.test.energi.network/" rel="noreferrer noopener" target="_blank" class="footer-link"><%= gettext("Block Explorer") %></a></li>
+          <li><a href="https://test.energiswap.exchange/" rel="noreferrer noopener" target="_blank" class="footer-link"><%= gettext("Energiswap") %></a></li>
+          <li><a href="https://info.test.energiswap.exchange/" rel="noreferrer noopener" target="_blank" class="footer-link"><%= gettext("Energiswap Analytics") %></a></li>
+          <li><a href="https://bridge.test.energi.network/" rel="noreferrer noopener" target="_blank" class="footer-link"><%= gettext("Energi Bridge") %></a></li>
+          <li><a href="https://wallet.test3.energi.network/" rel="noreferrer noopener" target="_blank" class="footer-link"><%= gettext("MyEnergiWallet") %></a></li>
+          <li><a href="https://nexus.test.energi.network/" rel="noreferrer noopener" target="_blank" class="footer-link"><%= gettext("Energi Nexus") %></a></li>
+          <li><a href="https://stats.test.energi.network/" rel="noreferrer noopener" target="_blank" class="footer-link"><%= gettext("Network Monitor") %></a></li>
+        </ul>
+      </div>
+
       <% main_nets = main_nets(other_networks()) %>
 
       <%= unless Enum.empty?(main_nets) do %>

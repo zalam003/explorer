@@ -4,9 +4,12 @@ set -eo pipefail
 # Set APPDIR
 CURRENTDIR=$(pwd)
 APPDIR=$(dirname $CURRENTDIR)
+PROJECT_NAME="blockscout"
 INDEXER="explorer_indexer"
 WEBAPP="explorer_webapp"
 WEBAPPIMAGE="769325152790.dkr.ecr.us-west-2.amazonaws.com/${WEBAPP}"
+ENV="develop"
+REGION="us-west-2"
 if [[ -z $CI_COMMIT_SHA ]]
 then
     CI_COMMIT_SHA=bs123456
@@ -69,8 +72,13 @@ case $1 in
         echo "==> Starting blockscout webapp"
         docker run -d --name ${WEBAPP} \
             --env-file ${APPDIR}/scripts/sandbox.env \
-            --volume ${APPDIR}/logs:/opt/app/logs \
             --network host \
+            --restart on-failure:3 \
+            --log-driver="awslogs" \
+            --log-opt awslogs-region=${REGION} \
+            --log-opt awslogs-group=${ENV}-${PROJECT_NAME} \
+            --log-opt awslogs-create-group=true \
+            --log-opt awslogs-stream=${PROJECT_NAME}-${WEBAPP} \
             ${WEBAPPIMAGE}:latest /bin/sh -c "mix phx.server" \
             DISABLE_WEBAPP=false
         ;;
@@ -79,7 +87,13 @@ case $1 in
         echo "==> Starting blockscout indexer"
         docker run -d --name ${INDEXER} \
             --env-file ${APPDIR}/scripts/sandbox.env \
-            --volume ${APPDIR}/logs:/opt/app/logs \
+            --network host \
+            --restart on-failure:3 \
+            --log-driver="awslogs" \
+            --log-opt awslogs-region=${REGION} \
+            --log-opt awslogs-group=${ENV}-${PROJECT_NAME} \
+            --log-opt awslogs-create-group=true \
+            --log-opt awslogs-stream=${PROJECT_NAME}-${INDEXER} \
             ${INDEXER}:latest /bin/sh -c "mix phx.server"
             #DISABLE_WEBAPP=true
         ;;

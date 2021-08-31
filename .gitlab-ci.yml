@@ -1,38 +1,83 @@
 variables:
-  CONTAINER_REGISTRY: 769325152790.dkr.ecr.us-west-2.amazonaws.com
-  AWS_REGION: us-west-2
-  SBX_SERVER_IP: 172.31.77.59
   SERVER_USER: ubuntu
-  SERVER_HOST: explorer.develop.energi.network
+  SCHEMA_NAME: explorer_schema
+  SBX_SERVER_IP: $SANDBOX_SERVER_IP
+  SBX_SERVER_HOST: explorer.develop.energi.network
+  TESTNET_SERVER_HOST: explorer.test.energi.network
+  MAINNET_SERVER_HOST: explorer.energi.network
   APP_DIR: /home/$SERVER_USER
-  APP1_NAME: explorer_indexer
-  APP2_NAME: explorer_webapp
+  APP1_NAME: explorer_webapp
   TAG1_LATEST: $CONTAINER_REGISTRY/$APP1_NAME:latest
   TAG1_COMMIT: $CONTAINER_REGISTRY/$APP1_NAME:$CI_COMMIT_SHORT_SHA
-  TAG2_LATEST: $CONTAINER_REGISTRY/$APP2_NAME:latest
-  TAG2_COMMIT: $CONTAINER_REGISTRY/$APP2_NAME:$CI_COMMIT_SHORT_SHA
+  PROJECT_NAME: BlockExplorer
 
 stages:
   - build
   - deploy-sbx
+  - deploy-testnet-schema
+  - deploy-testnet-indexer
+  - deploy-testnet-webapp
 
 .sbx_triggers: &sbx_triggers
   refs:
     - sandbox
 
+.testnet_triggers: &testnet_triggers
+  refs:
+    - develop
+
 .runner:
   tags: [docker_runner]
 
-build-webapp:
+.before_script_template: &testnet_indexer_vars
+  before_script:
+    - cd scripts
+    - sed -i "12iIMAGE=$CONTAINER_REGISTRY" start.sh
+    - cp template.env testnet.env
+    - sed -i "s/CORENODEIP/${TESTNET_CORENODE_IP1}/g" testnet.env
+    - sed -i "s/WSPORT/49795/g" testnet.env
+    - sed -i "s/HTTPPORT/49796/g" testnet.env
+    - sed -i "s/CHAINID/49797/g" testnet.env
+    - sed -i "s|SECRETKEYBASE|${TESTNET_SECRET_KEY_BASE}|g" testnet.env
+    - sed -i "s/DBUSERNAME/${TESTNET_DB_USERNAME}/g" testnet.env
+    - sed -i "s|DBPASSWORD|${TESTNET_DB_PASSWORD}|g" testnet.env
+    - sed -i "s/DBNAME/${TESTNET_DB_NAME}/g" testnet.env
+    - sed -i "s/DBHOST/${TESTNET_DB_HOSTNAME}/g" testnet.env
+    - sed -i "s/REWARDS_CONTRACT/\#REWARDS_CONTRACT/g" testnet.env
+    #- sed -i "s/REWARDCONTRACT/${TESTNET_REWARDCONTRACT}/g" testnet.env
+    - sed -i "s/EXPLORERHOST/${TESTNET_SERVER_HOST}/g" testnet.env
+    - cd -
+
+.before_script_template: &testnet_webapp2_vars
+  before_script:
+    - cd scripts
+    - sed -i "12iIMAGE=$CONTAINER_REGISTRY" start.sh
+    - cp template.env testnet.env
+    - sed -i '19iDISABLE_INDEXER=true' testnet.env
+    - sed -i "s/CORENODEIP/${TESTNET_CORENODE_IP2}/g" testnet.env
+    - sed -i "s/WSPORT/49795/g" testnet.env
+    - sed -i "s/HTTPPORT/49796/g" testnet.env
+    - sed -i "s/CHAINID/49797/g" testnet.env
+    - sed -i "s|SECRETKEYBASE|${TESTNET_SECRET_KEY_BASE}|g" testnet.env
+    - sed -i "s/DBUSERNAME/${TESTNET_DB_USERNAME}/g" testnet.env
+    - sed -i "s|DBPASSWORD|${TESTNET_DB_PASSWORD}|g" testnet.env
+    - sed -i "s/DBNAME/${TESTNET_DB_NAME}/g" testnet.env
+    - sed -i "s/DBHOST/${TESTNET_DB_HOSTNAME}/g" testnet.env
+    - sed -i "s/REWARDS_CONTRACT/\#REWARDS_CONTRACT/g" testnet.env
+    #- sed -i "s/REWARDCONTRACT/${TESTNET_REWARDCONTRACT}/g" testnet.env
+    - sed -i "s/EXPLORERHOST/${TESTNET_SERVER_HOST}/g" testnet.env
+    - cd -
+
+build-image:
   stage: build
   tags:
     - docker_runner
   script:
     - cd scripts
-    - aws ecr create-repository --repository-name $APP2_NAME || true
-    - docker build --cache-from $TAG2_LATEST -f ./Dockerfile_webapp -t $TAG2_COMMIT -t $TAG2_LATEST ../
-    - docker push $TAG2_COMMIT
-    - docker push $TAG2_LATEST
+    - aws ecr create-repository --repository-name $APP1_NAME || true
+    - docker build --cache-from $TAG1_LATEST -f ./Dockerfile_webapp -t $TAG1_COMMIT -t $TAG1_LATEST ../
+    - docker push $TAG1_COMMIT
+    - docker push $TAG1_LATEST
   only:
     <<: *sbx_triggers
 
@@ -46,14 +91,83 @@ deploy-sbx:
   script:
     - apk add --no-cache git curl build-base autoconf automake linux-headers openssl-dev openssh bash
     - chmod og= $ID_RSA
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP "aws ecr create-repository --repository-name $APP2_NAME || true"
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP "aws ecr get-login-password | docker login --username AWS --password-stdin $CONTAINER_REGISTRY"
+    - echo "Deploy to $SBX_SERVER_IP"
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP 'export AWS_REGION=$AWS_REGION'
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP "aws ecr create-repository --repository-name $APP1_NAME || true"
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP 'if [[ -d $APP_DIR/scripts ]]; then rm -rf $APP_DIR/scripts; fi'
     - scp -i $ID_RSA -o StrictHostKeyChecking=no -r ./scripts $SERVER_USER@$SBX_SERVER_IP:$APP_DIR/.
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP "if [[ ! -d $APP_DIR/logs ]]; then mkdir $APP_DIR/logs; chmod 777 $APP_DIR/logs; fi"
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP "docker pull $TAG2_LATEST"
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP "docker container rm -f $APP2_NAME || true"
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP "cd $APP_DIR/scripts && ./start_sandbox.sh run_webapp"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP "docker pull $TAG1_LATEST"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP "docker container rm -f $APP1_NAME || true"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP "cd $APP_DIR/scripts && ./start.sh -e develop -r run_indexer -i $CONTAINER_REGISTRY"
   only:
     <<: *sbx_triggers
+
+tnet-schema:
+  image: alpine:latest
+  services:
+    - docker:dind
+  stage: deploy-testnet-schema
+  <<: *testnet_indexer_vars
+  tags:
+    - docker_runner
+  script:
+    - apk add --no-cache git curl build-base autoconf automake linux-headers openssl-dev openssh bash
+    - chmod og= $ID_RSA
+    - echo "Deploy to $TESTNET_SERVER_IP1"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP1 'sudo su - && export AWS_REGION=$AWS_REGION'
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP1 "aws ecr create-repository --repository-name $APP1_NAME || true"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP1 'if [[ -d $APP_DIR/scripts ]]; then rm -rf $APP_DIR/scripts; fi'
+    - scp -i $ID_RSA -o StrictHostKeyChecking=no -r ./scripts $SERVER_USER@$TESTNET_SERVER_IP1:$APP_DIR/.
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP1 "docker pull $TAG1_LATEST"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP1 "docker container rm -f $SCHEMA_NAME || true"
+    - echo "Create DB schema"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP1 "cd $APP_DIR/scripts && ./start.sh -e testnet -r schema_aws -i $CONTAINER_REGISTRY"
+  only:
+    <<: *testnet_triggers
+
+tnet-idxr:
+  image: alpine:latest
+  services:
+    - docker:dind
+  stage: deploy-testnet-indexer
+  <<: *testnet_indexer_vars
+  tags:
+    - docker_runner
+  script:
+    - apk add --no-cache git curl build-base autoconf automake linux-headers openssl-dev openssh bash
+    - chmod og= $ID_RSA
+    - echo "Deploy to $TESTNET_SERVER_IP1"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP1 'export AWS_REGION=$AWS_REGION'
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP1 "aws ecr create-repository --repository-name $APP1_NAME || true"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP1 'if [[ -d $APP_DIR/scripts ]]; then rm -rf $APP_DIR/scripts; fi'
+    - scp -i $ID_RSA -o StrictHostKeyChecking=no -r ./scripts $SERVER_USER@$TESTNET_SERVER_IP1:$APP_DIR/.
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP1 "docker pull $TAG1_LATEST"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP1 "docker container rm -f explorer_indexer || true"
+    - echo "Start Indexer on $TESTNET_SERVER_IP1"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP1 "cd $APP_DIR/scripts && ./start.sh -e testnet -r run_indexer -i $CONTAINER_REGISTRY"
+  only:
+    <<: *testnet_triggers
+
+tnet-web1:
+  image: alpine:latest
+  services:
+    - docker:dind
+  stage: deploy-testnet-webapp
+  <<: *testnet_webapp2_vars
+  tags:
+    - docker_runner
+  script:
+    - apk add --no-cache git curl build-base autoconf automake linux-headers openssl-dev openssh bash
+    - chmod og= $ID_RSA
+    - echo "Deploy to $TESTNET_SERVER_IP2"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP2 'export AWS_REGION=$AWS_REGION'
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP2 "aws ecr create-repository --repository-name $APP1_NAME || true"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP2 'if [[ -d $APP_DIR/scripts ]]; then rm -rf $APP_DIR/scripts; fi'
+    - scp -i $ID_RSA -o StrictHostKeyChecking=no -r ./scripts $SERVER_USER@$TESTNET_SERVER_IP2:$APP_DIR/.
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP2 "docker pull $TAG1_LATEST"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP2 "docker container rm -f explorer_webapp || true"
+    - echo "Start webapp on $TESTNET_SERVER_IP2"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP2 "cd $APP_DIR/scripts && ./start.sh -e testnet -r run_webapp -i $CONTAINER_REGISTRY"
+  only:
+    <<: *testnet_triggers
+

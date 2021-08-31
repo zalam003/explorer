@@ -33,6 +33,7 @@ stages:
 .mainnet_triggers: &mainnet_triggers
   refs:
     - master
+    - cicd-for-mainnet
 
 .runner:
   tags: [docker_runner]

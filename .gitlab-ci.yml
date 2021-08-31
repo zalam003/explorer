@@ -7,6 +7,7 @@ variables:
   MAINNET_SERVER_HOST: explorer.energi.network
   APP_DIR: /home/$SERVER_USER
   APP1_NAME: explorer_webapp
+  APP2_NAME: explorer_indexer
   TAG1_LATEST: $CONTAINER_REGISTRY/$APP1_NAME:latest
   TAG1_COMMIT: $CONTAINER_REGISTRY/$APP1_NAME:$CI_COMMIT_SHORT_SHA
   PROJECT_NAME: BlockExplorer
@@ -17,6 +18,9 @@ stages:
   - deploy-testnet-schema
   - deploy-testnet-indexer
   - deploy-testnet-webapp
+  - deploy-mainnet-schema
+  - deploy-mainnet-indexer
+  - deploy-mainnet-webapp
 
 .sbx_triggers: &sbx_triggers
   refs:
@@ -25,6 +29,10 @@ stages:
 .testnet_triggers: &testnet_triggers
   refs:
     - develop
+
+.mainnet_triggers: &mainnet_triggers
+  refs:
+    - master
 
 .runner:
   tags: [docker_runner]
@@ -48,7 +56,7 @@ stages:
     - sed -i "s/EXPLORERHOST/${TESTNET_SERVER_HOST}/g" testnet.env
     - cd -
 
-.before_script_template: &testnet_webapp2_vars
+.before_script_template: &testnet_webapp_vars
   before_script:
     - cd scripts
     - sed -i "12iIMAGE=$CONTAINER_REGISTRY" start.sh
@@ -66,6 +74,43 @@ stages:
     - sed -i "s/REWARDS_CONTRACT/\#REWARDS_CONTRACT/g" testnet.env
     #- sed -i "s/REWARDCONTRACT/${TESTNET_REWARDCONTRACT}/g" testnet.env
     - sed -i "s/EXPLORERHOST/${TESTNET_SERVER_HOST}/g" testnet.env
+    - cd -
+
+.before_script_template: &mainnet_indexer_vars
+  before_script:
+    - cd scripts
+    - sed -i "12iIMAGE=$CONTAINER_REGISTRY" start.sh
+    - cp template.env mainnet.env
+    - sed -i "s/CORENODEIP/${MAINNET_CORENODE_IP1}/g" mainnet.env
+    - sed -i "s/WSPORT/49795/g" mainnet.env
+    - sed -i "s/HTTPPORT/49796/g" mainnet.env
+    - sed -i "s/CHAINID/49797/g" mainnet.env
+    - sed -i "s|SECRETKEYBASE|${MAINNET_SECRET_KEY_BASE}|g" mainnet.env
+    - sed -i "s/DBUSERNAME/${MAINNET_DB_USERNAME}/g" mainnet.env
+    - sed -i "s|DBPASSWORD|${MAINNET_DB_PASSWORD}|g" mainnet.env
+    - sed -i "s/DBNAME/${MAINNET_DB_NAME}/g" mainnet.env
+    - sed -i "s/DBHOST/${MAINNET_DB_HOSTNAME}/g" mainnet.env
+    - sed -i "s/REWARDCONTRACT/${MAINNET_REWARDCONTRACT}/g" mainnet.env
+    - sed -i "s/EXPLORERHOST/${MAINNET_SERVER_HOST}/g" mainnet.env
+    - cd -
+
+.before_script_template: &mainnet_webapp_vars
+  before_script:
+    - cd scripts
+    - sed -i "12iIMAGE=$CONTAINER_REGISTRY" start.sh
+    - cp template.env mainnet.env
+    - sed -i '19iDISABLE_INDEXER=true' mainnet.env
+    - sed -i "s/CORENODEIP/${MAINNET_CORENODE_IP2}/g" mainnet.env
+    - sed -i "s/WSPORT/49795/g" mainnet.env
+    - sed -i "s/HTTPPORT/49796/g" mainnet.env
+    - sed -i "s/CHAINID/49797/g" mainnet.env
+    - sed -i "s|SECRETKEYBASE|${MAINNET_SECRET_KEY_BASE}|g" mainnet.env
+    - sed -i "s/DBUSERNAME/${MAINNET_DB_USERNAME}/g" mainnet.env
+    - sed -i "s|DBPASSWORD|${MAINNET_DB_PASSWORD}|g" mainnet.env
+    - sed -i "s/DBNAME/${MAINNET_DB_NAME}/g" mainnet.env
+    - sed -i "s/DBHOST/${MAINNET_DB_HOSTNAME}/g" mainnet.env
+    - sed -i "s/REWARDCONTRACT/${MAINNET_REWARDCONTRACT}/g" mainnet.env
+    - sed -i "s/EXPLORERHOST/${MAINNET_SERVER_HOST}/g" mainnet.env
     - cd -
 
 build-image:
@@ -153,7 +198,7 @@ tnet-web1:
   services:
     - docker:dind
   stage: deploy-testnet-webapp
-  <<: *testnet_webapp2_vars
+  <<: *testnet_webapp_vars
   tags:
     - docker_runner
   script:
@@ -171,3 +216,71 @@ tnet-web1:
   only:
     <<: *testnet_triggers
 
+mnet-schema:
+  image: alpine:latest
+  services:
+    - docker:dind
+  stage: deploy-mainnet-schema
+  <<: *mainnet_indexer_vars
+  tags:
+    - docker_runner
+  script:
+    - apk add --no-cache git curl build-base autoconf automake linux-headers openssl-dev openssh bash
+    - chmod og= $ID_RSA
+    - echo "Deploy to $MAINNET_SERVER_IP1"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP1 'sudo su - && export AWS_REGION=$AWS_REGION'
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP1 "aws ecr create-repository --repository-name $APP1_NAME || true"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP1 'if [[ -d $APP_DIR/scripts ]]; then rm -rf $APP_DIR/scripts; fi'
+    - scp -i $ID_RSA -o StrictHostKeyChecking=no -r ./scripts $SERVER_USER@$MAINNET_SERVER_IP1:$APP_DIR/.
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP1 "docker pull $TAG1_LATEST"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP1 "docker container rm -f $SCHEMA_NAME || true"
+    - echo "Create DB schema"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP1 "cd $APP_DIR/scripts && ./start.sh -e mainnet -r schema_aws -i $CONTAINER_REGISTRY"
+  only:
+    <<: *mainnet_triggers
+
+mnet-idxr:
+  image: alpine:latest
+  services:
+    - docker:dind
+  stage: deploy-mainnet-indexer
+  <<: *mainnet_indexer_vars
+  tags:
+    - docker_runner
+  script:
+    - apk add --no-cache git curl build-base autoconf automake linux-headers openssl-dev openssh bash
+    - chmod og= $ID_RSA
+    - echo "Deploy to $MAINNET_SERVER_IP1"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP1 'export AWS_REGION=$AWS_REGION'
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP1 "aws ecr create-repository --repository-name $APP1_NAME || true"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP1 'if [[ -d $APP_DIR/scripts ]]; then rm -rf $APP_DIR/scripts; fi'
+    - scp -i $ID_RSA -o StrictHostKeyChecking=no -r ./scripts $SERVER_USER@$MAINNET_SERVER_IP1:$APP_DIR/.
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP1 "docker pull $TAG1_LATEST"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP1 "docker container rm -f explorer_indexer || true"
+    - echo "Start Indexer on $MAINNET_SERVER_IP1"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP1 "cd $APP_DIR/scripts && ./start.sh -e mainnet -r run_indexer -i $CONTAINER_REGISTRY"
+  only:
+    <<: *mainnet_triggers
+
+mnet-web1:
+  image: alpine:latest
+  services:
+    - docker:dind
+  stage: deploy-mainnet-webapp
+  <<: *mainnet_webapp_vars
+  tags:
+    - docker_runner
+  script:
+    - apk add --no-cache git curl build-base autoconf automake linux-headers openssl-dev openssh bash
+    - chmod og= $ID_RSA
+    - echo "Deploy to $MAINNET_SERVER_IP2"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP2 'export AWS_REGION=$AWS_REGION'
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP2 "aws ecr create-repository --repository-name $APP1_NAME || true"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP2 'if [[ -d $APP_DIR/scripts ]]; then rm -rf $APP_DIR/scripts; fi'
+    - scp -i $ID_RSA -o StrictHostKeyChecking=no -r ./scripts $SERVER_USER@$MAINNET_SERVER_IP2:$APP_DIR/.
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP2 "docker pull $TAG1_LATEST"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP2 "docker container rm -f explorer_webapp || true"
+    - echo "Start webapp on $MAINNET_SERVER_IP2"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP2 "cd $APP_DIR/scripts && ./start.sh -e mainnet -r run_webapp -i $CONTAINER_REGISTRY"
+  only:
+    <<: *mainnet_triggers

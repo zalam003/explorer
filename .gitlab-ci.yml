@@ -82,6 +82,8 @@ stages:
     - cd scripts
     - sed -i "12iIMAGE=$CONTAINER_REGISTRY" start.sh
     - cp template.env mainnet.env
+    - sed -i "s/Testnet/Mainnet/g" mainnet.env
+    - sed -i "s/testnet.json/mainnet.json/g" mainnet.env
     - sed -i "s/CORENODEIP/${MAINNET_CORENODE_IP1}/g" mainnet.env
     - sed -i "s/WSPORT/39795/g" mainnet.env
     - sed -i "s/HTTPPORT/39796/g" mainnet.env
@@ -101,6 +103,8 @@ stages:
     - sed -i "12iIMAGE=$CONTAINER_REGISTRY" start.sh
     - cp template.env mainnet.env
     - sed -i '19iDISABLE_INDEXER=true' mainnet.env
+    - sed -i "s/Testnet/Mainnet/g" mainnet.env
+    - sed -i "s/testnet.json/mainnet.json/g" mainnet.env
     - sed -i "s/CORENODEIP/${MAINNET_CORENODE_IP2}/g" mainnet.env
     - sed -i "s/WSPORT/39795/g" mainnet.env
     - sed -i "s/HTTPPORT/39796/g" mainnet.env

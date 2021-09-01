@@ -218,6 +218,14 @@ case $TODO in
             ${INDEXER}:latest /bin/sh -c "mix do ecto.drop"
         ;;
 
+    keybase)
+        echo "==> Generating Secret Key Base"
+         docker run --rm --name keybase \
+            --env-file ${APPDIR}/scripts/${ENVFILE} \
+            --volume ${APPDIR}/logs:/opt/app/logs \
+            ${WEBAPP}:latest /bin/sh -c "mix phx.gen.secret"
+        ;;
+    
     restart_webapp)
         $0 -e $ENV -r stop_webapp
         sleep 10

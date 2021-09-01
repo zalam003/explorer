@@ -146,7 +146,7 @@ deploy-sbx:
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP 'if [[ -d $APP_DIR/scripts ]]; then rm -rf $APP_DIR/scripts; fi'
     - scp -i $ID_RSA -o StrictHostKeyChecking=no -r ./scripts $SERVER_USER@$SBX_SERVER_IP:$APP_DIR/.
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP "docker pull $TAG1_LATEST"
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP "docker container rm -f $APP1_NAME || true"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP "docker container rm -f $APP2_NAME || true"
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP "cd $APP_DIR/scripts && ./start.sh -e develop -r run_indexer -i $CONTAINER_REGISTRY"
   only:
     <<: *sbx_triggers
@@ -191,7 +191,7 @@ tnet-idxr:
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP1 'if [[ -d $APP_DIR/scripts ]]; then rm -rf $APP_DIR/scripts; fi'
     - scp -i $ID_RSA -o StrictHostKeyChecking=no -r ./scripts $SERVER_USER@$TESTNET_SERVER_IP1:$APP_DIR/.
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP1 "docker pull $TAG1_LATEST"
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP1 "docker container rm -f explorer_indexer || true"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP1 "docker container rm -f $APP2_NAME || true"
     - echo "Start Indexer on $TESTNET_SERVER_IP1"
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP1 "cd $APP_DIR/scripts && ./start.sh -e testnet -r run_indexer -i $CONTAINER_REGISTRY"
   only:
@@ -214,7 +214,7 @@ tnet-web1:
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP2 'if [[ -d $APP_DIR/scripts ]]; then rm -rf $APP_DIR/scripts; fi'
     - scp -i $ID_RSA -o StrictHostKeyChecking=no -r ./scripts $SERVER_USER@$TESTNET_SERVER_IP2:$APP_DIR/.
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP2 "docker pull $TAG1_LATEST"
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP2 "docker container rm -f explorer_webapp || true"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP2 "docker container rm -f $APP1_NAME || true"
     - echo "Start webapp on $TESTNET_SERVER_IP2"
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP2 "cd $APP_DIR/scripts && ./start.sh -e testnet -r run_webapp -i $CONTAINER_REGISTRY"
   only:
@@ -260,7 +260,7 @@ mnet-idxr:
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP1 'if [[ -d $APP_DIR/scripts ]]; then rm -rf $APP_DIR/scripts; fi'
     - scp -i $ID_RSA -o StrictHostKeyChecking=no -r ./scripts $SERVER_USER@$MAINNET_SERVER_IP1:$APP_DIR/.
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP1 "docker pull $TAG1_LATEST"
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP1 "docker container rm -f explorer_indexer || true"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP1 "docker container rm -f $APP2_NAME || true"
     - echo "Start Indexer on $MAINNET_SERVER_IP1"
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP1 "cd $APP_DIR/scripts && ./start.sh -e mainnet -r run_indexer -i $CONTAINER_REGISTRY"
   only:
@@ -283,7 +283,7 @@ mnet-web1:
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP2 'if [[ -d $APP_DIR/scripts ]]; then rm -rf $APP_DIR/scripts; fi'
     - scp -i $ID_RSA -o StrictHostKeyChecking=no -r ./scripts $SERVER_USER@$MAINNET_SERVER_IP2:$APP_DIR/.
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP2 "docker pull $TAG1_LATEST"
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP2 "docker container rm -f explorer_webapp || true"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP2 "docker container rm -f $APP1_NAME || true"
     - echo "Start webapp on $MAINNET_SERVER_IP2"
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP2 "cd $APP_DIR/scripts && ./start.sh -e mainnet -r run_webapp -i $CONTAINER_REGISTRY"
   only:

@@ -32,7 +32,6 @@ const jsOptimizationParams = {
   parallel: true
 }
 
-            loader: "css-loader",
 const dropzoneJs = {
   entry: {
     dropzone: './js/lib/dropzone.js',

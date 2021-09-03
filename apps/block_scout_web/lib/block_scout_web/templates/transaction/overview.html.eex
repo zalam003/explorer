@@ -436,11 +436,9 @@
                     <!-- Copy UTF-8 input  -->
                     <%= render BlockScoutWeb.CommonComponentsView, "_btn_copy.html",
                         additional_classes: ["btn-copy-icon-small", "btn-copy-icon-no-borders", "btn-copy-icon-ml-0", "btn-copy-tx-raw-input", "tx-utf8-input"],
-                    class="btn-copy-icon tx-utf8-input transaction-input d-none"
                         clipboard_text: @transaction.input.bytes,
                         aria_label: gettext("Copy Value"),
-                    title='<%= gettext("Copy Txn Input") %>'
-                    style="display: none;"
+                        title: gettext("Copy Txn UTF-8 Input"),
                         style: "display: none;" %>
                   </div>
                 </div>

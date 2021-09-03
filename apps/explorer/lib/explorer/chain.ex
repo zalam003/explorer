@@ -2849,7 +2849,7 @@ defmodule Explorer.Chain do
           right_join:
             missing_range in fragment(
               """
-                (SELECT b1.number 
+                (SELECT b1.number
                 FROM generate_series(0, (?)::integer) AS b1(number)
                 WHERE NOT EXISTS
                   (SELECT 1 FROM blocks b2 WHERE b2.number=b1.number AND b2.consensus))
@@ -2936,7 +2936,7 @@ defmodule Explorer.Chain do
         right_join:
           missing_range in fragment(
             """
-              (SELECT distinct b1.number 
+              (SELECT distinct b1.number
               FROM generate_series((?)::integer, (?)::integer) AS b1(number)
               WHERE NOT EXISTS
                 (SELECT 1 FROM blocks b2 WHERE b2.number=b1.number AND b2.consensus))
@@ -3806,11 +3806,68 @@ defmodule Explorer.Chain do
     end
   end
 
+  @spec create_genesis_smart_contract(map()) :: {:ok, SmartContract.t()} | {:error, Ecto.Changeset.t()}
+  def create_genesis_smart_contract(attrs \\ %{}, external_libraries \\ []) do
+
+    new_contract = %SmartContract{}
+
+    smart_contract_changeset =
+      new_contract
+      |> SmartContract.changeset(attrs)
+      |> Changeset.put_change(:external_libraries, external_libraries)
+
+    address_hash = Changeset.get_field(smart_contract_changeset, :address_hash)
+
+    find_or_insert_address_from_hash(address_hash)
+
+    {:ok, contract_bytecode} = Explorer.Chain.Data.load(attrs.contract_bytecode)
+
+    # Enforce ShareLocks tables order (see docs: sharelocks.md)
+    insert_result =
+      Multi.new()
+      |> Multi.run(:set_address_verified, fn repo, _ -> set_address_verified(repo, address_hash) end)
+      |> Multi.run(:set_address_contract_code, fn repo, _ -> set_address_contract_code(repo, address_hash, contract_bytecode) end)
+      |> Multi.run(:clear_primary_address_names, fn repo, _ -> clear_primary_address_names(repo, address_hash) end)
+      |> Multi.run(:insert_address_name, fn repo, _ ->
+        name = Changeset.get_field(smart_contract_changeset, :name)
+        create_address_name(repo, name, address_hash)
+      end)
+      |> Multi.insert(:smart_contract, smart_contract_changeset)
+      |> Repo.transaction()
+
+    case insert_result do
+      {:ok, %{smart_contract: smart_contract}} ->
+        {:ok, smart_contract}
+
+      {:error, :smart_contract, changeset, _} ->
+        {:error, changeset}
+
+      {:error, :set_address_verified, message, _} ->
+        {:error, message}
+
+      {:error, :set_address_contract_code, message, _} ->
+        {:error, message}
+    end
+  end
+
+  defp set_address_contract_code(repo, address_hash, contract_code) do
+    query =
+      from(
+        address in Address,
+        where: address.hash == ^address_hash
+      )
+
+    case repo.update_all(query, set: [contract_code: contract_code]) do
+      {1, _} -> {:ok, []}
+      _ -> {:error, "There was an error setting the address contract code."}
+    end
+  end
+
   @doc """
   Updates a `t:SmartContract.t/0`.
 
   Has the similar logic as create_smart_contract/1.
-  Used in cases when you need to update row in DB contains SmartContract, e.g. in case of changing 
+  Used in cases when you need to update row in DB contains SmartContract, e.g. in case of changing
   status `partially verified` to `fully verified` (re-verify).
   """
   @spec update_smart_contract(map()) :: {:ok, SmartContract.t()} | {:error, Ecto.Changeset.t()}
@@ -4807,7 +4864,7 @@ defmodule Explorer.Chain do
 
   # Fetches custom metadata for bridged tokens from the node.
   # Currently, gets Balancer token composite tokens with their weights
-  # from foreign chain 
+  # from foreign chain
   defp get_bridged_token_custom_metadata(foreign_token_address_hash, json_rpc_named_arguments, foreign_json_rpc)
        when not is_nil(foreign_json_rpc) and foreign_json_rpc !== "" do
     eth_call_foreign_json_rpc_named_arguments =

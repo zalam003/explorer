@@ -157,7 +157,7 @@ case $TODO in
             --log-opt awslogs-group=${ENV}-${PROJECT_NAME} \
             --log-opt awslogs-create-group=true \
             --log-opt awslogs-stream=${PROJECT_NAME}-${INDEXER} \
-            ${IMAGE}/${INDEXER}:latest /bin/sh -c "mix phx.server"
+            ${IMAGE}/${WEBAPP}:latest /bin/sh -c "mix phx.server"
         ;;
 
     schema_aws)
@@ -177,7 +177,7 @@ case $TODO in
         docker run --rm --name ${SCHEMA_NAME} \
             --env-file ${APPDIR}/scripts/${ENVFILE} \
             --volume ${APPDIR}/logs:/opt/app/logs \
-            ${INDEXER}:latest /bin/sh -c "mix do ecto.create, ecto.migrate"
+            ${WEBAPP}:latest /bin/sh -c "mix do ecto.create, ecto.migrate"
         ;;
 
     all_webapp)
@@ -215,7 +215,7 @@ case $TODO in
         docker run --rm -i --name ${INDEXER}DROPDB \
             --env-file ${APPDIR}/scripts/${ENVFILE} \
             --volume ${APPDIR}/logs:/opt/app/logs \
-            ${INDEXER}:latest /bin/sh -c "mix do ecto.drop"
+            ${WEBAPP}:latest /bin/sh -c "mix do ecto.drop"
         ;;
 
     keybase)

@@ -14,6 +14,7 @@ variables:
 
 stages:
   - build
+  - deploy-sbx-schema
   - deploy-sbx
   - deploy-testnet-schema
   - deploy-testnet-indexer
@@ -130,6 +131,27 @@ build-image:
   only:
     <<: *sbx_triggers
 
+sbx-schema:
+  image: alpine:latest
+  services:
+    - docker:dind
+  stage: deploy-sbx-schema
+  tags:
+    - docker_runner
+  script:
+    - apk add --no-cache git curl build-base autoconf automake linux-headers openssl-dev openssh bash
+    - chmod og= $ID_RSA
+    - echo "Deploy to $SBX_SERVER_IP"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP 'sudo su - && export AWS_REGION=$AWS_REGION'
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP 'if [[ -d $APP_DIR/scripts ]]; then rm -rf $APP_DIR/scripts; fi'
+    - scp -i $ID_RSA -o StrictHostKeyChecking=no -r ./scripts $SERVER_USER@$SBX_SERVER_IP:$APP_DIR/.
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP "docker pull $TAG1_LATEST"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP "docker container rm -f $SCHEMA_NAME || true"
+    - echo "Create DB schema"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP "cd $APP_DIR/scripts && ./start.sh -e develop -r schema_aws -i $CONTAINER_REGISTRY"
+  only:
+    <<: *sbx_triggers
+
 deploy-sbx:
   image: alpine:latest
   services:
@@ -142,7 +164,6 @@ deploy-sbx:
     - chmod og= $ID_RSA
     - echo "Deploy to $SBX_SERVER_IP"
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP 'export AWS_REGION=$AWS_REGION'
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP "aws ecr create-repository --repository-name $APP1_NAME || true"
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP 'if [[ -d $APP_DIR/scripts ]]; then rm -rf $APP_DIR/scripts; fi'
     - scp -i $ID_RSA -o StrictHostKeyChecking=no -r ./scripts $SERVER_USER@$SBX_SERVER_IP:$APP_DIR/.
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP "docker pull $TAG1_LATEST"
@@ -164,7 +185,6 @@ tnet-schema:
     - chmod og= $ID_RSA
     - echo "Deploy to $TESTNET_SERVER_IP1"
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP1 'sudo su - && export AWS_REGION=$AWS_REGION'
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP1 "aws ecr create-repository --repository-name $APP1_NAME || true"
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP1 'if [[ -d $APP_DIR/scripts ]]; then rm -rf $APP_DIR/scripts; fi'
     - scp -i $ID_RSA -o StrictHostKeyChecking=no -r ./scripts $SERVER_USER@$TESTNET_SERVER_IP1:$APP_DIR/.
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP1 "docker pull $TAG1_LATEST"
@@ -187,7 +207,6 @@ tnet-idxr:
     - chmod og= $ID_RSA
     - echo "Deploy to $TESTNET_SERVER_IP1"
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP1 'export AWS_REGION=$AWS_REGION'
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP1 "aws ecr create-repository --repository-name $APP1_NAME || true"
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP1 'if [[ -d $APP_DIR/scripts ]]; then rm -rf $APP_DIR/scripts; fi'
     - scp -i $ID_RSA -o StrictHostKeyChecking=no -r ./scripts $SERVER_USER@$TESTNET_SERVER_IP1:$APP_DIR/.
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP1 "docker pull $TAG1_LATEST"
@@ -210,7 +229,6 @@ tnet-web1:
     - chmod og= $ID_RSA
     - echo "Deploy to $TESTNET_SERVER_IP2"
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP2 'export AWS_REGION=$AWS_REGION'
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP2 "aws ecr create-repository --repository-name $APP1_NAME || true"
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP2 'if [[ -d $APP_DIR/scripts ]]; then rm -rf $APP_DIR/scripts; fi'
     - scp -i $ID_RSA -o StrictHostKeyChecking=no -r ./scripts $SERVER_USER@$TESTNET_SERVER_IP2:$APP_DIR/.
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP2 "docker pull $TAG1_LATEST"
@@ -233,7 +251,6 @@ mnet-schema:
     - chmod og= $ID_RSA
     - echo "Deploy to $MAINNET_SERVER_IP1"
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP1 'sudo su - && export AWS_REGION=$AWS_REGION'
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP1 "aws ecr create-repository --repository-name $APP1_NAME || true"
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP1 'if [[ -d $APP_DIR/scripts ]]; then rm -rf $APP_DIR/scripts; fi'
     - scp -i $ID_RSA -o StrictHostKeyChecking=no -r ./scripts $SERVER_USER@$MAINNET_SERVER_IP1:$APP_DIR/.
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP1 "docker pull $TAG1_LATEST"
@@ -256,7 +273,6 @@ mnet-idxr:
     - chmod og= $ID_RSA
     - echo "Deploy to $MAINNET_SERVER_IP1"
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP1 'export AWS_REGION=$AWS_REGION'
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP1 "aws ecr create-repository --repository-name $APP1_NAME || true"
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP1 'if [[ -d $APP_DIR/scripts ]]; then rm -rf $APP_DIR/scripts; fi'
     - scp -i $ID_RSA -o StrictHostKeyChecking=no -r ./scripts $SERVER_USER@$MAINNET_SERVER_IP1:$APP_DIR/.
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP1 "docker pull $TAG1_LATEST"
@@ -279,7 +295,6 @@ mnet-web1:
     - chmod og= $ID_RSA
     - echo "Deploy to $MAINNET_SERVER_IP2"
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP2 'export AWS_REGION=$AWS_REGION'
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP2 "aws ecr create-repository --repository-name $APP1_NAME || true"
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP2 'if [[ -d $APP_DIR/scripts ]]; then rm -rf $APP_DIR/scripts; fi'
     - scp -i $ID_RSA -o StrictHostKeyChecking=no -r ./scripts $SERVER_USER@$MAINNET_SERVER_IP2:$APP_DIR/.
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP2 "docker pull $TAG1_LATEST"

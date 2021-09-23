@@ -20,25 +20,25 @@
         <p class="footer-info-text"><%= gettext("Blockscout is a tool for inspecting and analyzing EVM based blockchains. Blockchain explorer for Ethereum Networks.") %></p>
         <div class="footer-social-icons">
           <a href="https://twitter.com/energi/" rel="noreferrer noopener" target="_blank" class="footer-social-icon" title='<%= gettext("Twitter") %>'>
-            <i class="fab fa-twitter"></i>
+          <div class="footer-social-icon-container fontawesome-icon twitter"></div>
           </a>
           <a href="https://discordapp.com/invite/sCtgNC3/" rel="noreferrer noopener" target="_blank" class="footer-social-icon" title='<%= gettext("Discord") %>'>
-            <i class="fab fa-discord"></i>
+            <div class="footer-social-icon-container fontawesome-icon discord"></div>
           </a>
           <a href="https://t.me/energicrypto/" rel="noreferrer noopener" target="_blank" class="footer-social-icon" title='<%= gettext("Telegram") %>'>
-            <i class="fab fa-telegram-plane"></i>
+            <div class="footer-social-icon-container fontawesome-icon telegram"></div>
           </a>
-          <a href="https://reddit.com/r/energicryptocurrency" rel="noreferrer noopener" target="_blank" class="footer-social-icon" title='<%= gettext("Reddit") %>'>
-            <i class="fab fa-reddit"></i>
+          <a href="https://reddit.com/r/energicryptocurrency/" rel="noreferrer noopener" target="_blank" class="footer-social-icon" title='<%= gettext("Reddit") %>'>
+            <div class="footer-social-icon-container fontawesome-icon reddit"></div>
           </a>
           <a href="https://github.com/energicryptocurrency/" rel="noreferrer noopener" target="_blank" class="footer-social-icon" title='<%= gettext("Github") %>'>
-            <i class="fab fa-github"></i>
+            <div class="footer-social-icon-container fontawesome-icon github"></div>
           </a>
           <a href="https://facebook.com/Energi-Cryptocurrency-195355164580336/" rel="noreferrer noopener" target="_blank" class="footer-social-icon" title='<%= gettext("Facebook") %>'>
-            <i class="fab fa-facebook"></i>
+            <div class="footer-social-icon-container fontawesome-icon facebook"></div>
           </a>
           <a href="https://medium.com/energi/" rel="noreferrer noopener" target="_blank" class="footer-social-icon" title='<%= gettext("Medium") %>'>
-            <i class="fab fa-medium"></i>
+            <div class="footer-social-icon-container fontawesome-icon medium"></div>
           </a>
         </div>
       </div>

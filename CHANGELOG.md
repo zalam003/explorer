@@ -1,7 +1,11 @@
 ## Current
 
 ### Features
-- [#4655](https://github.com/blockscout/blockscout/pull/4655) - EIP-3091 support
+- [#4667](https://github.com/blockscout/blockscout/pull/4667) - Transaction Page: Add expand/collapse button for long contract method data
+- [#4641](https://github.com/blockscout/blockscout/pull/4641) - Improve Read Contract page logic
+- [#4660](https://github.com/blockscout/blockscout/pull/4660) - Save Sourcify path instead of filename
+- [#4656](https://github.com/blockscout/blockscout/pull/4656) - Open in Tenderly button
+- [#4655](https://github.com/blockscout/blockscout/pull/4655), [#4676](https://github.com/blockscout/blockscout/pull/4676) - EIP-3091 support
 - [#4621](https://github.com/blockscout/blockscout/pull/4621) - Add beacon contract address slot for proxy
 - [#4625](https://github.com/blockscout/blockscout/pull/4625) - Contract address page: Add implementation link to the overview of proxy contracts
 - [#4624](https://github.com/blockscout/blockscout/pull/4624) - Support HTML tags in alert message
@@ -12,6 +16,7 @@
 - [#4579](https://github.com/blockscout/blockscout/pull/4579) - Write contract page: Resize inputs; Improve multiplier selector
 
 ### Fixes
+- [#4668](https://github.com/blockscout/blockscout/pull/4668) - Fix css for dark theme
 - [#4654](https://github.com/blockscout/blockscout/pull/4654) - AddressView: Change `@burn_address` to string `0x0000000000000000000000000000000000000000`
 - [#4626](https://github.com/blockscout/blockscout/pull/4626) - Refine view of popup for reverted tx
 - [#4640](https://github.com/blockscout/blockscout/pull/4640) - Token page: fixes in mobile view

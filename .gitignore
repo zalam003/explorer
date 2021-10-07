@@ -46,3 +46,4 @@ screenshots/
 # Energi related
 /.gitlab-ci.yml
 /docs
+/scripts/local.env

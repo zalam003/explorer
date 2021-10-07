@@ -74,7 +74,7 @@ fi
 echo $TODO
 case $TODO in
     build_webapp|webapp)
-        if [[ -z $(docker ps -a -f NAME=${WEBAPP} | grep  $1) ]]
+        if [[ -z $(docker ps -a -f NAME=${WEBAPP} | grep  ${WEBAPP}) ]]
         then
             echo "==> Build blockscout webapp"
             docker build -f ${APPDIR}/scripts/Dockerfile_webapp -t ${WEBAPP}:$CI_COMMIT_SHA ../
@@ -91,7 +91,7 @@ case $TODO in
         ;;
 
     build_indexer|indexer)
-        if [[ -z $(docker ps -a -f NAME=${INDEXER} | grep  $1) ]]
+        if [[ -z $(docker ps -a -f NAME=${INDEXER} | grep  ${INDEXER}) ]]
         then
             echo "==> Build blockscout indexer"
             docker build -f ${APPDIR}/scripts/Dockerfile_indexer -t ${INDEXER}:$CI_COMMIT_SHA ../
@@ -107,7 +107,7 @@ case $TODO in
         fi
         ;;
 
-    run_webapp_local|start_webapp)
+    run_webapp_local|start_webapp_local)
         echo "==> Starting blockscout webapp"
         docker run -d --name ${WEBAPP} \
             --env-file ${APPDIR}/scripts/${ENVFILE} \
@@ -132,17 +132,12 @@ case $TODO in
             DISABLE_INDEXER=true
         ;;
 
-    run_indexer_local|start_indexer)
+    run_indexer_local|start_indexer_local)
         echo "==> Starting blockscout indexer"
         docker run -d --name ${INDEXER} \
             --env-file ${APPDIR}/scripts/${ENVFILE} \
             --network host \
             --restart on-failure:3 \
-            --log-driver="awslogs" \
-            --log-opt awslogs-region=${REGION} \
-            --log-opt awslogs-group=${ENV}-${PROJECT_NAME} \
-            --log-opt awslogs-create-group=true \
-            --log-opt awslogs-stream=${PROJECT_NAME}-${INDEXER} \
             ${IMAGE}:latest /bin/sh -c "mix phx.server"
         ;;
 

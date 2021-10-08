@@ -79,7 +79,7 @@ RUN echo "deps installed"
 RUN mix compile
 RUN echo "app installed"
 
-RUN npm install npm@latest
+RUN npm install --global npm@7
 
 # Add blockscout npm deps
 RUN cd apps/block_scout_web/assets/ && \

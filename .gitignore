@@ -47,3 +47,4 @@ screenshots/
 /.gitlab-ci.yml
 /docs
 /scripts/local.env
+/.vscode

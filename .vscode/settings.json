@@ -1,0 +1,6 @@
+{
+    "elixirLS.dialyzerEnabled": false,
+    "elixirLS.fetchDeps": false,
+    "elixirLS.signatureAfterComplete": false,
+    "elixirLS.suggestSpecs": false
+}

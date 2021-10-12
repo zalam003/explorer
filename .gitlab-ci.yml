@@ -55,6 +55,8 @@ stages:
     - sed -i "s/REWARDS_CONTRACT/\#REWARDS_CONTRACT/g" testnet.env
     #- sed -i "s/REWARDCONTRACT/${TESTNET_REWARDCONTRACT}/g" testnet.env
     - sed -i "s/EXPLORERHOST/${TESTNET_SERVER_HOST}/g" testnet.env
+    - sed -i "s/CAPTCHASECRET/${CAPTCHASECRET}/g" testnet.env
+    - sed -i "s/CAPTCHACLIENT/${CAPTCHACLIENT}/g" testnet.env
     - cd -
 
 .before_script_template: &testnet_webapp_vars
@@ -75,6 +77,8 @@ stages:
     - sed -i "s/REWARDS_CONTRACT/\#REWARDS_CONTRACT/g" testnet.env
     #- sed -i "s/REWARDCONTRACT/${TESTNET_REWARDCONTRACT}/g" testnet.env
     - sed -i "s/EXPLORERHOST/${TESTNET_SERVER_HOST}/g" testnet.env
+    - sed -i "s/CAPTCHASECRET/${CAPTCHASECRET}/g" testnet.env
+    - sed -i "s/CAPTCHACLIENT/${CAPTCHACLIENT}/g" testnet.env
     - cd -
 
 .before_script_template: &mainnet_indexer_vars
@@ -95,6 +99,8 @@ stages:
     - sed -i "s/DBHOST/${MAINNET_DB_HOSTNAME}/g" mainnet.env
     - sed -i "s/REWARDCONTRACT/${MAINNET_REWARDCONTRACT}/g" mainnet.env
     - sed -i "s/EXPLORERHOST/${MAINNET_SERVER_HOST}/g" mainnet.env
+    - sed -i "s/CAPTCHASECRET/${CAPTCHASECRET}/g" mainnet.env
+    - sed -i "s/CAPTCHACLIENT/${CAPTCHACLIENT}/g" mainnet.env
     - cd -
 
 .before_script_template: &mainnet_webapp_vars
@@ -116,6 +122,8 @@ stages:
     - sed -i "s/DBHOST/${MAINNET_DB_HOSTNAME}/g" mainnet.env
     - sed -i "s/REWARDCONTRACT/${MAINNET_REWARDCONTRACT}/g" mainnet.env
     - sed -i "s/EXPLORERHOST/${MAINNET_SERVER_HOST}/g" mainnet.env
+    - sed -i "s/CAPTCHASECRET/${CAPTCHASECRET}/g" mainnet.env
+    - sed -i "s/CAPTCHACLIENT/${CAPTCHACLIENT}/g" mainnet.env
     - cd -
 
 build-image:
@@ -144,6 +152,8 @@ sbx-schema:
     - echo "Deploy to $SBX_SERVER_IP"
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP 'sudo su - && export AWS_REGION=$AWS_REGION'
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP 'if [[ -d $APP_DIR/scripts ]]; then rm -rf $APP_DIR/scripts; fi'
+    - echo "RE_CAPTCHA_SECRET_KEY=${CAPTCHASECRET}" >> ./scripts/develop.env
+    - echo "RE_CAPTCHA_CLIENT_KEY=${CAPTCHACLIENT}" >> ./scripts/develop.env
     - scp -i $ID_RSA -o StrictHostKeyChecking=no -r ./scripts $SERVER_USER@$SBX_SERVER_IP:$APP_DIR/.
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP "docker pull $TAG1_LATEST"
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP "docker container rm -f $SCHEMA_NAME || true"

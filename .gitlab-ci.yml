@@ -175,6 +175,8 @@ deploy-sbx:
     - echo "Deploy to $SBX_SERVER_IP"
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP 'export AWS_REGION=$AWS_REGION'
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP 'if [[ -d $APP_DIR/scripts ]]; then rm -rf $APP_DIR/scripts; fi'
+    - echo "RE_CAPTCHA_SECRET_KEY=${CAPTCHASECRET}" >> ./scripts/develop.env
+    - echo "RE_CAPTCHA_CLIENT_KEY=${CAPTCHACLIENT}" >> ./scripts/develop.env
     - scp -i $ID_RSA -o StrictHostKeyChecking=no -r ./scripts $SERVER_USER@$SBX_SERVER_IP:$APP_DIR/.
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP "docker pull $TAG1_LATEST"
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP "docker container rm -f $APP2_NAME || true"

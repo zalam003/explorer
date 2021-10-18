@@ -66,7 +66,9 @@ export function reducer (state = initialState, action) {
       return Object.assign({}, state, { transactionCount })
     }
     case 'RECEIVED_NEW_TOKEN_TRANSFER': {
-      if (state.channelDisconnected) return state
+      if (state.channelDisconnected) {
+        return state
+      }
 
       const tokenTransferCount = (action.msg.fromAddressHash === state.addressHash) ? state.tokenTransferCount + 1 : state.tokenTransferCount
 
@@ -134,7 +136,9 @@ const elements = {
     },
     render ($el, state, oldState) {
       if (state.countersFetched && state.tokenTransferCount) {
-        if (oldState.tokenTransferCount === state.tokenTransferCount) return
+        if (oldState.tokenTransferCount === state.tokenTransferCount) {
+          return
+        }
         const transfersDSName = (state.tokenTransferCount > 1) ? ' Transfers' : ' Transfer'
         $el.empty().append(numeral(state.tokenTransferCount).format() + transfersDSName)
         $el.show()

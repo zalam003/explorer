@@ -9,6 +9,7 @@ defmodule Indexer.Transform.TokenTransfers do
   alias Explorer.{Chain, Repo}
   alias Explorer.Chain.{Token, TokenTransfer}
   alias Explorer.Token.MetadataRetriever
+  alias Indexer.Blacklist
 
   @burn_address "0x0000000000000000000000000000000000000000"
 
@@ -46,9 +47,25 @@ defmodule Indexer.Transform.TokenTransfers do
 
     tokens_dedup = tokens |> Enum.dedup()
 
+    blacklisted_contracts = Blacklist.blacklistedTokens()
+
+    tokens_dedup =
+      tokens_dedup
+      |> Enum.reject(fn tokens_dedup ->
+        Enum.member?(blacklisted_contracts, tokens_dedup.contract_address_hash)
+      end)
+
+    token_transfer = token_transfers
+
+    token_transfer =
+      token_transfer
+      |> Enum.reject(fn token_transfer ->
+        Enum.member?(blacklisted_contracts, token_transfer.token_contract_address_hash)
+      end)
+
     token_transfers_from_logs_dedup = %{
       tokens: tokens_dedup,
-      token_transfers: token_transfers
+      token_transfers: token_transfer
     }
 
     token_transfers_from_logs_dedup

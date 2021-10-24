@@ -4,33 +4,37 @@
 if [[ $1 == mainnet ]]
 then
     . ./mainnet.env
-    export FILENAME=smart_contracts_mainnet.csv
-    export ADDRFILE=contract_address_mainnet.txt
+    export ADDRFILE=dup_contract_addr_mainnet.txt
 
 elif [[ $1 == testnet ]]
 then
     . ./testnet.env
-    export FILENAME=smart_contracts_testnet.csv
-    export ADDRFILE=contract_address_testnet.txt
+    export ADDRFILE=up_contract_addr_testnet.txt
 
-elif [[ $1 == testmainnet ]]
+elif [[ $1 == develop ]]
+then
+    . ./develop.env
+    export ADDRFILE=up_contract_addr_mainnet.txt
+
+elif [[ $1 == local ]]
 then
     . ./local.env
-    export ADDRFILE=contract_address_mainnet.txt
+    export ADDRFILE=up_contract_addr_mainnet.txt
 
 else
     echo
     echo "Usage: $0 <environment>"
     echo "    environments are:"
-    echo "        testmainnet - Test Mainnet"
-    echo "        testnet     - Production Testnet"
-    echo "        mainnet     - Production Mainnet"
+    echo "        local    - Local"
+    echo "        develop  - Develop"
+    echo "        testnet  - Testnet"
+    echo "        mainnet  - Mainnet"
     echo
     exit
 
 fi
 
-#
+# export variables
 export PGPORT=5432
 export PGHOST
 export PGDATABASE
@@ -46,9 +50,9 @@ then
 
 fi
 
-#
+#######
 # Remove user address Tokens
-#
+#######
 > ${TMPCONTRACTFILE}
 for TOKEN_ADDR in `cat ${ADDRFILE} | awk '{print $1}'`
 do
@@ -56,8 +60,11 @@ do
     psql -d $PGDATABASE -U $PGUSER -P pager=off -t -c "SELECT token_contract_address_hash,address_hash FROM address_current_token_balances WHERE token_contract_address_hash = '${TOKEN_ADDR}' and value > 0;" >> ${TMPCONTRACTFILE}
 done
 
+# Remove duplicates
 sort -u ${TMPCONTRACTFILE} -o ${TMPCONTRACTFILE}
+# Remove blank
 sed -i '/^$/d' ${TMPCONTRACTFILE}
+# Remove delimiter
 sed -i 's/ |//g' ${TMPCONTRACTFILE}
 
 #
@@ -83,12 +90,11 @@ then
     rm ${TMPCONTRACTFILE}
 fi    
 
-#
+#######
 # Remove Tokens from list
-#
+#######
 for ADDR in `cat ${ADDRFILE} | awk '{print $1}'`
 do
-    # Remove from Tokens list
     echo "Remove from Tokens List: ${ADDR}"
     psql -d $PGDATABASE -U $PGUSER -h $PGHOST -t -c "UPDATE tokens SET \
       total_supply = 0 \

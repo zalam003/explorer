@@ -16,12 +16,15 @@ stages:
   - build
   - deploy-sbx-schema
   - deploy-sbx
+  - dedup-sbx
   - deploy-testnet-schema
   - deploy-testnet-indexer
   - deploy-testnet-webapp
+  - dedup-testnet
   - deploy-mainnet-schema
   - deploy-mainnet-indexer
   - deploy-mainnet-webapp
+  - dedup-mainnet
 
 .sbx_triggers: &sbx_triggers
   refs:
@@ -313,5 +316,56 @@ mnet-web1:
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP2 "docker container rm -f $APP1_NAME || true"
     - echo "Start webapp on $MAINNET_SERVER_IP2"
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP2 "cd $APP_DIR/scripts && ./start.sh -e mainnet -r run_webapp -i $CONTAINER_REGISTRY"
+  only:
+    <<: *mainnet_triggers
+
+sbx-dedup:
+  stage: dedup-sbx
+  image: postgres:latest
+  tags:
+    - docker_runner
+  script:
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP "cd $APP_DIR/scripts && ./token_remove.sh develop"
+  rules:
+      - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+        changes:
+          - scripts/token_remove.sh
+          - scripts/dup_contracts_addr_{testnet,mainnet}.txt
+        when: manual
+        allow_failure: true
+  only:
+    <<: *sbx_triggers
+
+tnet-dedup:
+  stage: dedup-testnet
+  image: postgres:latest
+  tags:
+    - docker_runner
+  script:
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP1 "cd $APP_DIR/scripts && ./token_remove.sh testnet"
+  rules:
+      - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+        changes:
+          - scripts/token_remove.sh
+          - scripts/dup_contracts_addr_{testnet,mainnet}.txt
+        when: manual
+        allow_failure: true
+  only:
+    <<: *testnet_triggers
+
+mnet-dedup:
+  stage: dedup-mainnet
+  image: postgres:latest
+  tags:
+    - docker_runner
+  script:
+      - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP1 "cd $APP_DIR/scripts && ./token_remove.sh mainnet"
+  rules:
+      - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+        changes:
+          - scripts/token_remove.sh
+          - scripts/dup_contracts_addr_{testnet,mainnet}.txt
+        when: manual
+        allow_failure: true
   only:
     <<: *mainnet_triggers

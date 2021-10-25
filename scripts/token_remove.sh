@@ -1,4 +1,11 @@
 #!/bin/bash
+#
+# Description: Script to remove duplicate tokens from Block Explorer DB
+#
+# Dependency:
+#   - dup_contract_addr_mainnet.txt   Contract address for duplicates in mainnet
+#   - dup_contract_addr_testnet.txt   Contract address for duplicates in testnet
+#
 #set -x
 
 if [[ $1 == mainnet ]]
@@ -9,17 +16,17 @@ then
 elif [[ $1 == testnet ]]
 then
     . ./testnet.env
-    export ADDRFILE=up_contract_addr_testnet.txt
+    export ADDRFILE=dup_contract_addr_testnet.txt
 
 elif [[ $1 == develop ]]
 then
     . ./develop.env
-    export ADDRFILE=up_contract_addr_mainnet.txt
+    export ADDRFILE=dup_contract_addr_mainnet.txt
 
 elif [[ $1 == local ]]
 then
     . ./local.env
-    export ADDRFILE=up_contract_addr_mainnet.txt
+    export ADDRFILE=dup_contract_addr_mainnet.txt
 
 else
     echo

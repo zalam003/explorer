@@ -137,13 +137,11 @@ build-image:
     - docker push $TAG1_COMMIT
     - docker push $TAG1_LATEST
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_COMMIT_BRANCH == "sandbox"'
       changes:
         - apps/**/*
         - scripts/Dockerfile_{indexer,webapp}
         - scripts/start.sh
-      only:
-        <<: *sbx_triggers
 
 sbx-schema:
   image: alpine:latest

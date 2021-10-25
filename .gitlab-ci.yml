@@ -136,8 +136,14 @@ build-image:
     - docker build --cache-from $TAG1_LATEST -f ./Dockerfile_webapp -t $TAG1_COMMIT -t $TAG1_LATEST ../
     - docker push $TAG1_COMMIT
     - docker push $TAG1_LATEST
-  only:
-    <<: *sbx_triggers
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - apps/**/*
+        - scripts/Dockerfile_{indexer,webapp}
+        - scripts/start.sh
+      only:
+        <<: *sbx_triggers
 
 sbx-schema:
   image: alpine:latest

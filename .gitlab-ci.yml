@@ -136,8 +136,12 @@ build-image:
     - docker build --cache-from $TAG1_LATEST -f ./Dockerfile_webapp -t $TAG1_COMMIT -t $TAG1_LATEST ../
     - docker push $TAG1_COMMIT
     - docker push $TAG1_LATEST
-  only:
-    <<: *sbx_triggers
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_COMMIT_BRANCH == "sandbox"'
+      changes:
+        - apps/**/*
+        - scripts/Dockerfile_{indexer,webapp}
+        - scripts/start.sh
 
 sbx-schema:
   image: alpine:latest
@@ -159,6 +163,7 @@ sbx-schema:
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP "docker container rm -f $SCHEMA_NAME || true"
     - echo "Create DB schema"
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP "cd $APP_DIR/scripts && ./start.sh -e develop -r schema_aws -i $CONTAINER_REGISTRY"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP "cd $APP_DIR/scripts && ./token_remove.sh develop"
   only:
     <<: *sbx_triggers
 
@@ -203,6 +208,7 @@ tnet-schema:
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP1 "docker container rm -f $SCHEMA_NAME || true"
     - echo "Create DB schema"
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP1 "cd $APP_DIR/scripts && ./start.sh -e testnet -r schema_aws -i $CONTAINER_REGISTRY"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP1 "cd $APP_DIR/scripts && ./token_remove.sh testnet"
   only:
     <<: *testnet_triggers
 
@@ -269,6 +275,7 @@ mnet-schema:
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP1 "docker container rm -f $SCHEMA_NAME || true"
     - echo "Create DB schema"
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP1 "cd $APP_DIR/scripts && ./start.sh -e mainnet -r schema_aws -i $CONTAINER_REGISTRY"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP1 "cd $APP_DIR/scripts && ./token_remove.sh mainnet"
   only:
     <<: *mainnet_triggers
 

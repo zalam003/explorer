@@ -20,7 +20,6 @@ then
     exit 0
 
 elif [[ $1 == develop ]]
-elif [[ $1 == develop ]]
 then
     . ./develop.env
     export ADDRFILE=etoken_contract_addr_mainnet.txt

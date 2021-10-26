@@ -210,7 +210,6 @@ tnet-schema:
     - echo "Create DB schema"
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP1 "cd $APP_DIR/scripts && ./start.sh -e testnet -r schema_aws -i $CONTAINER_REGISTRY"
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP1 "cd $APP_DIR/scripts && ./token_remove.sh testnet"
-    #- ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP1 "cd $APP_DIR/scripts && ./token_rename.sh testnet"
   only:
     <<: *testnet_triggers
 

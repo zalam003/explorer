@@ -17,7 +17,9 @@ elif [[ $1 == testnet ]]
 then
     . ./testnet.env
     export ADDRFILE=etoken_contract_addr_testnet.txt
+    exit 0
 
+elif [[ $1 == develop ]]
 elif [[ $1 == develop ]]
 then
     . ./develop.env

@@ -78,7 +78,7 @@ sed -i 's/ |//g' ${TMPCONTRACTFILE}
 IFS=$'\n'
 for LINE in $( cat ${TMPCONTRACTFILE} )
 do
-    echo "$LINE"
+    #echo "$LINE"
     CONTRACT=$(echo "$LINE" | awk '{print $1}')
     ADDR=$(echo "$LINE" | awk '{print $2}')
     echo "Contract: ${CONTRACT}  Address: ${ADDR}"

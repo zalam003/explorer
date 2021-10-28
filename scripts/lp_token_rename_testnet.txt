@@ -1,2 +1,4 @@
 # Contract                                  Name
 \x43B05f665a29E4e09F87f768B87930bC74f80d60,RAIN/BTC Energiswap LP
+\x6EdBD9553A043B53f24b0fcC0503Fa48Bafb6591,RAIN/DAI Energiswap LP
+\x841aD36E80dcF1a65A90F0e0B8bb9e16a433421e,WNRG/LINEA Energiswap LP

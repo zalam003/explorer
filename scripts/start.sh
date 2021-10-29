@@ -1,6 +1,6 @@
 #!/bin/bash
 set -eo pipefail
-set -x
+#set -x
 
 # Set APPDIR
 CURRENTDIR=$(pwd)
@@ -113,7 +113,7 @@ case $TODO in
             --env-file ${APPDIR}/scripts/${ENVFILE} \
             --network host \
             --restart on-failure:3 \
-            ${IMAGE}:latest /bin/sh -c "mix phx.server" \
+            ${WEBAPP}:latest /bin/sh -c "mix phx.server" \
             DISABLE_INDEXER=true
         ;;
 
@@ -136,9 +136,9 @@ case $TODO in
         echo "==> Starting blockscout indexer"
         docker run -d --name ${INDEXER} \
             --env-file ${APPDIR}/scripts/${ENVFILE} \
-            --network host \
             --restart on-failure:3 \
-            ${IMAGE}:latest /bin/sh -c "mix phx.server"
+	    --add-host mainnet.energi.cloudns.cl:127.0.0.1 \
+            ${INDEXER}:latest /bin/sh -c "mix phx.server"
         ;;
 
     run_indexer|start_indexer)
@@ -172,7 +172,7 @@ case $TODO in
         docker run --rm --name ${SCHEMA_NAME} \
             --env-file ${APPDIR}/scripts/${ENVFILE} \
             --volume ${APPDIR}/logs:/opt/app/logs \
-            ${WEBAPP}:latest /bin/sh -c "mix do ecto.create, ecto.migrate"
+            ${INDEXER}:latest /bin/sh -c "mix do ecto.create, ecto.migrate"
         ;;
 
     all_webapp)

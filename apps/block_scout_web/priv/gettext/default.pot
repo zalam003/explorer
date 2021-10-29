@@ -427,8 +427,8 @@ msgstr ""
 
 #, elixir-format
 #: lib/block_scout_web/templates/layout/_footer.html.eex:20
-msgid "Blockscout is a tool for inspecting and analyzing EVM based blockchains. Blockchain explorer for Ethereum Networks."
-msgstr "Block Explorer is a tool for inspecting and analyzing Energi blockchain. It is based from Blockscout."
+msgid "Block Explorer is a tool for inspecting and analyzing Ethereum blockchain. It is based from "
+msgstr "Block Explorer is a tool for inspecting and analyzing Energi blockchain. It is based from "
 
 #, elixir-format
 #: lib/block_scout_web/templates/stakes/_stakes_top.html.eex:45

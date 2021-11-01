@@ -147,6 +147,7 @@ build-image:
         - apps/**/*
         - scripts/Dockerfile_{indexer,webapp}
         - scripts/start.sh
+      when: always
 
 sbx-schema:
   image: alpine:latest

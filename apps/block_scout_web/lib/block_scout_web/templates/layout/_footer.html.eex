@@ -17,11 +17,8 @@
 
     <div class="row">
       <div class="col-xs-12 col-lg-3">
-<<<<<<< HEAD
         <p class="footer-info-text"><%= gettext("Block Explorer is a tool for inspecting and analyzing Energi blockchain. It is based from ") %><a href="https://github.com/blockscout/blockscout" class="footer-link" rel="noreferrer noopener" target="_blank">Blockscout.</a></p>
-=======
-        <p class="footer-info-text"><%= gettext "Block Explorer is a tool for inspecting and analyzing Ethereum blockchain. It is based from " %><a rel="noreferrer noopener" target="_blank" href="<%= https://github.com/blockscout/blockscout %>"><%= gettext "Blockscout." %></a></p>
->>>>>>> sandbox
+
         <div class="footer-social-icons">
           <a href="https://twitter.com/energi/" rel="noreferrer noopener" target="_blank" class="footer-social-icon" title='<%= gettext("Twitter") %>'>
           <div class="footer-social-icon-container fontawesome-icon twitter"></div>

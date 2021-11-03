@@ -28,7 +28,6 @@ stages:
 .sbx_triggers: &sbx_triggers
   refs:
     - sandbox
-    - fix-cicd-build
 
 .testnet_triggers: &testnet_triggers
   refs:
@@ -146,11 +145,6 @@ build-image:
     #- if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "fix-cicd-build"'
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
     - if: '$CI_COMMIT_BRANCH == "fix-cicd-build"'
-      changes:
-        - /apps/**/*
-        - /scripts/Dockerfile_{indexer,webapp}
-        - /scripts/start.sh
-      when: always
 
 sbx-schema:
   image: alpine:latest

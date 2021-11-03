@@ -142,9 +142,7 @@ build-image:
     - docker push $TAG2_COMMIT
     - docker push $TAG2_LATEST
   rules:
-    #- if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "fix-cicd-build"'
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-    - if: '$CI_COMMIT_BRANCH == "fix-cicd-build"'
+    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "fix-cicd-build"'
 
 sbx-schema:
   image: alpine:latest

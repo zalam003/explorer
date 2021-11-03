@@ -427,7 +427,7 @@ msgstr ""
 
 #, elixir-format
 #: lib/block_scout_web/templates/layout/_footer.html.eex:20
-msgid "Block Explorer is a tool for inspecting and analyzing Energi blockchain. It is based from "
+msgid "Block Explorer is a tool for inspecting and analyzing Energi blockchain. It is based on open source code from "
 msgstr ""
 
 #, elixir-format

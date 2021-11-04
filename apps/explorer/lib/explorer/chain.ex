@@ -802,7 +802,7 @@ defmodule Explorer.Chain do
         select:
           sum(
             fragment(
-              "CASE 
+              "CASE
                 WHEN ? = 0 THEN 0
                 WHEN ? < ? THEN ?
                 ELSE ? END",
@@ -3496,14 +3496,11 @@ defmodule Explorer.Chain do
 
     InternalTransaction
     |> for_parent_transaction(hash)
-    |> join_associations(necessity_by_association)
     |> where_transaction_has_multiple_internal_transactions()
-    |> InternalTransaction.where_is_different_from_parent_transaction()
     |> InternalTransaction.where_nonpending_block()
-    |> page_internal_transaction(paging_options)
-    |> limit(^paging_options.page_size)
-    |> order_by([internal_transaction], asc: internal_transaction.index)
+    |> common_where_limit_order(paging_options)     # returns list in descending order
     |> preload(:transaction)
+    |> join_associations(necessity_by_association)
     |> Repo.all()
   end
 
@@ -3676,7 +3673,7 @@ defmodule Explorer.Chain do
     formatted_revert_reason
   end
 
-  defp format_revert_reason_message(revert_reason) do
+  def format_revert_reason_message(revert_reason) do
     case revert_reason do
       @revert_msg_prefix_1 <> rest ->
         rest
@@ -4865,6 +4862,8 @@ defmodule Explorer.Chain do
       else
         {:ok, false}
       end
+    else
+      {:ok, false}
     end
   end
 
@@ -6376,7 +6375,9 @@ defmodule Explorer.Chain do
     )
   end
 
-  def get_total_staked_and_ordered(address_hash) do
+  def get_total_staked_and_ordered(""), do: nil
+
+  def get_total_staked_and_ordered(address_hash) when is_binary(address_hash) do
     StakingPoolsDelegator
     |> where([delegator], delegator.address_hash == ^address_hash and not delegator.is_deleted)
     |> select([delegator], %{
@@ -6385,6 +6386,8 @@ defmodule Explorer.Chain do
     })
     |> Repo.one()
   end
+
+  def get_total_staked_and_ordered(_), do: nil
 
   defp with_decompiled_code_flag(query, _hash, false), do: query
 
@@ -6407,6 +6410,17 @@ defmodule Explorer.Chain do
     params
     |> Base.decode16!(case: :mixed)
     |> TypeDecoder.decode_raw(types)
+  end
+
+  def get_token_type(hash) do
+    query =
+      from(
+        token in Token,
+        where: token.contract_address_hash == ^hash,
+        select: token.type
+      )
+
+    Repo.one(query)
   end
 
   @doc """

@@ -10,6 +10,8 @@ variables:
   APP2_NAME: explorer_indexer
   TAG1_LATEST: $CONTAINER_REGISTRY/$APP1_NAME:latest
   TAG1_COMMIT: $CONTAINER_REGISTRY/$APP1_NAME:$CI_COMMIT_SHORT_SHA
+  TAG2_LATEST: $CONTAINER_REGISTRY/$APP2_NAME:latest
+  TAG2_COMMIT: $CONTAINER_REGISTRY/$APP2_NAME:$CI_COMMIT_SHORT_SHA
   PROJECT_NAME: BlockExplorer
 
 stages:
@@ -136,12 +138,11 @@ build-image:
     - docker build --cache-from $TAG1_LATEST -f ./Dockerfile_webapp -t $TAG1_COMMIT -t $TAG1_LATEST ../
     - docker push $TAG1_COMMIT
     - docker push $TAG1_LATEST
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_COMMIT_BRANCH == "sandbox"'
-      changes:
-        - apps/**/*
-        - scripts/Dockerfile_{indexer,webapp}
-        - scripts/start.sh
+    - docker build --cache-from $TAG2_LATEST -f ./Dockerfile_indexer -t $TAG2_COMMIT -t $TAG2_LATEST ../
+    - docker push $TAG2_COMMIT
+    - docker push $TAG2_LATEST
+  only:
+    <<: *sbx_triggers
 
 sbx-schema:
   image: alpine:latest

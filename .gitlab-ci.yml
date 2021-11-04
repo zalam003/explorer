@@ -141,9 +141,8 @@ build-image:
     - docker build --cache-from $TAG2_LATEST -f ./Dockerfile_indexer -t $TAG2_COMMIT -t $TAG2_LATEST ../
     - docker push $TAG2_COMMIT
     - docker push $TAG2_LATEST
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
-      when: always
+  only:
+    <<: *sbx_triggers
 
 sbx-schema:
   image: alpine:latest

@@ -42,17 +42,17 @@ defmodule Indexer.Transform.TokenTransfers do
     |> Enum.map(fn token_transfer ->
       token_transfer.token_contract_address_hash
     end)
-    |> Enum.dedup()
+    |> Enum.uniq()
     |> Enum.each(&update_token/1)
 
-    tokens_dedup = tokens |> Enum.dedup()
+    tokens_uniq = tokens |> Enum.uniq()
 
     blacklisted_contracts = Blacklist.blacklistedTokens()
 
-    tokens_dedup =
-      tokens_dedup
-      |> Enum.reject(fn tokens_dedup ->
-        Enum.member?(blacklisted_contracts, tokens_dedup.contract_address_hash)
+    tokens_uniq =
+      tokens_uniq
+      |> Enum.reject(fn tokens_uniq ->
+        Enum.member?(blacklisted_contracts, tokens_uniq.contract_address_hash)
       end)
 
     token_transfer = token_transfers
@@ -63,12 +63,12 @@ defmodule Indexer.Transform.TokenTransfers do
         Enum.member?(blacklisted_contracts, token_transfer.token_contract_address_hash)
       end)
 
-    token_transfers_from_logs_dedup = %{
-      tokens: tokens_dedup,
+    token_transfers_from_logs_uniq = %{
+      tokens: tokens_uniq,
       token_transfers: token_transfer
     }
 
-    token_transfers_from_logs_dedup
+    token_transfers_from_logs_uniq
   end
 
   defp do_parse(log, %{tokens: tokens, token_transfers: token_transfers} = acc, type \\ :erc20_erc721) do

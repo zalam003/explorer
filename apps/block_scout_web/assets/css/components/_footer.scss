@@ -49,7 +49,7 @@ $footer-logo-width: auto !default;
   transition: $transition-cont;
 
   &:hover {
-    color: #fff;
+    color: #00e676;
   }
 
   &:focus {
@@ -63,11 +63,6 @@ $footer-logo-width: auto !default;
 
 .footer-link {
   color: $footer-link-color;
-
-  &:hover {
-    color: $footer-link-color;
-    text-decoration: underline;
-  }
 }
 
 .footer-list {
@@ -96,7 +91,7 @@ $footer-logo-width: auto !default;
         transition: $transition-cont;
         &:hover {
           text-decoration: none;
-          color: #fff;
+          color: #00e676;
         }
         &:focus {
           color: darken($footer-text-color, 5);

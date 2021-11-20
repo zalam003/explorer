@@ -136,6 +136,7 @@ case $TODO in
         echo "==> Starting blockscout indexer"
         docker run -d --name ${INDEXER} \
             --env-file ${APPDIR}/scripts/${ENVFILE} \
+            -v ${APPDIR}/scripts/config.exs:/opt/app/apps/indexer/config/config.exs:ro \
             --network host \
             --restart on-failure:3 \
             ${IMAGE}:latest /bin/sh -c "mix phx.server"
@@ -145,6 +146,7 @@ case $TODO in
         echo "==> Starting blockscout indexer"
         docker run -d --name ${INDEXER} \
             --env-file ${APPDIR}/scripts/${ENVFILE} \
+            -v ${APPDIR}/scripts/config.exs:/opt/app/apps/indexer/config/config.exs:ro \
             --network host \
             --restart on-failure:3 \
             --log-driver="awslogs" \

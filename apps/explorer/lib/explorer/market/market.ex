@@ -9,6 +9,8 @@ defmodule Explorer.Market do
   alias Explorer.ExchangeRates.Token
   alias Explorer.Market.{MarketHistory, MarketHistoryCache}
   alias Explorer.{ExchangeRates, KnownTokens, Repo}
+  alias Explorer.Chain.Address
+  alias Explorer.Chain.Cache.TokenExchangeRate
 
   @doc """
   Get most recent exchange rate for the given symbol.
@@ -52,26 +54,40 @@ defmodule Explorer.Market do
     Repo.insert_all(MarketHistory, records_without_zeroes, on_conflict: :nothing, conflict_target: [:date])
   end
 
+  def get_price(token) do
+    energiswap_api_url = Application.get_env(:explorer, :energiswap_api_url)
+
+      if(!is_nil(energiswap_api_url)) do
+        TokenExchangeRate.fetch(token.contract_address_hash, Address.checksum(token.contract_address_hash))
+      end
+  end
+
   def add_price(%{symbol: symbol} = token) do
+
     known_address = get_known_address(symbol)
 
     matches_known_address = known_address && known_address == token.contract_address_hash
 
+    mnrg_token_address = Application.get_env(:explorer, :mnrg_token_address)
+    mnrg_token = Address.checksum(token.contract_address_hash) == mnrg_token_address
+
     usd_value =
       cond do
         matches_known_address ->
-          fetch_token_usd_value(matches_known_address, symbol)
+          get_price(token)
+
+        mnrg_token ->
+          nrg_price = get_exchange_rate(Explorer.coin())
+          nrg_price.usd_value
 
         bridged_token = mainnet_bridged_token?(token) ->
           TokenBridge.get_current_price_for_bridged_token(
             token.contract_address_hash,
             bridged_token.foreign_token_contract_address_hash
           )
-
         true ->
           nil
       end
-
     Map.put(token, :usd_value, usd_value)
   end
 
@@ -112,13 +128,4 @@ defmodule Explorer.Market do
       false
     end
   end
-
-  defp fetch_token_usd_value(true, symbol) do
-    case get_exchange_rate(symbol) do
-      %{usd_value: usd_value} -> usd_value
-      nil -> nil
-    end
-  end
-
-  defp fetch_token_usd_value(_matches_known_address, _symbol), do: nil
 end

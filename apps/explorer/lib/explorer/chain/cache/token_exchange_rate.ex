@@ -8,6 +8,8 @@ defmodule Explorer.Chain.Cache.TokenExchangeRate do
 
   alias Ecto.Changeset
   alias Explorer.Chain.BridgedToken
+  alias Explorer.Chain
+  alias Explorer.KnownTokens.Source, as: KnownTokenSource
   alias Explorer.ExchangeRates.Source
   alias Explorer.Repo
 
@@ -57,8 +59,10 @@ defmodule Explorer.Chain.Cache.TokenExchangeRate do
 
   def fetch(token_hash, address_hash_str) do
     if cache_expired?(address_hash_str) || value_is_empty?(address_hash_str) do
+      {:ok, tokens} = KnownTokenSource.fetch_known_tokens()
+      token_list = Source.fetch_energiswap_exchange_rates_for_tokens()
       Task.start_link(fn ->
-        update_cache_by_address_hash_str(token_hash, address_hash_str)
+        update_cache_for_all_known_tokens(tokens, token_list)
       end)
     end
 
@@ -116,10 +120,17 @@ defmodule Explorer.Chain.Cache.TokenExchangeRate do
     put_into_cache(cache_key(symbol), exchange_rate)
   end
 
-  defp update_cache_by_address_hash_str(token_hash, address_hash_str) do
-    put_into_cache("#{cache_key(address_hash_str)}_#{@last_update_key}", current_time())
+  defp update_cache_for_all_known_tokens(tokens, token_list) do
 
-    exchange_rate = fetch_token_exchange_rate_by_address(address_hash_str)
+    Enum.each(tokens, fn token ->
+      exchange_rate = Source.parse_token_price(token_list, token["address"])
+      {:ok, token_hash } = Chain.string_to_address_hash(token["address"])
+      update_cache_by_address_hash_str(token_hash, token["address"], exchange_rate)
+    end)
+  end
+
+  defp update_cache_by_address_hash_str(token_hash, address_hash_str, exchange_rate) do
+    put_into_cache("#{cache_key(address_hash_str)}_#{@last_update_key}", current_time())
 
     put_into_db(token_hash, exchange_rate)
     put_into_cache(cache_key(address_hash_str), exchange_rate)

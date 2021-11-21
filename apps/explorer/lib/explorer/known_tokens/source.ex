@@ -11,7 +11,19 @@ defmodule Explorer.KnownTokens.Source do
   """
   @spec fetch_known_tokens() :: {:ok, [Hash.Address.t()]} | {:error, any}
   def fetch_known_tokens(source \\ known_tokens_source()) do
-    Source.http_request(source.source_url())
+    {:ok, known_tokens }= Source.http_request(source.source_url())
+    # NOTE: The token symbol stored in DB must match the symbol received from the Energiswap API response
+    # Parse Energiswap API response
+    parsed_known_token =
+      Enum.map(known_tokens, fn ({k, v}) ->
+        %{
+          "address"=> k,
+          "symbol"=> v["symbol"],
+          "type"=> "default"
+        }
+        end
+      )
+    {:ok, parsed_known_token }
   end
 
   @doc """
@@ -21,7 +33,7 @@ defmodule Explorer.KnownTokens.Source do
 
   @spec known_tokens_source() :: module()
   defp known_tokens_source do
-    config(:source) || Explorer.KnownTokens.Source.MyEtherWallet
+    config(:source) || Explorer.KnownTokens.Source.EnergiSwap
   end
 
   @spec config(atom()) :: term

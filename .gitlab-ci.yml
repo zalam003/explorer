@@ -42,6 +42,13 @@ stages:
 .runner:
   tags: [docker_runner]
 
+.before_script_template: &sbx_indexer_vars
+  before_script:
+    - cd scripts
+    - cp ../apps/indexer/config/config.exs .
+    - sed -i "s/1 <<< 30/2 <<< 30/g" config.exs
+    - cd -
+
 .before_script_template: &testnet_indexer_vars
   before_script:
     - cd scripts
@@ -62,6 +69,8 @@ stages:
     - sed -i "s/EXPLORERHOST/${TESTNET_SERVER_HOST}/g" testnet.env
     - sed -i "s/CAPTCHASECRET/${CAPTCHASECRET}/g" testnet.env
     - sed -i "s/CAPTCHACLIENT/${CAPTCHACLIENT}/g" testnet.env
+    - cp ../apps/indexer/config/config.exs .
+    - sed -i "s/1 <<< 30/2 <<< 30/g" config.exs
     - cd -
 
 .before_script_template: &testnet_webapp_vars
@@ -108,6 +117,8 @@ stages:
     - sed -i "s/EXPLORERHOST/${MAINNET_SERVER_HOST}/g" mainnet.env
     - sed -i "s/CAPTCHASECRET/${CAPTCHASECRET}/g" mainnet.env
     - sed -i "s/CAPTCHACLIENT/${CAPTCHACLIENT}/g" mainnet.env
+    - cp ../apps/indexer/config/config.exs .
+    - sed -i "s/1 <<< 30/6 <<< 30/g" config.exs
     - cd -
 
 .before_script_template: &mainnet_webapp_vars
@@ -180,6 +191,7 @@ deploy-sbx:
   services:
     - docker:dind
   stage: deploy-sbx
+  <<: *sbx_indexer_vars
   tags:
     - docker_runner
   script:

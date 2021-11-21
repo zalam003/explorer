@@ -59,7 +59,7 @@ stages:
     - sed -i "s/HTTPPORT/49796/g" testnet.env
     - sed -i "s/CHAINID/49797/g" testnet.env
     - sed -i "s|SECRETKEYBASE|${TESTNET_SECRET_KEY_BASE}|g" testnet.env
-    - sed -i "s/ENERGISWAPAPIURL/${TESTNET_ENERGISWAP_API_URL}/g" testnet.env
+    - sed -i "s|ENERGISWAPAPIURL|${TESTNET_ENERGISWAP_API_URL}|g" testnet.env
     - sed -i "s/DBUSERNAME/${TESTNET_DB_USERNAME}/g" testnet.env
     - sed -i "s|DBPASSWORD|${TESTNET_DB_PASSWORD}|g" testnet.env
     - sed -i "s/DBNAME/${TESTNET_DB_NAME}/g" testnet.env
@@ -84,7 +84,7 @@ stages:
     - sed -i "s/HTTPPORT/49796/g" testnet.env
     - sed -i "s/CHAINID/49797/g" testnet.env
     - sed -i "s|SECRETKEYBASE|${TESTNET_SECRET_KEY_BASE}|g" testnet.env
-    - sed -i "s/ENERGISWAPAPIURL/${TESTNET_ENERGISWAP_API_URL}/g" testnet.env
+    - sed -i "s|ENERGISWAPAPIURL|${TESTNET_ENERGISWAP_API_URL}|g" testnet.env
     - sed -i "s/DBUSERNAME/${TESTNET_DB_USERNAME}/g" testnet.env
     - sed -i "s|DBPASSWORD|${TESTNET_DB_PASSWORD}|g" testnet.env
     - sed -i "s/DBNAME/${TESTNET_DB_NAME}/g" testnet.env
@@ -108,7 +108,7 @@ stages:
     - sed -i "s/HTTPPORT/39796/g" mainnet.env
     - sed -i "s/CHAINID/39797/g" mainnet.env
     - sed -i "s|SECRETKEYBASE|${MAINNET_SECRET_KEY_BASE}|g" mainnet.env
-    - sed -i "s/ENERGISWAPAPIURL/${MAINNET_ENERGISWAP_API_URL}/g" mainnet.env
+    - sed -i "s|ENERGISWAPAPIURL|${MAINNET_ENERGISWAP_API_URL}|g" mainnet.env
     - sed -i "s/DBUSERNAME/${MAINNET_DB_USERNAME}/g" mainnet.env
     - sed -i "s|DBPASSWORD|${MAINNET_DB_PASSWORD}|g" mainnet.env
     - sed -i "s/DBNAME/${MAINNET_DB_NAME}/g" mainnet.env
@@ -134,7 +134,7 @@ stages:
     - sed -i "s/HTTPPORT/39796/g" mainnet.env
     - sed -i "s/CHAINID/39797/g" mainnet.env
     - sed -i "s|SECRETKEYBASE|${MAINNET_SECRET_KEY_BASE}|g" mainnet.env
-    - sed -i "s/ENERGISWAPAPIURL/${MAINNET_ENERGISWAP_API_URL}/g" mainnet.env
+    - sed -i "s|ENERGISWAPAPIURL|${MAINNET_ENERGISWAP_API_URL}|g" mainnet.env
     - sed -i "s/DBUSERNAME/${MAINNET_DB_USERNAME}/g" mainnet.env
     - sed -i "s|DBPASSWORD|${MAINNET_DB_PASSWORD}|g" mainnet.env
     - sed -i "s/DBNAME/${MAINNET_DB_NAME}/g" mainnet.env

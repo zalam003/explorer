@@ -10,6 +10,8 @@ config :explorer,
   ecto_repos: [Explorer.Repo],
   coin: System.get_env("COIN") || "POA",
   coingecko_coin_id: System.get_env("COINGECKO_COIN_ID"),
+  energiswap_api_url: System.get_env("ENERGISWAP_API_URL"),
+  mnrg_token_address: System.get_env("MNRG_TOKEN_ADDRESS") || "0x0000000000000000000000000000000000000319",
   token_functions_reader_max_retries: 3,
   allowed_evm_versions:
     System.get_env("ALLOWED_EVM_VERSIONS") ||

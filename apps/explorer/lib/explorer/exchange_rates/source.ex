@@ -26,6 +26,28 @@ defmodule Explorer.ExchangeRates.Source do
     fetch_exchange_rates_request(Source.CoinGecko, source_url)
   end
 
+  @spec fetch_energiswap_exchange_rates_for_tokens() :: [any]
+  def fetch_energiswap_exchange_rates_for_tokens() do
+
+    energiswap_api_url = Application.get_env(:explorer, :energiswap_api_url)
+
+    if(is_nil(energiswap_api_url)) do
+      nil
+    else
+      {:ok, body} = http_request(energiswap_api_url)
+      {:ok, result} = parse_http_success_response(body)
+      result
+    end
+  end
+
+  def parse_token_price(result, address_hash) do
+    if(result[address_hash]) do
+      to_decimal(result[address_hash]["last_price"])
+    else
+      nil
+    end
+  end
+
   defp fetch_exchange_rates_request(_source, source_url) when is_nil(source_url), do: {:error, "Source URL is nil"}
 
   defp fetch_exchange_rates_request(source, source_url) do

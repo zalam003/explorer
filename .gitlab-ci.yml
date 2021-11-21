@@ -5,6 +5,8 @@ variables:
   SBX_SERVER_HOST: explorer.develop.energi.network
   TESTNET_SERVER_HOST: explorer.test.energi.network
   MAINNET_SERVER_HOST: explorer.energi.network
+  TESTNET_ENERGISWAP_API_URL: https://api.test.energiswap.exchange/v1/assets
+  MAINNET_ENERGISWAP_API_URL: https://api.energiswap.exchange/v1/assets
   APP_DIR: /home/$SERVER_USER
   APP1_NAME: explorer_webapp
   APP2_NAME: explorer_indexer
@@ -40,6 +42,13 @@ stages:
 .runner:
   tags: [docker_runner]
 
+.before_script_template: &sbx_indexer_vars
+  before_script:
+    - cd scripts
+    - cp ../apps/indexer/config/config.exs .
+    - sed -i "s/1 <<< 30/2 <<< 30/g" config.exs
+    - cd -
+
 .before_script_template: &testnet_indexer_vars
   before_script:
     - cd scripts
@@ -50,6 +59,7 @@ stages:
     - sed -i "s/HTTPPORT/49796/g" testnet.env
     - sed -i "s/CHAINID/49797/g" testnet.env
     - sed -i "s|SECRETKEYBASE|${TESTNET_SECRET_KEY_BASE}|g" testnet.env
+    - sed -i "s|ENERGISWAPAPIURL|${TESTNET_ENERGISWAP_API_URL}|g" testnet.env
     - sed -i "s/DBUSERNAME/${TESTNET_DB_USERNAME}/g" testnet.env
     - sed -i "s|DBPASSWORD|${TESTNET_DB_PASSWORD}|g" testnet.env
     - sed -i "s/DBNAME/${TESTNET_DB_NAME}/g" testnet.env
@@ -59,6 +69,8 @@ stages:
     - sed -i "s/EXPLORERHOST/${TESTNET_SERVER_HOST}/g" testnet.env
     - sed -i "s/CAPTCHASECRET/${CAPTCHASECRET}/g" testnet.env
     - sed -i "s/CAPTCHACLIENT/${CAPTCHACLIENT}/g" testnet.env
+    - cp ../apps/indexer/config/config.exs .
+    - sed -i "s/1 <<< 30/2 <<< 30/g" config.exs
     - cd -
 
 .before_script_template: &testnet_webapp_vars
@@ -72,6 +84,7 @@ stages:
     - sed -i "s/HTTPPORT/49796/g" testnet.env
     - sed -i "s/CHAINID/49797/g" testnet.env
     - sed -i "s|SECRETKEYBASE|${TESTNET_SECRET_KEY_BASE}|g" testnet.env
+    - sed -i "s|ENERGISWAPAPIURL|${TESTNET_ENERGISWAP_API_URL}|g" testnet.env
     - sed -i "s/DBUSERNAME/${TESTNET_DB_USERNAME}/g" testnet.env
     - sed -i "s|DBPASSWORD|${TESTNET_DB_PASSWORD}|g" testnet.env
     - sed -i "s/DBNAME/${TESTNET_DB_NAME}/g" testnet.env
@@ -95,6 +108,7 @@ stages:
     - sed -i "s/HTTPPORT/39796/g" mainnet.env
     - sed -i "s/CHAINID/39797/g" mainnet.env
     - sed -i "s|SECRETKEYBASE|${MAINNET_SECRET_KEY_BASE}|g" mainnet.env
+    - sed -i "s|ENERGISWAPAPIURL|${MAINNET_ENERGISWAP_API_URL}|g" mainnet.env
     - sed -i "s/DBUSERNAME/${MAINNET_DB_USERNAME}/g" mainnet.env
     - sed -i "s|DBPASSWORD|${MAINNET_DB_PASSWORD}|g" mainnet.env
     - sed -i "s/DBNAME/${MAINNET_DB_NAME}/g" mainnet.env
@@ -103,6 +117,8 @@ stages:
     - sed -i "s/EXPLORERHOST/${MAINNET_SERVER_HOST}/g" mainnet.env
     - sed -i "s/CAPTCHASECRET/${CAPTCHASECRET}/g" mainnet.env
     - sed -i "s/CAPTCHACLIENT/${CAPTCHACLIENT}/g" mainnet.env
+    - cp ../apps/indexer/config/config.exs .
+    - sed -i "s/1 <<< 30/6 <<< 30/g" config.exs
     - cd -
 
 .before_script_template: &mainnet_webapp_vars
@@ -118,6 +134,7 @@ stages:
     - sed -i "s/HTTPPORT/39796/g" mainnet.env
     - sed -i "s/CHAINID/39797/g" mainnet.env
     - sed -i "s|SECRETKEYBASE|${MAINNET_SECRET_KEY_BASE}|g" mainnet.env
+    - sed -i "s|ENERGISWAPAPIURL|${MAINNET_ENERGISWAP_API_URL}|g" mainnet.env
     - sed -i "s/DBUSERNAME/${MAINNET_DB_USERNAME}/g" mainnet.env
     - sed -i "s|DBPASSWORD|${MAINNET_DB_PASSWORD}|g" mainnet.env
     - sed -i "s/DBNAME/${MAINNET_DB_NAME}/g" mainnet.env
@@ -174,6 +191,7 @@ deploy-sbx:
   services:
     - docker:dind
   stage: deploy-sbx
+  <<: *sbx_indexer_vars
   tags:
     - docker_runner
   script:

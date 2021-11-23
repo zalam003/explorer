@@ -55,7 +55,7 @@ fi
 echo "Download tokens with moniker"
 psql -d $PGDATABASE -U $PGUSER -h $PGHOST -t -c "SELECT name,contract_address_hash FROM tokens WHERE name LIKE '%@ Energi';" > ${TMPFILE}
 
-if [[ ! -s ${TMPFILE} ]]
+if [[ -s ${TMPFILE} ]]
 then
     #######
     # Rename Tokens

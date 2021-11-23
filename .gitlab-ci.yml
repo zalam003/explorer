@@ -183,6 +183,7 @@ sbx-schema:
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP "cd $APP_DIR/scripts && ./start.sh -e develop -r schema_aws -i $CONTAINER_REGISTRY"
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP "cd $APP_DIR/scripts && ./token_remove.sh develop"
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP "cd $APP_DIR/scripts && ./token_rename.sh develop"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP "cd $APP_DIR/scripts && ./remove_moniker.sh develop"
   only:
     <<: *sbx_triggers
 
@@ -229,6 +230,7 @@ tnet-schema:
     - echo "Create DB schema"
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP1 "cd $APP_DIR/scripts && ./start.sh -e testnet -r schema_aws -i $CONTAINER_REGISTRY"
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP1 "cd $APP_DIR/scripts && ./token_remove.sh testnet"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP "cd $APP_DIR/scripts && ./remove_moniker.sh testnet"
   only:
     <<: *testnet_triggers
 
@@ -297,6 +299,7 @@ mnet-schema:
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP1 "cd $APP_DIR/scripts && ./start.sh -e mainnet -r schema_aws -i $CONTAINER_REGISTRY"
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP1 "cd $APP_DIR/scripts && ./token_remove.sh mainnet"
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP1 "cd $APP_DIR/scripts && ./token_rename.sh mainnet"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP "cd $APP_DIR/scripts && ./remove_moniker.sh mainnet"
   only:
     <<: *mainnet_triggers
 

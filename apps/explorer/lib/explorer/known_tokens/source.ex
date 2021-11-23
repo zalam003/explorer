@@ -10,8 +10,8 @@ defmodule Explorer.KnownTokens.Source do
   Fetches known tokens
   """
   @spec fetch_known_tokens() :: {:ok, [Hash.Address.t()]} | {:error, any}
-  def fetch_known_tokens(source \\ known_tokens_source()) do
-    {:ok, known_tokens }= Source.http_request(source.source_url())
+  def fetch_known_tokens(_source \\ known_tokens_source()) do
+    known_tokens = Source.fetch_energiswap_exchange_rates_for_tokens()
     # NOTE: The token symbol stored in DB must match the symbol received from the Energiswap API response
     # Parse Energiswap API response
     parsed_known_token =

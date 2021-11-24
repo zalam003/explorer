@@ -68,7 +68,7 @@
             <% @address.token -> %>
               <dl class="row">
                 <dt class="col-sm-4 col-md-4 col-lg-3 text-muted">
-                  <%= render BlockScoutWeb.CommonComponentsView, "_i_tooltip_2.html",
+                  <%= render BlockScoutWeb.CommonComponentsView, "_i_tooltip_3.html",
                   text: gettext("Token name and symbol.") %>
                   <%= gettext("Token") %>
                 </dt>
@@ -80,7 +80,7 @@
                     @address.hash),
                     "data-test":
                     "token_hash_link"
-                  ) 
+                  )
                   %>
                 </dd>
               </dl>
@@ -88,7 +88,7 @@
               <%= if contract?(@address) do %>
                 <dl class="row">
                   <dt class="col-sm-4 col-md-4 col-lg-3 text-muted">
-                    <%= render BlockScoutWeb.CommonComponentsView, "_i_tooltip_2.html",
+                    <%= render BlockScoutWeb.CommonComponentsView, "_i_tooltip_3.html",
                     text: gettext("The name found in the source code of the Contract.") %>
                     <%= gettext("Contract Name") %>
                   </dt>
@@ -99,7 +99,7 @@
               <% else %>
                 <dl class="row">
                   <dt class="col-sm-4 col-md-4 col-lg-3 text-muted">
-                    <%= render BlockScoutWeb.CommonComponentsView, "_i_tooltip_2.html",
+                    <%= render BlockScoutWeb.CommonComponentsView, "_i_tooltip_3.html",
                     text: gettext("The name of the validator.") %>
                     <%= gettext("Validator Name") %>
                   </dt>
@@ -115,7 +115,7 @@
           <%= if contract?(@address) do %>
             <dl class="row">
               <dt class="col-sm-4 col-md-4 col-lg-3 text-muted">
-                <%= render BlockScoutWeb.CommonComponentsView, "_i_tooltip_2.html",
+                <%= render BlockScoutWeb.CommonComponentsView, "_i_tooltip_3.html",
                 text: gettext("Transactions and address of creation.") %>
                 <%= gettext("Creator") %>
               </dt>
@@ -148,7 +148,7 @@
             <% implementation_address = Chain.get_implementation_address_hash(@address.hash, @address.smart_contract.abi) || "0x0000000000000000000000000000000000000000" %>
             <dl class="row">
               <dt class="col-sm-4 col-md-4 col-lg-3 text-muted">
-                <%= render BlockScoutWeb.CommonComponentsView, "_i_tooltip_2.html",
+                <%= render BlockScoutWeb.CommonComponentsView, "_i_tooltip_3.html",
                 text: gettext("Implementation address of the proxy contract.") %>
                 <%= gettext("Implementation") %>
               </dt>
@@ -158,7 +158,7 @@
                   to: address_path(@conn, :show, implementation_address),
                   class: "contract-address mb-2",
                   style: "margin-top: 0.5rem;"
-                ) 
+                )
                 %>
               </dd>
             </dl>
@@ -166,7 +166,7 @@
           <!-- Balance -->
           <dl class="row">
             <dt class="col-sm-4 col-md-4 col-lg-3 text-muted">
-              <%= render BlockScoutWeb.CommonComponentsView, "_i_tooltip_2.html",
+              <%= render BlockScoutWeb.CommonComponentsView, "_i_tooltip_3.html",
               text: gettext("Address balance in xDAI (doesn't include ERC20, ERC721, ERC1155 tokens).") %>
               <%= gettext("Balance") %>
             </dt>
@@ -181,7 +181,7 @@
                     data-placement="top"
                     data-toggle="tooltip"
                     data-html="true"
-                    title='<%= "@ " <> usd_value <> "/" <> gettext("Ether") %>'  
+                    title='<%= "@ " <> usd_value <> "/" <> gettext("Ether") %>'
                   >
                   </span>)
                 </span>
@@ -191,7 +191,7 @@
           <!-- Tokens -->
           <dl class="row" data-test="outside_of_dropdown">
             <dt class="col-sm-4 col-md-4 col-lg-3 text-muted">
-              <%= render BlockScoutWeb.CommonComponentsView, "_i_tooltip_2.html",
+              <%= render BlockScoutWeb.CommonComponentsView, "_i_tooltip_3.html",
               text: gettext("All tokens in the account and total value.") %>
               <%= gettext("Tokens") %>
             </dt>
@@ -202,7 +202,7 @@
           <!-- Transaction count -->
           <dl class="row address-transactions-count-item">
             <dt class="col-sm-4 col-md-4 col-lg-3 text-muted">
-              <%= render BlockScoutWeb.CommonComponentsView, "_i_tooltip_2.html",
+              <%= render BlockScoutWeb.CommonComponentsView, "_i_tooltip_3.html",
               text: gettext("Number of transactions related to this address.") %>
               <%= gettext("Transactions") %>
             </dt>
@@ -221,7 +221,7 @@
           <!-- Transfers count -->
           <dl class="row address-transfers-count-item">
             <dt class="col-sm-4 col-md-4 col-lg-3 text-muted">
-              <%= render BlockScoutWeb.CommonComponentsView, "_i_tooltip_2.html",
+              <%= render BlockScoutWeb.CommonComponentsView, "_i_tooltip_3.html",
               text: gettext("Number of transfers to/from this address.") %>
               <%= gettext("Transfers") %>
             </dt>
@@ -240,7 +240,7 @@
           <!-- Gas used -->
           <dl class="row address-gas-used-item">
             <dt class="col-sm-4 col-md-4 col-lg-3 text-muted">
-              <%= render BlockScoutWeb.CommonComponentsView, "_i_tooltip_2.html",
+              <%= render BlockScoutWeb.CommonComponentsView, "_i_tooltip_3.html",
               text: gettext("Gas used by the address.") %>
               <%= gettext("Gas Used") %>
             </dt>
@@ -254,7 +254,7 @@
           <%= if @address.fetched_coin_balance_block_number do %>
             <dl class="row">
               <dt class="col-sm-4 col-md-4 col-lg-3 text-muted">
-                <%= render BlockScoutWeb.CommonComponentsView, "_i_tooltip_2.html",
+                <%= render BlockScoutWeb.CommonComponentsView, "_i_tooltip_3.html",
                 text: gettext("Block number in which the address was updated.") %>
                 <%= gettext("Last Balance Update") %>
               </dt>
@@ -270,7 +270,7 @@
           <!-- Blocks Validated -->
           <dl class="row address-validation-count-item" style="display: none;">
             <dt class="col-sm-4 col-md-4 col-lg-3 text-muted">
-              <%= render BlockScoutWeb.CommonComponentsView, "_i_tooltip_2.html",
+              <%= render BlockScoutWeb.CommonComponentsView, "_i_tooltip_3.html",
               text: gettext("Gas used by the address.") %>
               <%= gettext("Blocks Validated") %>
             </dt>
@@ -293,4 +293,4 @@
   <%= render BlockScoutWeb.AddressView, "_validator_metadata_modal.html", address_name: address_name, validator_metadata: validator_metadata %>
 <% end %>
 
-<%= render BlockScoutWeb.Advertisement.BannersAdView, "_banner_728.html", conn: @conn %> 
+<%= render BlockScoutWeb.Advertisement.BannersAdView, "_banner_728.html", conn: @conn %>

@@ -10,8 +10,19 @@ defmodule Explorer.ExchangeRates.Source do
   """
   @spec fetch_exchange_rates(module) :: {:ok, [Token.t()]} | {:error, any}
   def fetch_exchange_rates(source \\ exchange_rates_source()) do
+    wnrg_token_address = Application.get_env(:explorer, :wnrg_token_address)
     source_url = source.source_url()
-    fetch_exchange_rates_request(source, source_url)
+    nrg_coin_details = fetch_exchange_rates_request(source, source_url)
+
+    wnrg_price = fetch_token_price(wnrg_token_address)
+    if(is_nil(wnrg_price)) do
+      nrg_coin_details
+    else
+      {:ok, [nrg_details_map]} = nrg_coin_details
+      wnrg_price = fetch_token_price(wnrg_token_address)
+      # Update usd_value of the map(fetched from Coingecko) with the price fecthed from energiswap
+      {:ok, [Map.put(nrg_details_map, :usd_value, wnrg_price)]}
+    end
   end
 
   @spec fetch_exchange_rates_for_token(String.t()) :: {:ok, [Token.t()]} | {:error, any}
@@ -34,10 +45,22 @@ defmodule Explorer.ExchangeRates.Source do
     if(is_nil(energiswap_api_url)) do
       nil
     else
-      {:ok, body} = http_request(energiswap_api_url)
+    IO.inspect("#############################################")
+    IO.inspect("### FETCHING TOKEN PRICES FROM ENERGISWAP ###")
+    IO.inspect("#############################################")
+      {:ok, body} = http_request(energiswap_api_url, energiswap_headers())
       {:ok, result} = parse_http_success_response(body)
       result
     end
+  end
+
+  @spec fetch_token_price(String.t()) :: [any]
+  def fetch_token_price(token_address_str) do
+    IO.inspect("#################################")
+    IO.inspect("###### FETCHING WNRG PRICE ######")
+    IO.inspect("#################################")
+    result = fetch_energiswap_exchange_rates_for_tokens()
+    parse_token_price(result, token_address_str)
   end
 
   def parse_token_price(result, address_hash) do
@@ -84,6 +107,11 @@ defmodule Explorer.ExchangeRates.Source do
     [{"Content-Type", "application/json"}]
   end
 
+  def energiswap_headers do
+    energiswap_auth_secret = Application.get_env(:explorer, :energiswap_auth_secret)
+    [{"authorization_secret", energiswap_auth_secret}]
+  end
+
   def decode_json(data) do
     Jason.decode!(data)
   rescue
@@ -112,8 +140,8 @@ defmodule Explorer.ExchangeRates.Source do
     Application.get_env(:explorer, __MODULE__, [])[key]
   end
 
-  def http_request(source_url) do
-    case HTTPoison.get(source_url, headers()) do
+  def http_request(source_url, headers \\ headers()) do
+    case HTTPoison.get(source_url, headers) do
       {:ok, %Response{body: body, status_code: 200}} ->
         parse_http_success_response(body)
 

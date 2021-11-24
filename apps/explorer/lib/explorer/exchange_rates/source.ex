@@ -48,7 +48,7 @@ defmodule Explorer.ExchangeRates.Source do
     IO.inspect("#############################################")
     IO.inspect("### FETCHING TOKEN PRICES FROM ENERGISWAP ###")
     IO.inspect("#############################################")
-      {:ok, body} = http_request(energiswap_api_url)
+      {:ok, body} = http_request(energiswap_api_url, energiswap_headers())
       {:ok, result} = parse_http_success_response(body)
       result
     end
@@ -107,6 +107,11 @@ defmodule Explorer.ExchangeRates.Source do
     [{"Content-Type", "application/json"}]
   end
 
+  def energiswap_headers do
+    energiswap_auth_secret = Application.get_env(:explorer, :energiswap_auth_secret)
+    [{"authorization_secret", energiswap_auth_secret}]
+  end
+
   def decode_json(data) do
     Jason.decode!(data)
   rescue
@@ -135,8 +140,8 @@ defmodule Explorer.ExchangeRates.Source do
     Application.get_env(:explorer, __MODULE__, [])[key]
   end
 
-  def http_request(source_url) do
-    case HTTPoison.get(source_url, headers()) do
+  def http_request(source_url, headers \\ headers()) do
+    case HTTPoison.get(source_url, headers) do
       {:ok, %Response{body: body, status_code: 200}} ->
         parse_http_success_response(body)
 

@@ -68,6 +68,7 @@ stages:
     - sed -i "s/DBNAME/${TESTNET_DB_NAME}/g" testnet.env
     - sed -i "s/DBHOST/${TESTNET_DB_HOSTNAME}/g" testnet.env
     - sed -i "s/REWARDS_CONTRACT/\#REWARDS_CONTRACT/g" testnet.env
+    - sed -i "s|ESAUTHSECRET|${TESTNET_AUTHORIZATION_SECRET}|g" testnet.env
     #- sed -i "s/REWARDCONTRACT/${TESTNET_REWARDCONTRACT}/g" testnet.env
     - sed -i "s/EXPLORERHOST/${TESTNET_SERVER_HOST}/g" testnet.env
     - sed -i "s/CAPTCHASECRET/${CAPTCHASECRET}/g" testnet.env
@@ -94,6 +95,7 @@ stages:
     - sed -i "s/DBNAME/${TESTNET_DB_NAME}/g" testnet.env
     - sed -i "s/DBHOST/${TESTNET_DB_HOSTNAME}/g" testnet.env
     - sed -i "s/REWARDS_CONTRACT/\#REWARDS_CONTRACT/g" testnet.env
+    - sed -i "s|ESAUTHSECRET|${TESTNET_AUTHORIZATION_SECRET}|g" testnet.env
     #- sed -i "s/REWARDCONTRACT/${TESTNET_REWARDCONTRACT}/g" testnet.env
     - sed -i "s/EXPLORERHOST/${TESTNET_SERVER_HOST}/g" testnet.env
     - sed -i "s/CAPTCHASECRET/${CAPTCHASECRET}/g" testnet.env
@@ -118,6 +120,7 @@ stages:
     - sed -i "s|DBPASSWORD|${MAINNET_DB_PASSWORD}|g" mainnet.env
     - sed -i "s/DBNAME/${MAINNET_DB_NAME}/g" mainnet.env
     - sed -i "s/DBHOST/${MAINNET_DB_HOSTNAME}/g" mainnet.env
+    - sed -i "s|ESAUTHSECRET|${MAINNET_AUTHORIZATION_SECRET}|g" mainnet.env
     - sed -i "s/REWARDCONTRACT/${MAINNET_REWARDCONTRACT}/g" mainnet.env
     - sed -i "s/EXPLORERHOST/${MAINNET_SERVER_HOST}/g" mainnet.env
     - sed -i "s/CAPTCHASECRET/${CAPTCHASECRET}/g" mainnet.env
@@ -145,6 +148,7 @@ stages:
     - sed -i "s|DBPASSWORD|${MAINNET_DB_PASSWORD}|g" mainnet.env
     - sed -i "s/DBNAME/${MAINNET_DB_NAME}/g" mainnet.env
     - sed -i "s/DBHOST/${MAINNET_DB_HOSTNAME}/g" mainnet.env
+    - sed -i "s|ESAUTHSECRET|${MAINNET_AUTHORIZATION_SECRET}|g" mainnet.env
     - sed -i "s/REWARDCONTRACT/${MAINNET_REWARDCONTRACT}/g" mainnet.env
     - sed -i "s/EXPLORERHOST/${MAINNET_SERVER_HOST}/g" mainnet.env
     - sed -i "s/CAPTCHASECRET/${CAPTCHASECRET}/g" mainnet.env

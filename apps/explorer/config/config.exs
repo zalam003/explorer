@@ -11,7 +11,9 @@ config :explorer,
   coin: System.get_env("COIN") || "POA",
   coingecko_coin_id: System.get_env("COINGECKO_COIN_ID"),
   energiswap_api_url: System.get_env("ENERGISWAP_API_URL"),
+  energiswap_auth_secret: System.get_env("ENERGISWAP_AUTH_SECRET"),
   mnrg_token_address: System.get_env("MNRG_TOKEN_ADDRESS") || "0x0000000000000000000000000000000000000319",
+  wnrg_token_address: System.get_env("WNRG_TOKEN_ADDRESS"),
   token_functions_reader_max_retries: 3,
   allowed_evm_versions:
     System.get_env("ALLOWED_EVM_VERSIONS") ||

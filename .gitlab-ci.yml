@@ -7,6 +7,8 @@ variables:
   MAINNET_SERVER_HOST: explorer.energi.network
   TESTNET_ENERGISWAP_API_URL: https://api.test.energiswap.exchange/v1/assets
   MAINNET_ENERGISWAP_API_URL: https://api.energiswap.exchange/v1/assets
+  TESTNET_WNRG_TOKEN_ADDRESS: 0x184F7b12f29d675f34ff816528ADBfd0E0501Ad4
+  MAINNET_WNRG_TOKEN_ADDRESS: 0xA55F26319462355474A9F2c8790860776a329aA4
   APP_DIR: /home/$SERVER_USER
   APP1_NAME: explorer_webapp
   APP2_NAME: explorer_indexer
@@ -60,11 +62,13 @@ stages:
     - sed -i "s/CHAINID/49797/g" testnet.env
     - sed -i "s|SECRETKEYBASE|${TESTNET_SECRET_KEY_BASE}|g" testnet.env
     - sed -i "s|ENERGISWAPAPIURL|${TESTNET_ENERGISWAP_API_URL}|g" testnet.env
+    - sed -i "s|WNRGTOKENADDRESS|${TESTNET_WNRG_TOKEN_ADDRESS}|g" testnet.env
     - sed -i "s/DBUSERNAME/${TESTNET_DB_USERNAME}/g" testnet.env
     - sed -i "s|DBPASSWORD|${TESTNET_DB_PASSWORD}|g" testnet.env
     - sed -i "s/DBNAME/${TESTNET_DB_NAME}/g" testnet.env
     - sed -i "s/DBHOST/${TESTNET_DB_HOSTNAME}/g" testnet.env
     - sed -i "s/REWARDS_CONTRACT/\#REWARDS_CONTRACT/g" testnet.env
+    - sed -i "s|ESAUTHSECRET|${TESTNET_AUTHORIZATION_SECRET}|g" testnet.env
     #- sed -i "s/REWARDCONTRACT/${TESTNET_REWARDCONTRACT}/g" testnet.env
     - sed -i "s/EXPLORERHOST/${TESTNET_SERVER_HOST}/g" testnet.env
     - sed -i "s/CAPTCHASECRET/${CAPTCHASECRET}/g" testnet.env
@@ -85,11 +89,13 @@ stages:
     - sed -i "s/CHAINID/49797/g" testnet.env
     - sed -i "s|SECRETKEYBASE|${TESTNET_SECRET_KEY_BASE}|g" testnet.env
     - sed -i "s|ENERGISWAPAPIURL|${TESTNET_ENERGISWAP_API_URL}|g" testnet.env
+    - sed -i "s|WNRGTOKENADDRESS|${TESTNET_WNRG_TOKEN_ADDRESS}|g" testnet.env
     - sed -i "s/DBUSERNAME/${TESTNET_DB_USERNAME}/g" testnet.env
     - sed -i "s|DBPASSWORD|${TESTNET_DB_PASSWORD}|g" testnet.env
     - sed -i "s/DBNAME/${TESTNET_DB_NAME}/g" testnet.env
     - sed -i "s/DBHOST/${TESTNET_DB_HOSTNAME}/g" testnet.env
     - sed -i "s/REWARDS_CONTRACT/\#REWARDS_CONTRACT/g" testnet.env
+    - sed -i "s|ESAUTHSECRET|${TESTNET_AUTHORIZATION_SECRET}|g" testnet.env
     #- sed -i "s/REWARDCONTRACT/${TESTNET_REWARDCONTRACT}/g" testnet.env
     - sed -i "s/EXPLORERHOST/${TESTNET_SERVER_HOST}/g" testnet.env
     - sed -i "s/CAPTCHASECRET/${CAPTCHASECRET}/g" testnet.env
@@ -109,10 +115,12 @@ stages:
     - sed -i "s/CHAINID/39797/g" mainnet.env
     - sed -i "s|SECRETKEYBASE|${MAINNET_SECRET_KEY_BASE}|g" mainnet.env
     - sed -i "s|ENERGISWAPAPIURL|${MAINNET_ENERGISWAP_API_URL}|g" mainnet.env
+    - sed -i "s|WNRGTOKENADDRESS|${MAINNET_WNRG_TOKEN_ADDRESS}|g" mainnet.env
     - sed -i "s/DBUSERNAME/${MAINNET_DB_USERNAME}/g" mainnet.env
     - sed -i "s|DBPASSWORD|${MAINNET_DB_PASSWORD}|g" mainnet.env
     - sed -i "s/DBNAME/${MAINNET_DB_NAME}/g" mainnet.env
     - sed -i "s/DBHOST/${MAINNET_DB_HOSTNAME}/g" mainnet.env
+    - sed -i "s|ESAUTHSECRET|${MAINNET_AUTHORIZATION_SECRET}|g" mainnet.env
     - sed -i "s/REWARDCONTRACT/${MAINNET_REWARDCONTRACT}/g" mainnet.env
     - sed -i "s/EXPLORERHOST/${MAINNET_SERVER_HOST}/g" mainnet.env
     - sed -i "s/CAPTCHASECRET/${CAPTCHASECRET}/g" mainnet.env
@@ -135,10 +143,12 @@ stages:
     - sed -i "s/CHAINID/39797/g" mainnet.env
     - sed -i "s|SECRETKEYBASE|${MAINNET_SECRET_KEY_BASE}|g" mainnet.env
     - sed -i "s|ENERGISWAPAPIURL|${MAINNET_ENERGISWAP_API_URL}|g" mainnet.env
+    - sed -i "s|WNRGTOKENADDRESS|${MAINNET_WNRG_TOKEN_ADDRESS}|g" mainnet.env
     - sed -i "s/DBUSERNAME/${MAINNET_DB_USERNAME}/g" mainnet.env
     - sed -i "s|DBPASSWORD|${MAINNET_DB_PASSWORD}|g" mainnet.env
     - sed -i "s/DBNAME/${MAINNET_DB_NAME}/g" mainnet.env
     - sed -i "s/DBHOST/${MAINNET_DB_HOSTNAME}/g" mainnet.env
+    - sed -i "s|ESAUTHSECRET|${MAINNET_AUTHORIZATION_SECRET}|g" mainnet.env
     - sed -i "s/REWARDCONTRACT/${MAINNET_REWARDCONTRACT}/g" mainnet.env
     - sed -i "s/EXPLORERHOST/${MAINNET_SERVER_HOST}/g" mainnet.env
     - sed -i "s/CAPTCHASECRET/${CAPTCHASECRET}/g" mainnet.env
@@ -183,6 +193,7 @@ sbx-schema:
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP "cd $APP_DIR/scripts && ./start.sh -e develop -r schema_aws -i $CONTAINER_REGISTRY"
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP "cd $APP_DIR/scripts && ./token_remove.sh develop"
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP "cd $APP_DIR/scripts && ./token_rename.sh develop"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP "cd $APP_DIR/scripts && ./remove_moniker.sh develop"
   only:
     <<: *sbx_triggers
 
@@ -229,6 +240,7 @@ tnet-schema:
     - echo "Create DB schema"
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP1 "cd $APP_DIR/scripts && ./start.sh -e testnet -r schema_aws -i $CONTAINER_REGISTRY"
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP1 "cd $APP_DIR/scripts && ./token_remove.sh testnet"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP1 "cd $APP_DIR/scripts && ./remove_moniker.sh testnet"
   only:
     <<: *testnet_triggers
 
@@ -297,6 +309,7 @@ mnet-schema:
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP1 "cd $APP_DIR/scripts && ./start.sh -e mainnet -r schema_aws -i $CONTAINER_REGISTRY"
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP1 "cd $APP_DIR/scripts && ./token_remove.sh mainnet"
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP1 "cd $APP_DIR/scripts && ./token_rename.sh mainnet"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP1 "cd $APP_DIR/scripts && ./remove_moniker.sh mainnet"
   only:
     <<: *mainnet_triggers
 

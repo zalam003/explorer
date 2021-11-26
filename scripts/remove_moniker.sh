@@ -1,6 +1,7 @@
 #!/bin/bash
 #
 # Description: Remove '@ Energi' moniker from token names
+#              Special case update name of BTC to Bitcoin in Mainnet
 #
 #set -x
 
@@ -76,6 +77,16 @@ else
 
 fi
 
+# Change BTC name to Bitcoin
+if [[ $1 == mainnet || $1 == develop ]]
+then
+    echo "Rename Token: Bitcoin from Energi BTC"
+    psql -d $PGDATABASE -U $PGUSER -h $PGHOST -t -c "UPDATE tokens SET
+      name = 'Bitcoin',
+      symbol = 'BTC'
+      WHERE contract_address_hash = '\x29a791703e5A5A8D1578F8611b4D3691377CEbc0';"
+
+fi
+
 # Clean up
 rm ${TMPFILE}
-

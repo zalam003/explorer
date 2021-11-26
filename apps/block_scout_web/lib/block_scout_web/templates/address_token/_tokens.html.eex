@@ -39,7 +39,7 @@
   <td class="stakes-td">
     <p class="mb-0 col-md-6 text-right text-muted">
       <% token_price = if @token_balance.token.usd_value, do: @token_balance.token.usd_value, else: nil %>
-      <span data-selector="token-price" data-token-usd-value="<%= @token_balance.token.usd_value %>"><%= ChainView.format_currency_value(token_price, "@") %></span>
+      <span data-selector="token-price" data-token-usd-value="<%= @token_balance.token.usd_value %>"><%= ChainView.format_currency_value(token_price, "@ $") %></span>
     </p>
   </td>
   <td class="stakes-td">

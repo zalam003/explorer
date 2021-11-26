@@ -82,7 +82,7 @@ if [[ $1 == mainnet || $1 == develop ]]
 then
     echo "Rename Token: Bitcoin from Energi BTC"
     psql -d $PGDATABASE -U $PGUSER -h $PGHOST -t -c "UPDATE tokens SET
-      name = 'Bitcoin'
+      name = 'Bitcoin',
       symbol = 'BTC'
       WHERE contract_address_hash = '\x29a791703e5A5A8D1578F8611b4D3691377CEbc0';"
 

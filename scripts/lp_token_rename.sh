@@ -10,22 +10,22 @@
 
 if [[ $1 == mainnet ]]
 then
-    . ./mainnet.env
+    . ./mainnet_indexer.env
     export LPTOKENLIST=lp_token_rename_mainnet.txt
 
 elif [[ $1 == testnet ]]
 then
-    . ./testnet.env
+    . ./testnet_indexer.env
     export LPTOKENLIST=lp_token_rename_testnet.txt
 
 elif [[ $1 == develop ]]
 then
-    . ./develop.env
+    . ./develop_indexer.env
     export LPTOKENLIST=lp_token_rename_mainnet.txt
 
 elif [[ $1 == local ]]
 then
-    . ./local.env
+    . ./local_indexer.env
     export LPTOKENLIST=lp_token_rename_mainnet.txt
 
 else

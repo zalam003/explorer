@@ -1,34 +1,31 @@
-variables:
-  SERVER_USER: ubuntu
-  SCHEMA_NAME: explorer_schema
-  SBX_SERVER_IP: $SANDBOX_SERVER_IP
-  SBX_SERVER_HOST: explorer.develop.energi.network
-  TESTNET_SERVER_HOST: explorer.test.energi.network
-  MAINNET_SERVER_HOST: explorer.energi.network
-  TESTNET_ENERGISWAP_API_URL: https://api.test.energiswap.exchange/v1/assets
-  MAINNET_ENERGISWAP_API_URL: https://api.energiswap.exchange/v1/assets
-  TESTNET_WNRG_TOKEN_ADDRESS: "0x184F7b12f29d675f34ff816528ADBfd0E0501Ad4"
-  MAINNET_WNRG_TOKEN_ADDRESS: "0xA55F26319462355474A9F2c8790860776a329aA4"
-  APP_DIR: /home/$SERVER_USER
-  APP1_NAME: explorer_webapp
-  APP2_NAME: explorer_indexer
-  TAG1_LATEST: $CONTAINER_REGISTRY/$APP1_NAME:latest
-  TAG1_COMMIT: $CONTAINER_REGISTRY/$APP1_NAME:$CI_COMMIT_SHORT_SHA
-  TAG2_LATEST: $CONTAINER_REGISTRY/$APP2_NAME:latest
-  TAG2_COMMIT: $CONTAINER_REGISTRY/$APP2_NAME:$CI_COMMIT_SHORT_SHA
-  PROJECT_NAME: BlockExplorer
+############################################################
+#                      Variables                           #
+############################################################
+# Include all variables
+include:
+  - local: '/scripts/variables.yml'
 
+############################################################
+#                         Stages                           #
+############################################################
 stages:
   - build
+  - scan
   - deploy-sbx-schema
-  - deploy-sbx
+  - deploy-sbx-indexer
+  - deploy-sbx-webapp
   - deploy-testnet-schema
   - deploy-testnet-indexer
-  - deploy-testnet-webapp
+  - deploy-testnet-webapp1
+  - deploy-testnet-webapp2
   - deploy-mainnet-schema
   - deploy-mainnet-indexer
-  - deploy-mainnet-webapp
+  - deploy-mainnet-webapp1
+  - deploy-mainnet-webapp2
 
+############################################################
+#                       Triggers                           #
+############################################################
 .sbx_triggers: &sbx_triggers
   refs:
     - sandbox
@@ -41,136 +38,200 @@ stages:
   refs:
     - master
 
+############################################################
+#                        Runner                            #
+############################################################
 .runner:
   tags: [docker_runner]
 
-.before_script_template: &sbx_indexer_vars
+############################################################
+#                        Scripts                           #
+############################################################
+
+# Update variables and generate environment file
+.set_variables:
   before_script:
+    - echo "create environment file"
     - cd scripts
-    - cp ../apps/indexer/config/config.exs .
-    - sed -i "s/1 <<< 30/2 <<< 30/g" config.exs
+    - sed -i "11iECRHOST=$CONTAINER_REGISTRY" start.sh
+    - cp template.env ${ENVFILE}
+    - if [[ ${ISINDEXER} == no ]]; then echo "Disable indexer on webapp"; sed -i '19iDISABLE_INDEXER=true' ${ENVFILE}; fi
+    - if [[ ${ISINDEXER} == yes ]]; then cp ../apps/indexer/config/config.exs . ; sed -i "s/1 <<< 30/${INDEXER_MEM} <<< 30/g" config.exs; fi
+    - if [[ "${ENV_PREFIX}" == "MAINNET" || "${ENV_PREFIX}" == "SANDBOX" ]]; then echo "Switch to mainnet"; sed -i "s/Testnet/Mainnet/g" ${ENVFILE}; sed -i "s/testnet.json/mainnet.json/g" ${ENVFILE}; fi
+    - sed -i "s/CORENODEIP/${CORENODE_IP}/g" ${ENVFILE}
+    - sed -i "s/WSPORT/${WSPORT}/g" ${ENVFILE}
+    - sed -i "s/HTTPPORT/${HTTPPORT}/g" ${ENVFILE}
+    - sed -i "s/CHAINID/${CHAINID}/g" ${ENVFILE}
+    - sed -i "s/WEBPORT/${WEBPORT}/g" ${ENVFILE}
+    - sed -i "s|SECRETKEYBASE|${SECRET_KEY_BASE}|g" ${ENVFILE}
+    - sed -i "s|ENERGISWAPAPIURL|${ENERGISWAP_API_URL}|g" ${ENVFILE}
+    - sed -i "s|WNRGTOKENADDRESS|${WNRG_TOKEN_ADDRESS}|g" ${ENVFILE}
+    - sed -i "s/DBUSERNAME/${DB_USERNAME}/g" ${ENVFILE}
+    - sed -i "s|DBPASSWORD|${DB_PASSWORD}|g" ${ENVFILE}
+    - sed -i "s/DBNAME/${DB_NAME}/g" ${ENVFILE}
+    - sed -i "s/DBHOST/${DB_HOSTNAME}/g" ${ENVFILE}
+    - sed -i "s/DBPOOLSIZE/${DBPOOLSIZE}/g" ${ENVFILE}
+    - sed -i "s/REWARDSCONTRACT/${REWARDSCONTRACT}/g" ${ENVFILE}
+    - sed -i "s|ESAUTHSECRET|${AUTHORIZATION_SECRET}|g" ${ENVFILE}
+    - sed -i "s/EXPLORERHOST/${SERVER_HOST}/g" ${ENVFILE}
+    - sed -i "s/CAPTCHASECRET/${CAPTCHASECRET}/g" ${ENVFILE}
+    - sed -i "s/CAPTCHACLIENT/${CAPTCHACLIENT}/g" ${ENVFILE}
     - cd -
 
-.before_script_template: &testnet_indexer_vars
-  before_script:
-    - cd scripts
-    - sed -i "12iIMAGE=$CONTAINER_REGISTRY" start.sh
-    - cp template.env testnet.env
-    - sed -i "s/CORENODEIP/${TESTNET_CORENODE_IP1}/g" testnet.env
-    - sed -i "s/WSPORT/49795/g" testnet.env
-    - sed -i "s/HTTPPORT/49796/g" testnet.env
-    - sed -i "s/CHAINID/49797/g" testnet.env
-    - sed -i "s|SECRETKEYBASE|${TESTNET_SECRET_KEY_BASE}|g" testnet.env
-    - sed -i "s|ENERGISWAPAPIURL|${TESTNET_ENERGISWAP_API_URL}|g" testnet.env
-    - sed -i "s|WNRGTOKENADDRESS|${TESTNET_WNRG_TOKEN_ADDRESS}|g" testnet.env
-    - sed -i "s/DBUSERNAME/${TESTNET_DB_USERNAME}/g" testnet.env
-    - sed -i "s|DBPASSWORD|${TESTNET_DB_PASSWORD}|g" testnet.env
-    - sed -i "s/DBNAME/${TESTNET_DB_NAME}/g" testnet.env
-    - sed -i "s/DBHOST/${TESTNET_DB_HOSTNAME}/g" testnet.env
-    - sed -i "s/REWARDS_CONTRACT/\#REWARDS_CONTRACT/g" testnet.env
-    - sed -i "s|ESAUTHSECRET|${TESTNET_AUTHORIZATION_SECRET}|g" testnet.env
-    #- sed -i "s/REWARDCONTRACT/${TESTNET_REWARDCONTRACT}/g" testnet.env
-    - sed -i "s/EXPLORERHOST/${TESTNET_SERVER_HOST}/g" testnet.env
-    - sed -i "s/CAPTCHASECRET/${CAPTCHASECRET}/g" testnet.env
-    - sed -i "s/CAPTCHACLIENT/${CAPTCHACLIENT}/g" testnet.env
-    - cp ../apps/indexer/config/config.exs .
-    - sed -i "s/1 <<< 30/2 <<< 30/g" config.exs
-    - cd -
+# Script to deploy Docker image to server
+.deploy_image:
+  script:
+    - apk add --no-cache git curl build-base autoconf automake linux-headers openssl-dev openssh bash
+    - eval $(ssh-agent -s)
+    - echo "$SSH_RSA_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - echo "Deploy $ENVIRONMENT $RUN_APP as $SERVER_USER on $DEPLOY_SERVER_IP"
+    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$DEPLOY_SERVER_IP 'export AWS_REGION=$AWS_REGION'
+    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$DEPLOY_SERVER_IP 'if [[ -d $APP_DIR/scripts ]]; then rm -rf $APP_DIR/scripts; fi'
+    - scp -o StrictHostKeyChecking=no -r ./scripts $SERVER_USER@$DEPLOY_SERVER_IP:$APP_DIR/.
+    - echo "TAG $TAG_LATEST App Name $APP_NAME"
+    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$DEPLOY_SERVER_IP "docker pull $TAG_LATEST"
+    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$DEPLOY_SERVER_IP "docker container rm -f ${APP_NAME}_${ENVIRONMENT} || true"
+    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$DEPLOY_SERVER_IP "cd $APP_DIR/scripts && ./start.sh -e ${ENVIRONMENT} -r ${RUN_APP} -i ${CONTAINER_REGISTRY}"
 
-.before_script_template: &testnet_webapp_vars
-  before_script:
-    - cd scripts
-    - sed -i "12iIMAGE=$CONTAINER_REGISTRY" start.sh
-    - cp template.env testnet.env
-    - sed -i '19iDISABLE_INDEXER=true' testnet.env
-    - sed -i "s/CORENODEIP/${TESTNET_CORENODE_IP2}/g" testnet.env
-    - sed -i "s/WSPORT/49795/g" testnet.env
-    - sed -i "s/HTTPPORT/49796/g" testnet.env
-    - sed -i "s/CHAINID/49797/g" testnet.env
-    - sed -i "s|SECRETKEYBASE|${TESTNET_SECRET_KEY_BASE}|g" testnet.env
-    - sed -i "s|ENERGISWAPAPIURL|${TESTNET_ENERGISWAP_API_URL}|g" testnet.env
-    - sed -i "s|WNRGTOKENADDRESS|${TESTNET_WNRG_TOKEN_ADDRESS}|g" testnet.env
-    - sed -i "s/DBUSERNAME/${TESTNET_DB_USERNAME}/g" testnet.env
-    - sed -i "s|DBPASSWORD|${TESTNET_DB_PASSWORD}|g" testnet.env
-    - sed -i "s/DBNAME/${TESTNET_DB_NAME}/g" testnet.env
-    - sed -i "s/DBHOST/${TESTNET_DB_HOSTNAME}/g" testnet.env
-    - sed -i "s/REWARDS_CONTRACT/\#REWARDS_CONTRACT/g" testnet.env
-    - sed -i "s|ESAUTHSECRET|${TESTNET_AUTHORIZATION_SECRET}|g" testnet.env
-    #- sed -i "s/REWARDCONTRACT/${TESTNET_REWARDCONTRACT}/g" testnet.env
-    - sed -i "s/EXPLORERHOST/${TESTNET_SERVER_HOST}/g" testnet.env
-    - sed -i "s/CAPTCHASECRET/${CAPTCHASECRET}/g" testnet.env
-    - sed -i "s/CAPTCHACLIENT/${CAPTCHACLIENT}/g" testnet.env
-    - cd -
+# Script to update schema
+.update_schema:
+  script:
+    - apk add --no-cache git curl build-base autoconf automake linux-headers openssl-dev openssh bash
+    - eval $(ssh-agent -s)
+    - echo "$SSH_RSA_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - echo "Deploy schema as $SERVER_USER on $DEPLOY_SERVER_IP"
+    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$DEPLOY_SERVER_IP 'sudo su - && export AWS_REGION=$AWS_REGION'
+    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$DEPLOY_SERVER_IP 'if [[ -d $APP_DIR/scripts ]]; then rm -rf $APP_DIR/scripts; fi'
+    - scp -o StrictHostKeyChecking=no -r ./scripts $SERVER_USER@$DEPLOY_SERVER_IP:$APP_DIR/.
+    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$DEPLOY_SERVER_IP "docker pull $TAG1_LATEST"
+    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$DEPLOY_SERVER_IP "docker container rm -f $SCHEMA_NAME || true"
+    - echo "Create or update DB schema"
+    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$DEPLOY_SERVER_IP "cd $APP_DIR/scripts && ./start.sh -e ${ENVIRONMENT} -r ${RUN_APP} -i $CONTAINER_REGISTRY"
+    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$DEPLOY_SERVER_IP "cd $APP_DIR/scripts && ./token_remove.sh ${ENVIRONMENT}"
+    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$DEPLOY_SERVER_IP "cd $APP_DIR/scripts && ./token_rename.sh ${ENVIRONMENT}"
+    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$DEPLOY_SERVER_IP "cd $APP_DIR/scripts && ./remove_moniker.sh ${ENVIRONMENT}"
 
-.before_script_template: &mainnet_indexer_vars
-  before_script:
-    - cd scripts
-    - sed -i "12iIMAGE=$CONTAINER_REGISTRY" start.sh
-    - cp template.env mainnet.env
-    - sed -i "s/Testnet/Mainnet/g" mainnet.env
-    - sed -i "s/testnet.json/mainnet.json/g" mainnet.env
-    - sed -i "s/CORENODEIP/${MAINNET_CORENODE_IP1}/g" mainnet.env
-    - sed -i "s/WSPORT/39795/g" mainnet.env
-    - sed -i "s/HTTPPORT/39796/g" mainnet.env
-    - sed -i "s/CHAINID/39797/g" mainnet.env
-    - sed -i "s|SECRETKEYBASE|${MAINNET_SECRET_KEY_BASE}|g" mainnet.env
-    - sed -i "s|ENERGISWAPAPIURL|${MAINNET_ENERGISWAP_API_URL}|g" mainnet.env
-    - sed -i "s|WNRGTOKENADDRESS|${MAINNET_WNRG_TOKEN_ADDRESS}|g" mainnet.env
-    - sed -i "s/DBUSERNAME/${MAINNET_DB_USERNAME}/g" mainnet.env
-    - sed -i "s|DBPASSWORD|${MAINNET_DB_PASSWORD}|g" mainnet.env
-    - sed -i "s/DBNAME/${MAINNET_DB_NAME}/g" mainnet.env
-    - sed -i "s/DBHOST/${MAINNET_DB_HOSTNAME}/g" mainnet.env
-    - sed -i "s|ESAUTHSECRET|${MAINNET_AUTHORIZATION_SECRET}|g" mainnet.env
-    - sed -i "s/REWARDCONTRACT/${MAINNET_REWARDCONTRACT}/g" mainnet.env
-    - sed -i "s/EXPLORERHOST/${MAINNET_SERVER_HOST}/g" mainnet.env
-    - sed -i "s/CAPTCHASECRET/${CAPTCHASECRET}/g" mainnet.env
-    - sed -i "s/CAPTCHACLIENT/${CAPTCHACLIENT}/g" mainnet.env
-    - cp ../apps/indexer/config/config.exs .
-    - sed -i "s/1 <<< 30/6 <<< 30/g" config.exs
-    - cd -
-
-.before_script_template: &mainnet_webapp_vars
-  before_script:
-    - cd scripts
-    - sed -i "12iIMAGE=$CONTAINER_REGISTRY" start.sh
-    - cp template.env mainnet.env
-    - sed -i '19iDISABLE_INDEXER=true' mainnet.env
-    - sed -i "s/Testnet/Mainnet/g" mainnet.env
-    - sed -i "s/testnet.json/mainnet.json/g" mainnet.env
-    - sed -i "s/CORENODEIP/${MAINNET_CORENODE_IP2}/g" mainnet.env
-    - sed -i "s/WSPORT/39795/g" mainnet.env
-    - sed -i "s/HTTPPORT/39796/g" mainnet.env
-    - sed -i "s/CHAINID/39797/g" mainnet.env
-    - sed -i "s|SECRETKEYBASE|${MAINNET_SECRET_KEY_BASE}|g" mainnet.env
-    - sed -i "s|ENERGISWAPAPIURL|${MAINNET_ENERGISWAP_API_URL}|g" mainnet.env
-    - sed -i "s|WNRGTOKENADDRESS|${MAINNET_WNRG_TOKEN_ADDRESS}|g" mainnet.env
-    - sed -i "s/DBUSERNAME/${MAINNET_DB_USERNAME}/g" mainnet.env
-    - sed -i "s|DBPASSWORD|${MAINNET_DB_PASSWORD}|g" mainnet.env
-    - sed -i "s/DBNAME/${MAINNET_DB_NAME}/g" mainnet.env
-    - sed -i "s/DBHOST/${MAINNET_DB_HOSTNAME}/g" mainnet.env
-    - sed -i "s|ESAUTHSECRET|${MAINNET_AUTHORIZATION_SECRET}|g" mainnet.env
-    - sed -i "s/REWARDCONTRACT/${MAINNET_REWARDCONTRACT}/g" mainnet.env
-    - sed -i "s/EXPLORERHOST/${MAINNET_SERVER_HOST}/g" mainnet.env
-    - sed -i "s/CAPTCHASECRET/${CAPTCHASECRET}/g" mainnet.env
-    - sed -i "s/CAPTCHACLIENT/${CAPTCHACLIENT}/g" mainnet.env
-    - cd -
-
-build-image:
+############################################################
+#                      Build indexer                       #
+############################################################
+build-indexer:
   stage: build
   tags:
     - docker_runner
   script:
     - cd scripts
     - aws ecr create-repository --repository-name $APP1_NAME || true
-    - docker build --cache-from $TAG1_LATEST -f ./Dockerfile_webapp -t $TAG1_COMMIT -t $TAG1_LATEST ../
+    - docker build --cache-from $TAG1_LATEST -f ./Dockerfile_indexer -t $TAG1_COMMIT -t $TAG1_LATEST ../
     - docker push $TAG1_COMMIT
     - docker push $TAG1_LATEST
-    - docker build --cache-from $TAG2_LATEST -f ./Dockerfile_indexer -t $TAG2_COMMIT -t $TAG2_LATEST ../
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+      changes:
+        - apps/**/*
+        - scripts/Dockerfile_{indexer,webapp}
+        - scripts/start.sh
+    - if: $CI_COMMIT_TAG
+    # - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+
+############################################################
+#                       Build webapp                       #
+############################################################
+build-webapp:
+  stage: build
+  tags:
+    - docker_runner
+  script:
+    - cd scripts
+    - aws ecr create-repository --repository-name $APP1_NAME || true
+    - docker build --cache-from $TAG2_LATEST -f ./Dockerfile_webapp -t $TAG2_COMMIT -t $TAG2_LATEST ../
     - docker push $TAG2_COMMIT
     - docker push $TAG2_LATEST
-  only:
-    <<: *sbx_triggers
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+      changes:
+        - apps/**/*
+        - scripts/Dockerfile_{indexer,webapp}
+        - scripts/start.sh
+    - if: $CI_COMMIT_TAG
+    # - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
 
+############################################################
+#                       Scan webapp                       #
+############################################################
+scan-webapp:
+  stage: scan
+  variables:
+    ENVIRONMENT: testnet
+  tags:
+    - docker_runner
+  image:
+    name: aquasec/trivy:latest
+    entrypoint: ['']
+  services:
+    - docker:dind
+  script:
+    - echo "Scan $APP_NAME Docker Image for the $ENVIRONMENT"
+    - trivy --no-progress --output gl-container-scanning-report.json $CONTAINER_REGISTRY/$APP2_NAME:latest
+    - trivy --exit-code 1 --no-progress --severity CRITICAL $CONTAINER_REGISTRY/$APP2_NAME:latest
+  cache:
+    paths:
+      - .trivycache/
+  artifacts:
+    reports:
+      container_scanning: gl-container-scanning-report.json
+  allow_failure: true
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+      changes:
+        - apps/**/*
+        - scripts/Dockerfile_{indexer,webapp}
+        - scripts/start.sh
+    - if: $CI_COMMIT_TAG
+    # - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+
+############################################################
+#                       Scan indexer                       #
+############################################################
+scan-indexer:
+  stage: scan
+  variables:
+    ENVIRONMENT: testnet
+  tags:
+    - docker_runner
+  image:
+    name: aquasec/trivy:latest
+    entrypoint: ['']
+  services:
+    - docker:dind
+  script:
+    - echo "Scan $APP_NAME Docker Image for the $ENVIRONMENT"
+    - trivy --no-progress --output gl-container-scanning-report.json $CONTAINER_REGISTRY/$APP1_NAME:latest
+    - trivy --exit-code 1 --no-progress --severity CRITICAL $CONTAINER_REGISTRY/$APP2_NAME:latest
+  cache:
+    paths:
+      - .trivycache/
+  artifacts:
+    reports:
+      container_scanning: gl-container-scanning-report.json
+  allow_failure: true
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+      changes:
+        - apps/**/*
+        - scripts/Dockerfile_{indexer,webapp}
+        - scripts/start.sh
+    - if: $CI_COMMIT_TAG
+    # - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+
+############################################################
+#                         Sandbox                          #
+############################################################
+
+# Update sandbox schema
 sbx-schema:
   image: alpine:latest
   services:
@@ -178,181 +239,179 @@ sbx-schema:
   stage: deploy-sbx-schema
   tags:
     - docker_runner
-  script:
-    - apk add --no-cache git curl build-base autoconf automake linux-headers openssl-dev openssh bash
-    - chmod og= $ID_RSA
-    - echo "Deploy to $SBX_SERVER_IP"
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP 'sudo su - && export AWS_REGION=$AWS_REGION'
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP 'if [[ -d $APP_DIR/scripts ]]; then rm -rf $APP_DIR/scripts; fi'
-    - echo "RE_CAPTCHA_SECRET_KEY=${CAPTCHASECRET}" >> ./scripts/develop.env
-    - echo "RE_CAPTCHA_CLIENT_KEY=${CAPTCHACLIENT}" >> ./scripts/develop.env
-    - scp -i $ID_RSA -o StrictHostKeyChecking=no -r ./scripts $SERVER_USER@$SBX_SERVER_IP:$APP_DIR/.
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP "docker pull $TAG1_LATEST"
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP "docker container rm -f $SCHEMA_NAME || true"
-    - echo "Create DB schema"
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP "cd $APP_DIR/scripts && ./start.sh -e develop -r schema_aws -i $CONTAINER_REGISTRY"
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP "cd $APP_DIR/scripts && ./token_remove.sh develop"
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP "cd $APP_DIR/scripts && ./token_rename.sh develop"
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP "cd $APP_DIR/scripts && ./remove_moniker.sh develop"
+  variables: !reference [.sandbox_schema_variables, variables]
+  extends:
+    - .set_variables
+    - .update_schema
   only:
     <<: *sbx_triggers
 
-deploy-sbx:
+# Deploy indexer in Sandbox
+sbx-idxr:
   image: alpine:latest
   services:
     - docker:dind
-  stage: deploy-sbx
-  <<: *sbx_indexer_vars
+  stage: deploy-sbx-indexer
   tags:
     - docker_runner
-  script:
-    - apk add --no-cache git curl build-base autoconf automake linux-headers openssl-dev openssh bash
-    - chmod og= $ID_RSA
-    - echo "Deploy to $SBX_SERVER_IP"
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP 'export AWS_REGION=$AWS_REGION'
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP 'if [[ -d $APP_DIR/scripts ]]; then rm -rf $APP_DIR/scripts; fi'
-    - echo "RE_CAPTCHA_SECRET_KEY=${CAPTCHASECRET}" >> ./scripts/develop.env
-    - echo "RE_CAPTCHA_CLIENT_KEY=${CAPTCHACLIENT}" >> ./scripts/develop.env
-    - scp -i $ID_RSA -o StrictHostKeyChecking=no -r ./scripts $SERVER_USER@$SBX_SERVER_IP:$APP_DIR/.
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP "docker pull $TAG1_LATEST"
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP "docker container rm -f $APP2_NAME || true"
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SBX_SERVER_IP "cd $APP_DIR/scripts && ./start.sh -e develop -r run_indexer -i $CONTAINER_REGISTRY"
+  variables: !reference [.sandbox_indexer_variables, variables]
+  extends:
+    - .deploy_image
   only:
     <<: *sbx_triggers
 
+# Deploy webapp in Sandbox
+sbx-web1:
+  image: alpine:latest
+  services:
+    - docker:dind
+  stage: deploy-sbx-webapp
+  tags:
+    - docker_runner
+  variables: !reference [.sandbox_webapp_variables, variables]
+  extends:
+    - .set_variables
+    - .deploy_image
+  only:
+    <<: *sbx_triggers
+
+############################################################
+#                        Testnet                           #
+############################################################
+
+# Update testnet schema
 tnet-schema:
   image: alpine:latest
   services:
     - docker:dind
   stage: deploy-testnet-schema
-  <<: *testnet_indexer_vars
   tags:
     - docker_runner
-  script:
-    - apk add --no-cache git curl build-base autoconf automake linux-headers openssl-dev openssh bash
-    - chmod og= $ID_RSA
-    - echo "Deploy to $TESTNET_SERVER_IP1"
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP1 'sudo su - && export AWS_REGION=$AWS_REGION'
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP1 'if [[ -d $APP_DIR/scripts ]]; then rm -rf $APP_DIR/scripts; fi'
-    - scp -i $ID_RSA -o StrictHostKeyChecking=no -r ./scripts $SERVER_USER@$TESTNET_SERVER_IP1:$APP_DIR/.
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP1 "docker pull $TAG1_LATEST"
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP1 "docker container rm -f $SCHEMA_NAME || true"
-    - echo "Create DB schema"
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP1 "cd $APP_DIR/scripts && ./start.sh -e testnet -r schema_aws -i $CONTAINER_REGISTRY"
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP1 "cd $APP_DIR/scripts && ./token_remove.sh testnet"
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP1 "cd $APP_DIR/scripts && ./remove_moniker.sh testnet"
+  variables: !reference [.testnet_schema_variables, variables]
+  extends:
+    - .set_variables
+    - .update_schema
   only:
     <<: *testnet_triggers
 
+# Deploy indexer in Testnet
 tnet-idxr:
   image: alpine:latest
   services:
     - docker:dind
   stage: deploy-testnet-indexer
-  <<: *testnet_indexer_vars
   tags:
     - docker_runner
-  script:
-    - apk add --no-cache git curl build-base autoconf automake linux-headers openssl-dev openssh bash
-    - chmod og= $ID_RSA
-    - echo "Deploy to $TESTNET_SERVER_IP1"
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP1 'export AWS_REGION=$AWS_REGION'
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP1 'if [[ -d $APP_DIR/scripts ]]; then rm -rf $APP_DIR/scripts; fi'
-    - scp -i $ID_RSA -o StrictHostKeyChecking=no -r ./scripts $SERVER_USER@$TESTNET_SERVER_IP1:$APP_DIR/.
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP1 "docker pull $TAG1_LATEST"
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP1 "docker container rm -f $APP2_NAME || true"
-    - echo "Start Indexer on $TESTNET_SERVER_IP1"
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP1 "cd $APP_DIR/scripts && ./start.sh -e testnet -r run_indexer -i $CONTAINER_REGISTRY"
+  variables: !reference [.testnet_indexer_variables, variables]
+  extends:
+    - .deploy_image
   only:
     <<: *testnet_triggers
 
+# Deploy webapp in Testnet
 tnet-web1:
   image: alpine:latest
   services:
     - docker:dind
-  stage: deploy-testnet-webapp
-  <<: *testnet_webapp_vars
+  stage: deploy-testnet-webapp1
   tags:
     - docker_runner
-  script:
-    - apk add --no-cache git curl build-base autoconf automake linux-headers openssl-dev openssh bash
-    - chmod og= $ID_RSA
-    - echo "Deploy to $TESTNET_SERVER_IP2"
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP2 'export AWS_REGION=$AWS_REGION'
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP2 'if [[ -d $APP_DIR/scripts ]]; then rm -rf $APP_DIR/scripts; fi'
-    - scp -i $ID_RSA -o StrictHostKeyChecking=no -r ./scripts $SERVER_USER@$TESTNET_SERVER_IP2:$APP_DIR/.
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP2 "docker pull $TAG1_LATEST"
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP2 "docker container rm -f $APP1_NAME || true"
-    - echo "Start webapp on $TESTNET_SERVER_IP2"
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$TESTNET_SERVER_IP2 "cd $APP_DIR/scripts && ./start.sh -e testnet -r run_webapp -i $CONTAINER_REGISTRY"
+  variables: !reference [.testnet_webapp1_variables, variables]
+  extends:
+    - .set_variables
+    - .deploy_image
   only:
     <<: *testnet_triggers
 
+############################################################
+#                         Mainnet                          #
+############################################################
+
+# Update mainnet schema
 mnet-schema:
   image: alpine:latest
   services:
     - docker:dind
   stage: deploy-mainnet-schema
-  <<: *mainnet_indexer_vars
   tags:
     - docker_runner
-  script:
-    - apk add --no-cache git curl build-base autoconf automake linux-headers openssl-dev openssh bash
-    - chmod og= $ID_RSA
-    - echo "Deploy to $MAINNET_SERVER_IP1"
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP1 'sudo su - && export AWS_REGION=$AWS_REGION'
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP1 'if [[ -d $APP_DIR/scripts ]]; then rm -rf $APP_DIR/scripts; fi'
-    - scp -i $ID_RSA -o StrictHostKeyChecking=no -r ./scripts $SERVER_USER@$MAINNET_SERVER_IP1:$APP_DIR/.
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP1 "docker pull $TAG1_LATEST"
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP1 "docker container rm -f $SCHEMA_NAME || true"
-    - echo "Create DB schema"
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP1 "cd $APP_DIR/scripts && ./start.sh -e mainnet -r schema_aws -i $CONTAINER_REGISTRY"
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP1 "cd $APP_DIR/scripts && ./token_remove.sh mainnet"
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP1 "cd $APP_DIR/scripts && ./token_rename.sh mainnet"
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP1 "cd $APP_DIR/scripts && ./remove_moniker.sh mainnet"
+  variables: !reference [.mainnet_schema_variables, variables]
+  extends:
+    - .set_variables
+    - .update_schema
   only:
     <<: *mainnet_triggers
 
+# Deploy indexer in Mainnet
 mnet-idxr:
   image: alpine:latest
   services:
     - docker:dind
   stage: deploy-mainnet-indexer
-  <<: *mainnet_indexer_vars
   tags:
     - docker_runner
-  script:
-    - apk add --no-cache git curl build-base autoconf automake linux-headers openssl-dev openssh bash
-    - chmod og= $ID_RSA
-    - echo "Deploy to $MAINNET_SERVER_IP1"
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP1 'export AWS_REGION=$AWS_REGION'
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP1 'if [[ -d $APP_DIR/scripts ]]; then rm -rf $APP_DIR/scripts; fi'
-    - scp -i $ID_RSA -o StrictHostKeyChecking=no -r ./scripts $SERVER_USER@$MAINNET_SERVER_IP1:$APP_DIR/.
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP1 "docker pull $TAG1_LATEST"
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP1 "docker container rm -f $APP2_NAME || true"
-    - echo "Start Indexer on $MAINNET_SERVER_IP1"
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP1 "cd $APP_DIR/scripts && ./start.sh -e mainnet -r run_indexer -i $CONTAINER_REGISTRY"
+  variables: !reference [.mainnet_indexer_variables, variables]
+  extends:
+    - .deploy_image
   only:
     <<: *mainnet_triggers
 
-mnet-web1:
+# Deploy webapp #1 in Mainnet
+mnet-web1a:
   image: alpine:latest
   services:
     - docker:dind
-  stage: deploy-mainnet-webapp
-  <<: *mainnet_webapp_vars
+  stage: deploy-mainnet-webapp1
   tags:
     - docker_runner
-  script:
-    - apk add --no-cache git curl build-base autoconf automake linux-headers openssl-dev openssh bash
-    - chmod og= $ID_RSA
-    - echo "Deploy to $MAINNET_SERVER_IP2"
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP2 'export AWS_REGION=$AWS_REGION'
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP2 'if [[ -d $APP_DIR/scripts ]]; then rm -rf $APP_DIR/scripts; fi'
-    - scp -i $ID_RSA -o StrictHostKeyChecking=no -r ./scripts $SERVER_USER@$MAINNET_SERVER_IP2:$APP_DIR/.
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP2 "docker pull $TAG1_LATEST"
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP2 "docker container rm -f $APP1_NAME || true"
-    - echo "Start webapp on $MAINNET_SERVER_IP2"
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$MAINNET_SERVER_IP2 "cd $APP_DIR/scripts && ./start.sh -e mainnet -r run_webapp -i $CONTAINER_REGISTRY"
+  variables: !reference [.mainnet_webapp1a_variables, variables]
+  extends:
+    - .set_variables
+    - .deploy_image
   only:
     <<: *mainnet_triggers
+
+# # Deploy webapp #2 in Mainnet
+# mnet-web1b:
+#   image: alpine:latest
+#   services:
+#     - docker:dind
+#   stage: deploy-mainnet-webapp2
+#   tags:
+#     - docker_runner
+#   variables: !reference [.mainnet_webapp1b_variables, variables]
+#   extends:
+#     - .set_variables
+#     - .deploy_image
+#   only:
+#     <<: *mainnet_triggers
+
+# Deploy webapp #3 in Mainnet
+mnet-web2a:
+  image: alpine:latest
+  services:
+    - docker:dind
+  stage: deploy-mainnet-webapp2
+  tags:
+    - docker_runner
+  variables: !reference [.mainnet_webapp2a_variables, variables]
+  extends:
+    - .set_variables
+    - .deploy_image
+  only:
+    <<: *mainnet_triggers
+
+# # Deploy webapp #4 in Mainnet
+# mnet-web2b:
+#   image: alpine:latest
+#   services:
+#     - docker:dind
+#   stage: deploy-mainnet-webapp2
+#   tags:
+#     - docker_runner
+#   variables: !reference [.mainnet_webapp2b_variables, variables]
+#   extends:
+#     - .set_variables
+#     - .deploy_image
+#   only:
+#     <<: *mainnet_triggers

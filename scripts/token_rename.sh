@@ -10,23 +10,23 @@
 
 if [[ $1 == mainnet ]]
 then
-    . ./mainnet.env
+    . ./mainnet_indexer.env
     export ADDRFILE=etoken_contract_addr_mainnet.txt
 
 elif [[ $1 == testnet ]]
 then
-    . ./testnet.env
+    . ./testnet_indexer.env
     export ADDRFILE=etoken_contract_addr_testnet.txt
     exit 0
 
 elif [[ $1 == develop ]]
 then
-    . ./develop.env
+    . ./develop_indexer.env
     export ADDRFILE=etoken_contract_addr_mainnet.txt
 
 elif [[ $1 == local ]]
 then
-    . ./local.env
+    . ./local_indexer.env
     export ADDRFILE=etoken_contract_addr_mainnet.txt
 
 else

@@ -7,22 +7,22 @@
 
 if [[ $1 == mainnet ]]
 then
-    . ./mainnet.env
+    . ./mainnet_indexer.env
     export TMPFILE=token_moniker_mainnet.txt
 
 elif [[ $1 == testnet ]]
 then
-    . ./testnet.env
+    . ./testnet_indexer.env
     export TMPFILE=token_moniker_testnet.txt
 
 elif [[ $1 == develop ]]
 then
-    . ./develop.env
+    . ./develop_indexer.env
     export TMPFILE=token_moniker_mainnet.txt
 
 elif [[ $1 == local ]]
 then
-    . ./local.env
+    . ./local_indexer.env
     export TMPFILE=token_moniker_mainnet.txt
 
 else

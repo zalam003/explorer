@@ -106,9 +106,9 @@ case $TODO in
         if [ "${ENV: -4}" == ".env" ]
         then
             ENV=$( echo $ENV | awk -F\. '{print $1}' )
-            ENVFILE="${ENV}_webapp.env"
+            ENVFILE="${ENV}.env"
         else
-            ENVFILE="${ENV}_webapp.env"
+            ENVFILE="${ENV}.env"
         fi
         docker run -d --name ${WEBAPP}_${ENV} \
             --env-file ${APPDIR}/scripts/${ENVFILE} \
@@ -145,12 +145,13 @@ case $TODO in
         if [ "${ENV: -4}" == ".env" ]
         then
             ENV=$( echo $ENV | awk -F\. '{print $1}' )
-            ENVFILE="${ENV}_indexer.env"
+            ENVFILE="${ENV}.env"
         else
-            ENVFILE="${ENV}_indexer.env"
+            ENVFILE="${ENV}.env"
         fi
         docker run -d --name ${INDEXER}_${ENV} \
             --env-file ${APPDIR}/scripts/${ENVFILE} \
+            -v ${APPDIR}/scripts/config.exs:/opt/app/apps/indexer/config/config.exs:ro \
             --restart on-failure:3 \
             ${INDEXER}:latest /bin/sh -c "mix phx.server"
         ;;
@@ -166,6 +167,7 @@ case $TODO in
         fi
         docker run -d --name ${INDEXER}_${ENV} \
             --env-file ${APPDIR}/scripts/${ENVFILE} \
+            -v ${APPDIR}/scripts/config.exs:/opt/app/apps/indexer/config/config.exs:ro \
             --restart on-failure:3 \
             --log-driver="awslogs" \
             --log-opt awslogs-region=${REGION} \
@@ -199,9 +201,9 @@ case $TODO in
         if [ "${ENV: -4}" == ".env" ]
         then
             ENV=$( echo $ENV | awk -F\. '{print $1}' )
-            ENVFILE="${ENV}_indexer.env"
+            ENVFILE="${ENV}.env"
         else
-            ENVFILE="${ENV}_indexer.env"
+            ENVFILE="${ENV}.env"
         fi
         docker run --rm --name ${SCHEMA_NAME} \
             --env-file ${APPDIR}/scripts/${ENVFILE} \

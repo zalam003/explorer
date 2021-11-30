@@ -60,9 +60,10 @@ defmodule Explorer.Chain.Cache.TokenExchangeRate do
   def fetch(token_hash, address_hash_str) do
     if cache_expired?(address_hash_str) || value_is_empty?(address_hash_str) do
       {:ok, tokens} = KnownTokenSource.fetch_known_tokens()
-      token_list = Source.fetch_energiswap_exchange_rates_for_tokens()
+      normal_token_list = Source.fetch_energiswap_exchange_rates_for_tokens()
+      lp_token_list = Source.fetch_energiswap_exchange_rates_for_lp_tokens()
       Task.start_link(fn ->
-        update_cache_for_all_known_tokens(tokens, token_list)
+        update_cache_for_all_known_tokens(tokens, Map.merge(normal_token_list,lp_token_list))
       end)
     end
 

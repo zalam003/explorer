@@ -7,5 +7,5 @@
     data-toggle="tooltip"
     title="<%= @text %>"
 >
-    <i class="fas fa-info-circle"></i>
+    <i style="color: lightgrey;" class="fas fa-question-circle"></i>
 </span>

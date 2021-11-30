@@ -4,6 +4,7 @@ defmodule Explorer.ExchangeRates.Source do
   """
   alias Explorer.ExchangeRates.{Source, Token}
   alias HTTPoison.{Error, Response}
+  alias Explorer.Chain
 
   @doc """
   Fetches exchange rates for currencies/tokens.
@@ -61,11 +62,11 @@ defmodule Explorer.ExchangeRates.Source do
   end
 
   def energiswap_assets_url() do
-    "#{energiswap_base_url()}assets"
+    "#{energiswap_base_url()}/assets"
   end
 
   def energiswap_lp_url() do
-    "#{energiswap_base_url()}lpprices"
+    "#{energiswap_base_url()}/lpprices"
   end
 
   @spec fetch_energiswap_exchange_rates_for_lp_tokens() :: [any]
@@ -103,15 +104,18 @@ defmodule Explorer.ExchangeRates.Source do
   end
 
   def format_lp_tokens(tokens) do
+    tokens =
       Enum.map(tokens, fn token ->
+        {:ok, address_hash} = Chain.string_to_address_hash(token["id"])
+        checksumed_address = Chain.Address.checksum(address_hash)
         %{
-          token["id"] => %{
-          "name" => "#{token["token0"]["symbol"]}/#{token["token1"]["symbol"]} Energiswap LP (#{token["token0"]["symbol"]}/#{token["token"]["symbol"]})",
+          checksumed_address => %{
           "symbol" => "#{token["token0"]["symbol"]}/#{token["token1"]["symbol"]}",
           "last_price" => token["lpPriceUSD"],
           }
         }
       end)
+      for token <- tokens, {address, details} <- token, into: %{}, do: {address, details}
   end
 
   defp fetch_exchange_rates_request(_source, source_url) when is_nil(source_url), do: {:error, "Source URL is nil"}

@@ -4,6 +4,7 @@ defmodule Explorer.ExchangeRates.Source do
   """
   alias Explorer.ExchangeRates.{Source, Token}
   alias HTTPoison.{Error, Response}
+  alias Explorer.Chain
 
   @doc """
   Fetches exchange rates for currencies/tokens.
@@ -13,13 +14,15 @@ defmodule Explorer.ExchangeRates.Source do
     wnrg_token_address = Application.get_env(:explorer, :wnrg_token_address)
     source_url = source.source_url()
     nrg_coin_details = fetch_exchange_rates_request(source, source_url)
-
     wnrg_price = fetch_token_price(wnrg_token_address)
+
     if(is_nil(wnrg_price)) do
       nrg_coin_details
     else
       {:ok, [nrg_details_map]} = nrg_coin_details
-      wnrg_price = fetch_token_price(wnrg_token_address)
+      wnrg_price =
+        fetch_token_price(wnrg_token_address)
+        |> Decimal.round(4)
       # Update usd_value of the map(fetched from Coingecko) with the price fecthed from energiswap
       {:ok, [Map.put(nrg_details_map, :usd_value, wnrg_price)]}
     end
@@ -39,18 +42,46 @@ defmodule Explorer.ExchangeRates.Source do
 
   @spec fetch_energiswap_exchange_rates_for_tokens() :: [any]
   def fetch_energiswap_exchange_rates_for_tokens() do
-
     energiswap_api_url = Application.get_env(:explorer, :energiswap_api_url)
 
     if(is_nil(energiswap_api_url)) do
       nil
     else
-    IO.inspect("#############################################")
-    IO.inspect("### FETCHING TOKEN PRICES FROM ENERGISWAP ###")
-    IO.inspect("#############################################")
-      {:ok, body} = http_request(energiswap_api_url, energiswap_headers())
+      IO.inspect("#############################################")
+      IO.inspect("### FETCHING TOKEN PRICES FROM ENERGISWAP ###")
+      IO.inspect("#############################################")
+      {:ok, body} = http_request(energiswap_assets_url(), energiswap_headers())
       {:ok, result} = parse_http_success_response(body)
       result
+    end
+  end
+
+  def energiswap_base_url() do
+    Application.get_env(:explorer, :energiswap_api_url)
+  end
+
+  def energiswap_assets_url() do
+    "#{energiswap_base_url()}/assets"
+  end
+
+  def energiswap_lp_url() do
+    "#{energiswap_base_url()}/lpprices"
+  end
+
+  @spec fetch_energiswap_exchange_rates_for_lp_tokens() :: [any]
+  def fetch_energiswap_exchange_rates_for_lp_tokens() do
+
+    lp_url = energiswap_lp_url()
+
+    if(is_nil(lp_url)) do
+      nil
+    else
+      IO.inspect("################################################")
+      IO.inspect("### FETCHING LP TOKEN PRICES FROM ENERGISWAP ###")
+      IO.inspect("################################################")
+      {:ok, body} = http_request(lp_url, energiswap_headers())
+      {:ok, result} = parse_http_success_response(body)
+      format_lp_tokens(result)
     end
   end
 
@@ -69,6 +100,21 @@ defmodule Explorer.ExchangeRates.Source do
     else
       nil
     end
+  end
+
+  def format_lp_tokens(tokens) do
+    tokens =
+      Enum.map(tokens, fn token ->
+        {:ok, address_hash} = Chain.string_to_address_hash(token["id"])
+        checksumed_address = Chain.Address.checksum(address_hash)
+        %{
+          checksumed_address => %{
+          "symbol" => "#{token["token0"]["symbol"]}/#{token["token1"]["symbol"]}",
+          "last_price" => token["lpPriceUSD"],
+          }
+        }
+      end)
+    for token <- tokens, {address, details} <- token, into: %{}, do: {address, details}
   end
 
   defp fetch_exchange_rates_request(_source, source_url) when is_nil(source_url), do: {:error, "Source URL is nil"}

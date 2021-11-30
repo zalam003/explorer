@@ -39,6 +39,7 @@ variables:
   variables:
     WEBPORT: 4100
     DBPOOLSIZE: 50
+    INDEXER_MEM: 6
     ENVIRONMENT: "develop"
     ISINDEXER: "yes"
     ENVFILE: "develop_indexer.env"
@@ -120,6 +121,7 @@ variables:
   variables:
     WEBPORT: 4000
     DBPOOLSIZE: 50
+    INDEXER_MEM: 6
     ENVIRONMENT: "testnet"
     ISINDEXER: "yes"
     ENVFILE: "testnet_indexer.env"
@@ -202,6 +204,7 @@ variables:
   variables:
     WEBPORT: 4100
     DBPOOLSIZE: 200
+    INDEXER_MEM: 7
     ENVIRONMENT: "mainnet"
     ISINDEXER: "yes"
     ENVFILE: "mainnet_indexer.env"

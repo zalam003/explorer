@@ -19,7 +19,9 @@ defmodule Explorer.ExchangeRates.Source do
       nrg_coin_details
     else
       {:ok, [nrg_details_map]} = nrg_coin_details
-      wnrg_price = fetch_token_price(wnrg_token_address)
+      wnrg_price =
+        fetch_token_price(wnrg_token_address)
+        |> Decimal.round(4)
       # Update usd_value of the map(fetched from Coingecko) with the price fecthed from energiswap
       {:ok, [Map.put(nrg_details_map, :usd_value, wnrg_price)]}
     end

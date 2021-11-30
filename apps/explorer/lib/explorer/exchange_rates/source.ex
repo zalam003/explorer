@@ -14,8 +14,8 @@ defmodule Explorer.ExchangeRates.Source do
     wnrg_token_address = Application.get_env(:explorer, :wnrg_token_address)
     source_url = source.source_url()
     nrg_coin_details = fetch_exchange_rates_request(source, source_url)
-
     wnrg_price = fetch_token_price(wnrg_token_address)
+
     if(is_nil(wnrg_price)) do
       nrg_coin_details
     else
@@ -42,7 +42,6 @@ defmodule Explorer.ExchangeRates.Source do
 
   @spec fetch_energiswap_exchange_rates_for_tokens() :: [any]
   def fetch_energiswap_exchange_rates_for_tokens() do
-
     energiswap_api_url = Application.get_env(:explorer, :energiswap_api_url)
 
     if(is_nil(energiswap_api_url)) do
@@ -115,7 +114,7 @@ defmodule Explorer.ExchangeRates.Source do
           }
         }
       end)
-      for token <- tokens, {address, details} <- token, into: %{}, do: {address, details}
+    for token <- tokens, {address, details} <- token, into: %{}, do: {address, details}
   end
 
   defp fetch_exchange_rates_request(_source, source_url) when is_nil(source_url), do: {:error, "Source URL is nil"}

@@ -23,12 +23,11 @@ defmodule Explorer.KnownTokens.Source do
   def parse_known_tokens(tokens) do
     Enum.map(tokens, fn ({address, token}) ->
       %{
-        "address"=> address,
-        "symbol"=> token["symbol"],
-        "type"=> "default"
+        "address" => address,
+        "symbol" => token["symbol"],
+        "type" => "default"
       }
-      end
-    )
+    end)
   end
 
   @doc """

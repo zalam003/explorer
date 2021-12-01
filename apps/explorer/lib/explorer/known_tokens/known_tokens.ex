@@ -29,7 +29,7 @@ defmodule Explorer.KnownTokens do
   @impl GenServer
   def handle_info({_ref, {:ok, addresses}}, state) do
     if store() == :ets do
-      records = Enum.map(addresses, fn x -> {x["symbol"], x["address"]} end)
+      records = Enum.map(addresses, fn x -> {x["address"], true } end)
 
       :ets.insert(table_name(), records)
     end
@@ -97,6 +97,22 @@ defmodule Explorer.KnownTokens do
       if ets_table_exists?(table_name()) do
         case :ets.lookup(table_name(), symbol) do
           [{_symbol, address} | _] -> Hash.Address.cast(address)
+          _ -> nil
+        end
+      else
+        nil
+      end
+    end
+  end
+
+  @doc """
+  Returns true from the known tokens by address
+  """
+  def lookup_from_address(address) do
+    if store() == :ets && enabled?() do
+      if ets_table_exists?(table_name()) do
+        case :ets.lookup(table_name(), address) do
+          [{_address, flag} | _] -> flag
           _ -> nil
         end
       else

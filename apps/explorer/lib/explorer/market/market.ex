@@ -62,18 +62,16 @@ defmodule Explorer.Market do
       end
   end
 
-  def add_price(%{symbol: symbol} = token) do
-
-    known_address = get_known_address(symbol)
-
-    matches_known_address = known_address && known_address == token.contract_address_hash
+  def add_price(%{symbol: _symbol} = token) do
+    checksummed_contract_address = Address.checksum(token.contract_address_hash)
+    known_address = KnownTokens.lookup_from_address(checksummed_contract_address)
 
     mnrg_token_address = Application.get_env(:explorer, :mnrg_token_address)
-    mnrg_token = Address.checksum(token.contract_address_hash) == mnrg_token_address
+    mnrg_token = checksummed_contract_address == mnrg_token_address
 
     usd_value =
       cond do
-        matches_known_address ->
+        known_address ->
           get_price(token)
 
         mnrg_token ->

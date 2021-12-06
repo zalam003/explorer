@@ -9,6 +9,23 @@ INDEXER="explorer_indexer"
 WEBAPP="explorer_webapp"
 SCHEMA_NAME="explorer_schema"
 
+# Catch all for local test only
+if [[ -z $CI_COMMIT_SHA ]]
+then
+    CI_COMMIT_SHA=bs123456
+fi
+
+# Base Image 
+if [[ -z $BASE_IMAGE_LATEST ]]
+then
+    BASE_IMAGE_LATEST="explorer_base_image:latest"
+fi
+export ALPINE_VERSION=3.15.0
+export ALPINE_MIN_VERSION=$( echo $ALPINE_VERSION | sed -ne 's/[^0-9]*\(\([0-9]\.\)\{0,4\}[0-9][^.]\).*/\1/p' )
+export ELIXIR_VERSION=$( cat ../.tool-versions | grep elixir | awk '{print $2}' | awk -F\- '{print $1}' )
+export ELIXIR_MIN_VERSION=$( echo $ELIXIR_VERSION | sed -ne 's/[^0-9]*\(\([0-9]\.\)\{0,4\}[0-9][^.]\).*/\1/p' )
+export ERLANG_VERSION=24.1.5
+
 # Check script arguments
 while [[ $# -gt 0 ]]
 do
@@ -39,12 +56,6 @@ do
     esac
 done
 
-# Catch all for testing only
-if [[ -z $CI_COMMIT_SHA ]]
-then
-    CI_COMMIT_SHA=bs123456
-fi
-
 # Catch all for testing only; set as secret
 if [[ -z $SECRET_KEY_BASE ]]
 then
@@ -67,8 +78,19 @@ fi
 
 # Main script
 case $TODO in
+    build_base_image)
+        echo "==> Build blockscout webapp"
+        docker build -f ${APPDIR}/scripts/Dockerfile_base_image \
+            --build-arg ALPINE_VERSION=${ALPINE_VERSION} \
+            --build-arg ALPINE_MIN_VERSION=${ALPINE_MIN_VERSION} \
+            --build-arg ERLANG_VERSION=${ERLANG_VERSION} \
+            --build-arg ELIXIR_VERSION=${ELIXIR_MIN_VERSION} \
+            --platform linux/amd64 \
+            -t $BASE_IMAGE_LATEST .
+        ;;
+
     build_webapp|webapp)
-        if [[ -z $(docker ps -a -f NAME=${WEBAPP} | grep  ${WEBAPP}) ]]
+        if [[ -z $(docker ps -a -f NAME=${WEBAPP} | grep ${WEBAPP}) ]]
         then
             echo "==> Build blockscout webapp"
             docker build -f ${APPDIR}/scripts/Dockerfile_webapp -t ${WEBAPP}:$CI_COMMIT_SHA ../
@@ -85,7 +107,7 @@ case $TODO in
         ;;
 
     build_indexer|indexer)
-        if [[ -z $(docker ps -a -f NAME=${INDEXER} | grep  ${INDEXER}) ]]
+        if [[ -z $(docker ps -a -f NAME=${INDEXER} | grep ${INDEXER}) ]]
         then
             echo "==> Build blockscout indexer"
             docker build -f ${APPDIR}/scripts/Dockerfile_indexer -t ${INDEXER}:$CI_COMMIT_SHA ../
@@ -106,9 +128,9 @@ case $TODO in
         if [ "${ENV: -4}" == ".env" ]
         then
             ENV=$( echo $ENV | awk -F\. '{print $1}' )
-            ENVFILE="${ENV}_webapp.env"
+            ENVFILE="${ENV}.env"
         else
-            ENVFILE="${ENV}_webapp.env"
+            ENVFILE="${ENV}.env"
         fi
         docker run -d --name ${WEBAPP}_${ENV} \
             --env-file ${APPDIR}/scripts/${ENVFILE} \
@@ -145,12 +167,13 @@ case $TODO in
         if [ "${ENV: -4}" == ".env" ]
         then
             ENV=$( echo $ENV | awk -F\. '{print $1}' )
-            ENVFILE="${ENV}_indexer.env"
+            ENVFILE="${ENV}.env"
         else
-            ENVFILE="${ENV}_indexer.env"
+            ENVFILE="${ENV}.env"
         fi
         docker run -d --name ${INDEXER}_${ENV} \
             --env-file ${APPDIR}/scripts/${ENVFILE} \
+            -v ${APPDIR}/scripts/config.exs:/opt/app/apps/indexer/config/config.exs:ro \
             --restart on-failure:3 \
             ${INDEXER}:latest /bin/sh -c "mix phx.server"
         ;;
@@ -166,6 +189,7 @@ case $TODO in
         fi
         docker run -d --name ${INDEXER}_${ENV} \
             --env-file ${APPDIR}/scripts/${ENVFILE} \
+            -v ${APPDIR}/scripts/config.exs:/opt/app/apps/indexer/config/config.exs:ro \
             --restart on-failure:3 \
             --log-driver="awslogs" \
             --log-opt awslogs-region=${REGION} \
@@ -199,9 +223,9 @@ case $TODO in
         if [ "${ENV: -4}" == ".env" ]
         then
             ENV=$( echo $ENV | awk -F\. '{print $1}' )
-            ENVFILE="${ENV}_indexer.env"
+            ENVFILE="${ENV}.env"
         else
-            ENVFILE="${ENV}_indexer.env"
+            ENVFILE="${ENV}.env"
         fi
         docker run --rm --name ${SCHEMA_NAME} \
             --env-file ${APPDIR}/scripts/${ENVFILE} \

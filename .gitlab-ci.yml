@@ -9,6 +9,7 @@ include:
 #                         Stages                           #
 ############################################################
 stages:
+  - build-base
   - build
   - scan
   - deploy-sbx-schema
@@ -116,6 +117,26 @@ stages:
     - ssh -o StrictHostKeyChecking=no $SERVER_USER@$DEPLOY_SERVER_IP "cd $APP_DIR/scripts && ./remove_moniker.sh ${ENVIRONMENT}"
 
 ############################################################
+#                     Build Base Image                     #
+############################################################
+build-base:
+  stage: build-base
+  tags:
+    - docker_runner
+  before_script:
+    - apk add bash
+  script:
+    - cd scripts
+    - ./start.sh -r build_base_image
+    - docker tag $BASE_IMAGE_LATEST $BASE_IMAGE_COMMIT
+    - docker push $BASE_IMAGE_COMMIT
+    - docker push $BASE_IMAGE_LATEST
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+      changes:
+        - .tool-versions
+
+############################################################
 #                      Build indexer                       #
 ############################################################
 build-indexer:
@@ -125,6 +146,7 @@ build-indexer:
   script:
     - cd scripts
     - aws ecr create-repository --repository-name $APP1_NAME || true
+    - sed -i "s|$DEFAULT_IMAGE|$BASE_IMAGE_LATEST|g" Dockerfile_indexer
     - docker build --cache-from $TAG1_LATEST -f ./Dockerfile_indexer -t $TAG1_COMMIT -t $TAG1_LATEST ../
     - docker push $TAG1_COMMIT
     - docker push $TAG1_LATEST
@@ -132,10 +154,9 @@ build-indexer:
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
       changes:
         - apps/**/*
-        - scripts/Dockerfile_{indexer,webapp}
+        - scripts/Dockerfile_{indexer,webapp,base_image}
         - scripts/start.sh
     - if: $CI_COMMIT_TAG
-    # - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
 
 ############################################################
 #                       Build webapp                       #
@@ -147,6 +168,7 @@ build-webapp:
   script:
     - cd scripts
     - aws ecr create-repository --repository-name $APP1_NAME || true
+    - sed -i "s|$DEFAULT_IMAGE|$BASE_IMAGE_LATEST|g" Dockerfile_webapp
     - docker build --cache-from $TAG2_LATEST -f ./Dockerfile_webapp -t $TAG2_COMMIT -t $TAG2_LATEST ../
     - docker push $TAG2_COMMIT
     - docker push $TAG2_LATEST
@@ -154,10 +176,9 @@ build-webapp:
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
       changes:
         - apps/**/*
-        - scripts/Dockerfile_{indexer,webapp}
+        - scripts/Dockerfile_{indexer,webapp,base_image}
         - scripts/start.sh
     - if: $CI_COMMIT_TAG
-    # - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
 
 ############################################################
 #                       Scan webapp                       #
@@ -188,10 +209,9 @@ scan-webapp:
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
       changes:
         - apps/**/*
-        - scripts/Dockerfile_{indexer,webapp}
+        - scripts/Dockerfile_{indexer,webapp,base_image}
         - scripts/start.sh
     - if: $CI_COMMIT_TAG
-    # - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
 
 ############################################################
 #                       Scan indexer                       #
@@ -222,10 +242,9 @@ scan-indexer:
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
       changes:
         - apps/**/*
-        - scripts/Dockerfile_{indexer,webapp}
+        - scripts/Dockerfile_{indexer,webapp,base_image}
         - scripts/start.sh
     - if: $CI_COMMIT_TAG
-    # - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
 
 ############################################################
 #                         Sandbox                          #

@@ -150,8 +150,8 @@ build-dev-image:
     - docker build --cache-from $TAG2_LATEST -f ./Dockerfile_webapp -t $TAG2_COMMIT ../
     - docker push $TAG2_COMMIT
     - echo "########################################################################"
-    - echo '# Run to pull image                                                    #'
-    - echo '# docker pull registry.energi.software/$APP2_NAME:$CI_COMMIT_SHORT_SHA #'
+    - echo " Run to pull image"
+    - echo " docker pull registry.energi.software/$APP2_NAME:$CI_COMMIT_SHORT_SHA"
     - echo "########################################################################"
   rules:
     - if: $CI_COMMIT_BRANCH && $CI_PIPELINE_SOURCE == "push"

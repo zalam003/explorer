@@ -151,14 +151,13 @@ build-dev-image:
     - docker push $TAG2_COMMIT
     - echo "########################################################################"
     - echo " Run to pull image"
-    - echo " docker pull registry.energi.software/$APP2_NAME:$CI_COMMIT_SHORT_SHA"
+    - echo " docker pull $ECR_PROXY_REGISTRY/$APP2_NAME:$CI_COMMIT_SHORT_SHA"
     - echo "########################################################################"
   rules:
     - if: $CI_COMMIT_BRANCH && $CI_PIPELINE_SOURCE == "push"
       changes:
         - apps/**/*
         - scripts/Dockerfile_{indexer,webapp,base_image}
-        - .gitlab-ci.yml
       when: manual
 
 ############################################################

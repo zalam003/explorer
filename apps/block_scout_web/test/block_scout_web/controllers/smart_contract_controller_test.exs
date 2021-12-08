@@ -76,7 +76,7 @@ defmodule BlockScoutWeb.SmartContractControllerTest do
             "stateMutability" => "view",
             "payable" => false,
             "outputs" => [%{"type" => "address", "name" => ""}],
-            "name" => "implementation",
+            "name" => "impl",
             "inputs" => [],
             "constant" => true
           }
@@ -110,7 +110,7 @@ defmodule BlockScoutWeb.SmartContractControllerTest do
             "stateMutability" => "nonpayable",
             "payable" => false,
             "outputs" => [%{"type" => "address", "name" => "", "internalType" => "address"}],
-            "name" => "implementation",
+            "name" => "impl",
             "inputs" => [],
             "constant" => false
           }
@@ -146,7 +146,7 @@ defmodule BlockScoutWeb.SmartContractControllerTest do
             "stateMutability" => "nonpayable",
             "payable" => false,
             "outputs" => [%{"type" => "address", "name" => "", "internalType" => "address"}],
-            "name" => "implementation",
+            "name" => "impl",
             "inputs" => [],
             "constant" => false
           }

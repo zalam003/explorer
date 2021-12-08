@@ -6579,7 +6579,7 @@ defmodule Explorer.Chain do
     implementation_method_abi =
       abi
       |> Enum.find(fn method ->
-        Map.get(method, "name") == "implementation" ||
+        Map.get(method, "name") == "impl" ||
           master_copy_pattern?(method)
       end)
 
@@ -6608,7 +6608,7 @@ defmodule Explorer.Chain do
     implementation_method_abi =
       abi
       |> Enum.find(fn method ->
-        Map.get(method, "name") == "implementation" && Map.get(method, "stateMutability") == "view"
+        Map.get(method, "name") == "impl" && Map.get(method, "stateMutability") == "view"
       end)
 
     master_copy_method_abi =
@@ -6671,7 +6671,7 @@ defmodule Explorer.Chain do
         "type" => "function",
         "stateMutability" => "view",
         "outputs" => [%{"type" => "address", "name" => "", "internalType" => "address"}],
-        "name" => "implementation",
+        "name" => "impl",
         "inputs" => []
       }
     ]
@@ -6809,7 +6809,7 @@ defmodule Explorer.Chain do
     implementation_method_abi =
       abi
       |> Enum.find(fn method ->
-        Map.get(method, "name") == "implementation" ||
+        Map.get(method, "name") == "impl" ||
           master_copy_pattern?(method)
       end)
 

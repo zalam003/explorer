@@ -14,7 +14,7 @@ defmodule Explorer.SmartContract.HelperTest do
         "name" => "upgradeToAndCall",
         "inputs" => [
           %{"type" => "uint256", "name" => "version"},
-          %{"type" => "address", "name" => "implementation"},
+          %{"type" => "address", "name" => "impl"},
           %{"type" => "bytes", "name" => "data"}
         ],
         "constant" => false
@@ -31,7 +31,7 @@ defmodule Explorer.SmartContract.HelperTest do
         "name" => "upgradeToAndCall",
         "inputs" => [
           %{"type" => "uint256", "name" => "version"},
-          %{"type" => "address", "name" => "implementation"},
+          %{"type" => "address", "name" => "impl"},
           %{"type" => "bytes", "name" => "data"}
         ],
         "constant" => false
@@ -103,7 +103,7 @@ defmodule Explorer.SmartContract.HelperTest do
         "name" => "upgradeToAndCall",
         "inputs" => [
           %{"type" => "uint256", "name" => "version"},
-          %{"type" => "address", "name" => "implementation"},
+          %{"type" => "address", "name" => "impl"},
           %{"type" => "bytes", "name" => "data"}
         ],
         "constant" => false

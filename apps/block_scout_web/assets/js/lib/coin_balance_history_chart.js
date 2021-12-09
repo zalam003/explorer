@@ -36,6 +36,7 @@ export function createCoinBalanceHistoryChart (el) {
           datasets: [{
             label: 'coin balance',
             data: coinBalanceHistoryData,
+            backgroundColor: "#7dd79f",   
             lineTension: 0,
             cubicInterpolationMode: 'monotone',
             fill: true

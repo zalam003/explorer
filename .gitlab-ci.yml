@@ -154,7 +154,7 @@ build-dev-image:
     - echo " docker pull $ECR_PROXY_REGISTRY/$APP2_NAME:$CI_COMMIT_SHORT_SHA"
     - echo "########################################################################"
   rules:
-    - if: $CI_COMMIT_BRANCH && $CI_PIPELINE_SOURCE == "push"
+    - if: '$CI_COMMIT_REF_PROTECTED == "false" && $CI_PIPELINE_SOURCE == "push"'
       changes:
         - apps/**/*
         - scripts/Dockerfile_{indexer,webapp,base_image}

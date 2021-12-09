@@ -10,6 +10,7 @@ include:
 ############################################################
 stages:
   - build-base
+  - build-dev-image
   - build
   - scan
   - deploy-sbx-schema
@@ -137,6 +138,29 @@ build-base:
         - .tool-versions
 
 ############################################################
+#                  Build Developer Image                   #
+############################################################
+build-dev-image:
+  stage: build-dev-image
+  tags:
+    - docker_runner
+  script:
+    - cd scripts
+    - sed -i "s|$DEFAULT_IMAGE|$BASE_IMAGE_LATEST|g" Dockerfile_webapp
+    - docker build --cache-from $TAG2_LATEST -f ./Dockerfile_webapp -t $TAG2_COMMIT ../
+    - docker push $TAG2_COMMIT
+    - echo "########################################################################"
+    - echo " Run to pull image"
+    - echo " docker pull $ECR_PROXY_REGISTRY/$APP2_NAME:$CI_COMMIT_SHORT_SHA"
+    - echo "########################################################################"
+  rules:
+    - if: $CI_COMMIT_BRANCH && $CI_PIPELINE_SOURCE == "push"
+      changes:
+        - apps/**/*
+        - scripts/Dockerfile_{indexer,webapp,base_image}
+      when: manual
+
+############################################################
 #                      Build indexer                       #
 ############################################################
 build-indexer:
@@ -145,7 +169,6 @@ build-indexer:
     - docker_runner
   script:
     - cd scripts
-    - aws ecr create-repository --repository-name $APP1_NAME || true
     - sed -i "s|$DEFAULT_IMAGE|$BASE_IMAGE_LATEST|g" Dockerfile_indexer
     - docker build --cache-from $TAG1_LATEST -f ./Dockerfile_indexer -t $TAG1_COMMIT -t $TAG1_LATEST ../
     - docker push $TAG1_COMMIT
@@ -167,7 +190,6 @@ build-webapp:
     - docker_runner
   script:
     - cd scripts
-    - aws ecr create-repository --repository-name $APP1_NAME || true
     - sed -i "s|$DEFAULT_IMAGE|$BASE_IMAGE_LATEST|g" Dockerfile_webapp
     - docker build --cache-from $TAG2_LATEST -f ./Dockerfile_webapp -t $TAG2_COMMIT -t $TAG2_LATEST ../
     - docker push $TAG2_COMMIT

@@ -1,15 +1,15 @@
 $body-dark: #080808; // body background
 $dark-bg: #111111; // hero shade
-$dark-light-bg: $dark-bg; // pills bg shade
+$dark-light-bg: #242526; // pills bg shade
 $dark-light: $dark-light-bg; // tile light top share
 $labels-dark: #888888; // header nav, labels
 
-$dark-primary: #75f94d;
+$dark-primary: #01e676;
 $dark-secondary: $dark-primary;
 $dark-primary-alternate: $dark-primary;
 
 .dark-forest-theme-applied {
-	color: #ffffff;
+	color: #fff;
 	background-color: $body-dark;
 
 	.dark-mode-changer--dark svg path {
@@ -20,9 +20,9 @@ $dark-primary-alternate: $dark-primary;
 	.navbar.navbar-primary {
 		background-color: $dark-light-bg !important;
 	}
-	.navbar-brand .navbar-logo {
-		filter: brightness(0) invert(1);
-	}
+	// .navbar-brand .navbar-logo {
+	// 	filter: brightness(0) invert(1);
+	// }
 	.navbar.navbar-primary .navbar-nav .nav-link {
 		color: $labels-dark;
 		.nav-link-icon {
@@ -51,9 +51,9 @@ $dark-primary-alternate: $dark-primary;
 			color: $labels-dark;
 		}
 	}
-	.navbar.navbar-primary .navbar-toggler .navbar-toggler-icon {
-		filter: invert(1);
-	}
+	// .navbar.navbar-primary .navbar-toggler .navbar-toggler-icon {
+	// 	filter: invert(1);
+	// }
 
 	// footer
 	.footer {
@@ -223,7 +223,7 @@ $dark-primary-alternate: $dark-primary;
 		color: $labels-dark;
 	}
 	.tile .tile-body a,
-	.tile span[data-address-hash] { color: $dark-primary; }
+	.tile span[data-address-hash] { color: $tile-span; }
 	.fade-up-blocks-chain .tile-type-block-animation .tile-type-line-up {
 		background-color: $dark-primary;
 	}

@@ -13,6 +13,7 @@ $header-textfield-magnifier-color: $header-search-input-color !default;
 $header-link-horizontal-padding: 0.71rem;
 $navbar-logo-height: 28px !default;
 $navbar-logo-width: auto !default;
+$slash-icon: #21d34f;
 
 .navbar.navbar-primary {
   background-color: $header-background-color;
@@ -202,10 +203,9 @@ $navbar-logo-width: auto !default;
     width: 100%;
 
     &.border {
-      border-color: $secondary !important;
+      border-color: $dark-gray !important;
       border-radius: 5px;
-      color: $secondary;
-      background-color: $header-textfield-background-color;
+      color: $slash-icon;
     }
   }
 }

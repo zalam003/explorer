@@ -1,8 +1,16 @@
 // general
-$primary: #00E676;
+$primary: #00e676;
 $secondary: #263238;
-$tertiary: #BDBDBD;
+$tertiary: #bdbdbd;
 $additional-font: #fff;
+
+$body-dark: #18191A; // body background
+$dark-bg: #2d2e2f; // hero shade
+$dark-light-bg: #242526; // pills bg shade
+$dark-light: #141619; // tile light top share
+$labels-dark: #8f9090; // header nav, labels
+$dark-gray: #474849; // drop-down
+$tile-span: #adadad; // data-address-hash
 
 //header
 $header-background-color: #263238;
@@ -90,6 +98,6 @@ $api-text-monospace-color: $primary;
 }
 
 // Dark theme
-$dark-primary: #9b62ff;
-$dark-secondary: #87e1a9;
-$dark-primary-alternate: #7e50d0; 
+$dark-primary: #01e676;
+$dark-secondary: #00e676;
+$dark-primary-alternate: #28a745; 

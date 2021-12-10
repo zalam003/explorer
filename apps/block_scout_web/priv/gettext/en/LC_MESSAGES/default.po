@@ -405,7 +405,7 @@ msgstr ""
 #, elixir-format
 #: lib/block_scout_web/templates/chain/_metatags.html.eex:4
 msgid "BlockScout provides analytics data, API, and Smart Contract tools for the %{subnetwork}"
-msgstr ""
+msgstr "Energi Explorer: Analytics data, API, and Smart Contract tools for Energi"
 
 #, elixir-format
 #: lib/block_scout_web/templates/chain/show.html.eex:176

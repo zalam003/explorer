@@ -82,7 +82,7 @@
           <li><a href="https://test.energiswap.exchange/" rel="noreferrer noopener" target="_blank" class="footer-link"><%= gettext("Energiswap") %></a></li>
           <li><a href="https://info.test.energiswap.exchange/" rel="noreferrer noopener" target="_blank" class="footer-link"><%= gettext("Energiswap Analytics") %></a></li>
           <li><a href="https://bridge.test.energi.network/" rel="noreferrer noopener" target="_blank" class="footer-link"><%= gettext("Energi Bridge") %></a></li>
-          <li><a href="https://wallet.test3.energi.network/" rel="noreferrer noopener" target="_blank" class="footer-link"><%= gettext("MyEnergiWallet") %></a></li>
+          <li><a href="https://wallet.test.energi.network/" rel="noreferrer noopener" target="_blank" class="footer-link"><%= gettext("MyEnergiWallet") %></a></li>
           <li><a href="https://nexus.test.energi.network/" rel="noreferrer noopener" target="_blank" class="footer-link"><%= gettext("Energi Nexus") %></a></li>
           <li><a href="https://stats.test.energi.network/" rel="noreferrer noopener" target="_blank" class="footer-link"><%= gettext("Network Monitor") %></a></li>
         </ul>

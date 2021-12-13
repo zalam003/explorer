@@ -136,6 +136,7 @@ build-base:
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
       changes:
         - .tool-versions
+        - scripts/build_base_image
 
 ############################################################
 #                  Build Developer Image                   #
@@ -207,6 +208,7 @@ build-webapp:
 ############################################################
 scan-webapp:
   stage: scan
+  needs: [build-webapp]
   variables:
     ENVIRONMENT: testnet
   tags:
@@ -240,6 +242,7 @@ scan-webapp:
 ############################################################
 scan-indexer:
   stage: scan
+  needs: [build-indexer]
   variables:
     ENVIRONMENT: testnet
   tags:
@@ -278,6 +281,7 @@ sbx-schema:
   services:
     - docker:dind
   stage: deploy-sbx-schema
+  needs: [scan-indexer]
   tags:
     - docker_runner
   variables: !reference [.sandbox_schema_variables, variables]
@@ -293,6 +297,7 @@ sbx-idxr:
   services:
     - docker:dind
   stage: deploy-sbx-indexer
+  needs: [sbx-schema]
   tags:
     - docker_runner
   variables: !reference [.sandbox_indexer_variables, variables]
@@ -307,6 +312,7 @@ sbx-web1:
   services:
     - docker:dind
   stage: deploy-sbx-webapp
+  needs: [scan-webapp]
   tags:
     - docker_runner
   variables: !reference [.sandbox_webapp_variables, variables]
@@ -326,6 +332,7 @@ tnet-schema:
   services:
     - docker:dind
   stage: deploy-testnet-schema
+  needs: []
   tags:
     - docker_runner
   variables: !reference [.testnet_schema_variables, variables]
@@ -341,6 +348,7 @@ tnet-idxr:
   services:
     - docker:dind
   stage: deploy-testnet-indexer
+  needs: [tnet-schema]
   tags:
     - docker_runner
   variables: !reference [.testnet_indexer_variables, variables]
@@ -374,6 +382,7 @@ mnet-schema:
   services:
     - docker:dind
   stage: deploy-mainnet-schema
+  needs: []
   tags:
     - docker_runner
   variables: !reference [.mainnet_schema_variables, variables]
@@ -389,6 +398,7 @@ mnet-idxr:
   services:
     - docker:dind
   stage: deploy-mainnet-indexer
+  needs: [mnet-schema]
   tags:
     - docker_runner
   variables: !reference [.mainnet_indexer_variables, variables]
@@ -403,6 +413,7 @@ mnet-web1a:
   services:
     - docker:dind
   stage: deploy-mainnet-webapp1
+  needs: []
   tags:
     - docker_runner
   variables: !reference [.mainnet_webapp1a_variables, variables]
@@ -418,6 +429,7 @@ mnet-web1a:
 #   services:
 #     - docker:dind
 #   stage: deploy-mainnet-webapp2
+#   needs: [mnet-web1a]
 #   tags:
 #     - docker_runner
 #   variables: !reference [.mainnet_webapp1b_variables, variables]
@@ -433,6 +445,7 @@ mnet-web2a:
   services:
     - docker:dind
   stage: deploy-mainnet-webapp2
+  needs: [mnet-web1a]
   tags:
     - docker_runner
   variables: !reference [.mainnet_webapp2a_variables, variables]
@@ -448,6 +461,7 @@ mnet-web2a:
 #   services:
 #     - docker:dind
 #   stage: deploy-mainnet-webapp2
+#   needs: []
 #   tags:
 #     - docker_runner
 #   variables: !reference [.mainnet_webapp2b_variables, variables]

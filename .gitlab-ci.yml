@@ -281,7 +281,9 @@ sbx-schema:
   services:
     - docker:dind
   stage: deploy-sbx-schema
-  needs: [scan-indexer]
+  needs: 
+    - job: scan-indexer
+      optional: true
   tags:
     - docker_runner
   variables: !reference [.sandbox_schema_variables, variables]
@@ -312,7 +314,9 @@ sbx-web1:
   services:
     - docker:dind
   stage: deploy-sbx-webapp
-  needs: [scan-webapp]
+  needs: 
+    - job: scan-webapp
+      optional: true
   tags:
     - docker_runner
   variables: !reference [.sandbox_webapp_variables, variables]
@@ -363,6 +367,7 @@ tnet-web1:
   services:
     - docker:dind
   stage: deploy-testnet-webapp1
+  needs: [tnet-schema]
   tags:
     - docker_runner
   variables: !reference [.testnet_webapp1_variables, variables]

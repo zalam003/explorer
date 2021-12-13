@@ -3,7 +3,7 @@ defmodule BlockScoutWeb.TransactionTokenTransferController do
 
   import BlockScoutWeb.Chain, only: [paging_options: 1, next_page_params: 3, split_list_by_page: 1]
 
-  alias BlockScoutWeb.{AccessHelpers, Controller, TransactionController, TransactionTokenTransferView}
+  alias BlockScoutWeb.{AccessHelpers, Controller, TransactionController, TransactionTokenTransferView, DecimalUpgradeHandler}
   alias Explorer.{Chain, Market}
   alias Explorer.ExchangeRates.Token
   alias Phoenix.View
@@ -33,7 +33,9 @@ defmodule BlockScoutWeb.TransactionTokenTransferController do
           paging_options(params)
         )
 
-      token_transfers_plus_one = Chain.transaction_to_token_transfers(transaction_hash, full_options)
+      token_transfers_plus_one =
+        Chain.transaction_to_token_transfers(transaction_hash, full_options)
+        |> DecimalUpgradeHandler.handle_decimals_upgrade()
 
       {token_transfers, next_page} = split_list_by_page(token_transfers_plus_one)
 

@@ -36,9 +36,6 @@ defmodule BlockScoutWeb.Tokens.HolderController do
 
       token_balances_json =
         Enum.map(token_balances_paginated, fn token_balance ->
-          IO.inspect(Address.checksum(token_balance.address_hash))
-          IO.inspect(token_balance)
-          IO.inspect(Address.checksum(token_balance.address_hash))
           View.render_to_string(HolderView, "_token_balances.html",
             address_hash: address_hash,
             token_balance: token_balance,

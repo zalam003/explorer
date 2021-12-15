@@ -1,7 +1,7 @@
 defmodule BlockScoutWeb.Tokens.HolderController do
   use BlockScoutWeb, :controller
 
-  alias BlockScoutWeb.{AccessHelpers, Controller}
+  alias BlockScoutWeb.{AccessHelpers, Controller, DecimalUpgradeHandler}
   alias BlockScoutWeb.Tokens.HolderView
   alias Explorer.{Chain, Market}
   alias Explorer.Chain.Address
@@ -19,8 +19,12 @@ defmodule BlockScoutWeb.Tokens.HolderController do
          {:ok, token} <- Chain.token_from_address_hash(address_hash),
          token_balances <- Chain.fetch_token_holders_from_token_hash(address_hash, paging_options(params)),
          {:ok, false} <- AccessHelpers.restricted_access?(address_hash_string, params) do
-      {token_balances_paginated, next_page} = split_list_by_page(token_balances)
-
+      token_balances_with_token_specs =
+        Enum.map(token_balances, fn token_balance ->
+          Map.put(token_balance, :token, token)
+        end)
+      parsed_token_balances = DecimalUpgradeHandler.handle_decimals_upgrade_for_token_balance(token_balances_with_token_specs)
+      {token_balances_paginated, next_page} = split_list_by_page(parsed_token_balances)
       next_page_path =
         case next_page_params(next_page, token_balances_paginated, params) do
           nil ->
@@ -32,10 +36,13 @@ defmodule BlockScoutWeb.Tokens.HolderController do
 
       token_balances_json =
         Enum.map(token_balances_paginated, fn token_balance ->
+          IO.inspect(Address.checksum(token_balance.address_hash))
+          IO.inspect(token_balance)
+          IO.inspect(Address.checksum(token_balance.address_hash))
           View.render_to_string(HolderView, "_token_balances.html",
             address_hash: address_hash,
             token_balance: token_balance,
-            token: token,
+            token: token_balance.token,
             conn: conn
           )
         end)

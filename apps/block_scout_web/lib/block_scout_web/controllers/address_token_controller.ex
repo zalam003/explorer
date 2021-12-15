@@ -3,7 +3,7 @@ defmodule BlockScoutWeb.AddressTokenController do
 
   import BlockScoutWeb.Chain, only: [next_page_params: 3, paging_options: 1, split_list_by_page: 1]
 
-  alias BlockScoutWeb.{AccessHelpers, AddressTokenView, Controller}
+  alias BlockScoutWeb.{AccessHelpers, AddressTokenView, Controller, DecimalUpgradeHandler}
   alias Explorer.{Chain, Market}
   alias Explorer.Chain.Address
   alias Explorer.ExchangeRates.Token
@@ -33,6 +33,7 @@ defmodule BlockScoutWeb.AddressTokenController do
       items =
         tokens
         |> Market.add_price()
+        |> DecimalUpgradeHandler.handle_decimals_upgrade_for_token_balance()
         |> Enum.map(fn {token_balance, bridged_token, token} ->
           View.render_to_string(
             AddressTokenView,

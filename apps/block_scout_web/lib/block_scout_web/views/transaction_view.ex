@@ -1,7 +1,7 @@
 defmodule BlockScoutWeb.TransactionView do
   use BlockScoutWeb, :view
 
-  alias BlockScoutWeb.{AccessHelpers, AddressView, BlockView, TabHelpers}
+  alias BlockScoutWeb.{AccessHelpers, AddressView, BlockView, TabHelpers , DecimalUpgradeHandler}
   alias BlockScoutWeb.Cldr.Number
   alias Explorer.{Chain, CustomContractsHelpers, Repo}
   alias Explorer.Chain.Block.Reward
@@ -53,6 +53,7 @@ defmodule BlockScoutWeb.TransactionView do
       |> Enum.filter(fn token_transfer ->
         token_transfer.block_hash == transaction.block_hash
       end)
+      |> DecimalUpgradeHandler.handle_decimals_upgrade()
 
     transaction_with_transfers_filtered =
       Map.put(transaction_with_transfers, :token_transfers, token_transfers_filtered_by_block_hash)

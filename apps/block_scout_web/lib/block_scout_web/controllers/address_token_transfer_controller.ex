@@ -1,7 +1,7 @@
 defmodule BlockScoutWeb.AddressTokenTransferController do
   use BlockScoutWeb, :controller
 
-  alias BlockScoutWeb.{AccessHelpers, Controller, TransactionView}
+  alias BlockScoutWeb.{AccessHelpers, Controller, TransactionView, DecimalUpgradeHandler}
   alias Explorer.ExchangeRates.Token
   alias Explorer.{Chain, Market}
   alias Explorer.Chain.Address
@@ -46,6 +46,7 @@ defmodule BlockScoutWeb.AddressTokenTransferController do
           token_hash,
           paging_options(params)
         )
+        |> DecimalUpgradeHandler.handle_decimal_upgrade_for_transaction()
 
       {transactions_paginated, next_page} = split_list_by_page(transactions)
 
@@ -140,6 +141,7 @@ defmodule BlockScoutWeb.AddressTokenTransferController do
           address_hash,
           options
         )
+        |> DecimalUpgradeHandler.handle_decimal_upgrade_for_transaction()
 
       {transactions_paginated, next_page} = split_list_by_page(transactions)
 

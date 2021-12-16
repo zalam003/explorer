@@ -1,7 +1,7 @@
 defmodule BlockScoutWeb.Tokens.TransferController do
   use BlockScoutWeb, :controller
 
-  alias BlockScoutWeb.{AccessHelpers, Controller}
+  alias BlockScoutWeb.{AccessHelpers, Controller, DecimalUpgradeHandler}
   alias BlockScoutWeb.Tokens.TransferView
   alias Explorer.{Chain, Market}
   alias Explorer.Chain.Address
@@ -18,7 +18,8 @@ defmodule BlockScoutWeb.Tokens.TransferController do
          {:ok, token} <- Chain.token_from_address_hash(address_hash),
          token_transfers <- Chain.fetch_token_transfers_from_token_hash(address_hash, paging_options(params)),
          {:ok, false} <- AccessHelpers.restricted_access?(address_hash_string, params) do
-      {token_transfers_paginated, next_page} = split_list_by_page(token_transfers)
+      parsed_token_transfers = DecimalUpgradeHandler.handle_decimals_upgrade(token_transfers)
+      {token_transfers_paginated, next_page} = split_list_by_page(parsed_token_transfers)
 
       next_page_path =
         case next_page_params(next_page, token_transfers_paginated, params) do

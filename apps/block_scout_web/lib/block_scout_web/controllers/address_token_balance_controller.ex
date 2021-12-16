@@ -1,7 +1,7 @@
 defmodule BlockScoutWeb.AddressTokenBalanceController do
   use BlockScoutWeb, :controller
 
-  alias BlockScoutWeb.AccessHelpers
+  alias BlockScoutWeb.{AccessHelpers, DecimalUpgradeHandler}
   alias Explorer.{Chain, Market}
   alias Explorer.Chain.Address
   alias Indexer.Fetcher.TokenBalanceOnDemand
@@ -20,6 +20,7 @@ defmodule BlockScoutWeb.AddressTokenBalanceController do
       token_balances_with_price =
         token_balances
         |> Market.add_price()
+        |> DecimalUpgradeHandler.handle_decimals_upgrade_for_token_balance()
 
       case AccessHelpers.restricted_access?(address_hash_string, params) do
         {:ok, false} ->

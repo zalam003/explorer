@@ -1400,8 +1400,8 @@ msgstr ""
 #: lib/block_scout_web/templates/address_contract_verification_via_flattened_code/new.html.eex:159
 #: lib/block_scout_web/templates/address_contract_verification_via_flattened_code/new.html.eex:181
 #: lib/block_scout_web/templates/address_contract_verification_via_flattened_code/new.html.eex:203
-#: lib/block_scout_web/templates/address_contract_verification_via_flattened_code/new.html.eex:225
-#: lib/block_scout_web/templates/address_contract_verification_via_flattened_code/new.html.eex:247
+#: lib/block_scout_web/templates/address_contract_verification_via_flattened_code/new.html.eex:251
+#: lib/block_scout_web/templates/address_contract_verification_via_flattened_code/new.html.eex:273
 #: lib/block_scout_web/templates/address_contract_verification_via_flattened_code/new.html.eex:269
 msgid "Library Address"
 msgstr ""
@@ -1412,8 +1412,8 @@ msgstr ""
 #: lib/block_scout_web/templates/address_contract_verification_via_flattened_code/new.html.eex:149
 #: lib/block_scout_web/templates/address_contract_verification_via_flattened_code/new.html.eex:171
 #: lib/block_scout_web/templates/address_contract_verification_via_flattened_code/new.html.eex:193
-#: lib/block_scout_web/templates/address_contract_verification_via_flattened_code/new.html.eex:215
-#: lib/block_scout_web/templates/address_contract_verification_via_flattened_code/new.html.eex:237
+#: lib/block_scout_web/templates/address_contract_verification_via_flattened_code/new.html.eex:241
+#: lib/block_scout_web/templates/address_contract_verification_via_flattened_code/new.html.eex:263
 #: lib/block_scout_web/templates/address_contract_verification_via_flattened_code/new.html.eex:259
 msgid "Library Name"
 msgstr ""

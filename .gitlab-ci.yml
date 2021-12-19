@@ -31,7 +31,7 @@ stages:
 .sbx_triggers: &sbx_triggers
   refs:
     - sandbox
-
+    
 .testnet_triggers: &testnet_triggers
   refs:
     - develop
@@ -89,13 +89,13 @@ stages:
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
     - echo "Deploy $ENVIRONMENT $RUN_APP as $SERVER_USER on $DEPLOY_SERVER_IP"
-    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$DEPLOY_SERVER_IP 'export AWS_REGION=$AWS_REGION'
-    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$DEPLOY_SERVER_IP 'if [[ -d $APP_DIR/scripts ]]; then rm -rf $APP_DIR/scripts; fi'
+    - ssh -t -o StrictHostKeyChecking=no $SERVER_USER@$DEPLOY_SERVER_IP 'export AWS_REGION=$AWS_REGION'
+    - ssh -t -o StrictHostKeyChecking=no $SERVER_USER@$DEPLOY_SERVER_IP 'if [[ -d $APP_DIR/scripts ]]; then rm -rf $APP_DIR/scripts; fi'
     - scp -o StrictHostKeyChecking=no -r ./scripts $SERVER_USER@$DEPLOY_SERVER_IP:$APP_DIR/.
     - echo "TAG $TAG_LATEST App Name $APP_NAME"
-    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$DEPLOY_SERVER_IP "docker pull $TAG_LATEST"
-    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$DEPLOY_SERVER_IP "docker container rm -f ${APP_NAME}_${ENVIRONMENT} || true"
-    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$DEPLOY_SERVER_IP "cd $APP_DIR/scripts && ./start.sh -e ${ENVIRONMENT} -r ${RUN_APP} -i ${CONTAINER_REGISTRY}"
+    - ssh -t -o StrictHostKeyChecking=no $SERVER_USER@$DEPLOY_SERVER_IP "docker pull $TAG_LATEST"
+    - ssh -t -o StrictHostKeyChecking=no $SERVER_USER@$DEPLOY_SERVER_IP "docker container rm -f ${APP_NAME}_${ENVIRONMENT} || true"
+    - ssh -t -o StrictHostKeyChecking=no $SERVER_USER@$DEPLOY_SERVER_IP "cd $APP_DIR/scripts && ./start.sh -e ${ENVIRONMENT} -r ${RUN_APP} -i ${CONTAINER_REGISTRY}"
 
 # Script to update schema
 .update_schema:
@@ -106,16 +106,16 @@ stages:
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
     - echo "Deploy schema as $SERVER_USER on $DEPLOY_SERVER_IP"
-    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$DEPLOY_SERVER_IP 'sudo su - && export AWS_REGION=$AWS_REGION'
-    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$DEPLOY_SERVER_IP 'if [[ -d $APP_DIR/scripts ]]; then rm -rf $APP_DIR/scripts; fi'
+    - ssh -t -o StrictHostKeyChecking=no $SERVER_USER@$DEPLOY_SERVER_IP 'sudo su - && export AWS_REGION=$AWS_REGION'
+    - ssh -t -o StrictHostKeyChecking=no $SERVER_USER@$DEPLOY_SERVER_IP 'if [[ -d $APP_DIR/scripts ]]; then rm -rf $APP_DIR/scripts; fi'
     - scp -o StrictHostKeyChecking=no -r ./scripts $SERVER_USER@$DEPLOY_SERVER_IP:$APP_DIR/.
-    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$DEPLOY_SERVER_IP "docker pull $TAG1_LATEST"
-    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$DEPLOY_SERVER_IP "docker container rm -f $SCHEMA_NAME || true"
+    - ssh -t -o StrictHostKeyChecking=no $SERVER_USER@$DEPLOY_SERVER_IP "docker pull $TAG1_LATEST"
+    - ssh -t -o StrictHostKeyChecking=no $SERVER_USER@$DEPLOY_SERVER_IP "docker container rm -f $SCHEMA_NAME || true"
     - echo "Create or update DB schema"
-    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$DEPLOY_SERVER_IP "cd $APP_DIR/scripts && ./start.sh -e ${ENVIRONMENT} -r ${RUN_APP} -i $CONTAINER_REGISTRY"
-    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$DEPLOY_SERVER_IP "cd $APP_DIR/scripts && ./token_remove.sh ${ENVIRONMENT}"
-    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$DEPLOY_SERVER_IP "cd $APP_DIR/scripts && ./token_rename.sh ${ENVIRONMENT}"
-    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$DEPLOY_SERVER_IP "cd $APP_DIR/scripts && ./remove_moniker.sh ${ENVIRONMENT}"
+    - ssh -t -o StrictHostKeyChecking=no $SERVER_USER@$DEPLOY_SERVER_IP "cd $APP_DIR/scripts && ./start.sh -e ${ENVIRONMENT} -r ${RUN_APP} -i $CONTAINER_REGISTRY"
+    - ssh -t -o StrictHostKeyChecking=no $SERVER_USER@$DEPLOY_SERVER_IP "cd $APP_DIR/scripts && ./token_remove.sh ${ENVIRONMENT}"
+    - ssh -t -o StrictHostKeyChecking=no $SERVER_USER@$DEPLOY_SERVER_IP "cd $APP_DIR/scripts && ./token_rename.sh ${ENVIRONMENT}"
+    - ssh -t -o StrictHostKeyChecking=no $SERVER_USER@$DEPLOY_SERVER_IP "cd $APP_DIR/scripts && ./remove_moniker.sh ${ENVIRONMENT}"
 
 ############################################################
 #                     Build Base Image                     #
@@ -229,6 +229,12 @@ scan-webapp:
     reports:
       container_scanning: gl-container-scanning-report.json
   allow_failure: true
+  retry:
+    max: 2
+    when:
+      - script_failure
+      - runner_system_failure
+      - stuck_or_timeout_failure  
   rules:
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
       changes:
@@ -255,7 +261,7 @@ scan-indexer:
   script:
     - echo "Scan $APP_NAME Docker Image for the $ENVIRONMENT"
     - trivy --no-progress --output gl-container-scanning-report.json $CONTAINER_REGISTRY/$APP1_NAME:latest
-    - trivy --exit-code 1 --no-progress --severity CRITICAL $CONTAINER_REGISTRY/$APP2_NAME:latest
+    - trivy --exit-code 1 --no-progress --severity CRITICAL $CONTAINER_REGISTRY/$APP1_NAME:latest
   cache:
     paths:
       - .trivycache/
@@ -263,6 +269,12 @@ scan-indexer:
     reports:
       container_scanning: gl-container-scanning-report.json
   allow_failure: true
+  retry:
+    max: 2
+    when:
+      - script_failure
+      - runner_system_failure
+      - stuck_or_timeout_failure 
   rules:
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
       changes:

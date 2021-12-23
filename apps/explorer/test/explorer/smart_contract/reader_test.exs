@@ -186,7 +186,7 @@ defmodule Explorer.SmartContract.ReaderTest do
                   "name" => ""
                 }
               ],
-              "name" => "impl",
+              "name" => "implementation",
               "inputs" => [],
               "constant" => true
             }

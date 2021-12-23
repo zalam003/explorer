@@ -32,7 +32,7 @@ defmodule BlockScoutWeb.SmartContractViewTest do
         "payable" => false,
         "outputs" => [],
         "name" => "upgradeTo",
-        "inputs" => [%{"type" => "uint256", "name" => "version"}, %{"type" => "address", "name" => "impl"}],
+        "inputs" => [%{"type" => "uint256", "name" => "version"}, %{"type" => "address", "name" => "implementation"}],
         "constant" => false
       }
 

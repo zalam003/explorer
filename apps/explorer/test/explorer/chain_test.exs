@@ -5528,7 +5528,7 @@ defmodule Explorer.ChainTest do
         "stateMutability" => "view",
         "payable" => false,
         "outputs" => [%{"type" => "address", "name" => ""}],
-        "name" => "impl",
+        "name" => "implementation",
         "inputs" => [],
         "constant" => true
       },
@@ -5583,7 +5583,7 @@ defmodule Explorer.ChainTest do
         "name" => "Upgraded",
         "inputs" => [
           %{"type" => "uint256", "name" => "version", "indexed" => false},
-          %{"type" => "address", "name" => "impl", "indexed" => true}
+          %{"type" => "address", "name" => "implementation", "indexed" => true}
         ],
         "anonymous" => false
       },

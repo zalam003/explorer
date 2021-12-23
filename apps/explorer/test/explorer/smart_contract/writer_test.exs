@@ -13,7 +13,7 @@ defmodule Explorer.SmartContract.WriterTest do
       "payable" => false,
       "outputs" => [],
       "name" => "upgradeTo",
-      "inputs" => [%{"type" => "uint256", "name" => "version"}, %{"type" => "address", "name" => "impl"}],
+      "inputs" => [%{"type" => "uint256", "name" => "version"}, %{"type" => "address", "name" => "implementation"}],
       "constant" => false
     },
     %{
@@ -30,7 +30,7 @@ defmodule Explorer.SmartContract.WriterTest do
       "stateMutability" => "view",
       "payable" => false,
       "outputs" => [%{"type" => "address", "name" => ""}],
-      "name" => "impl",
+      "name" => "implementation",
       "inputs" => [],
       "constant" => true
     },
@@ -51,7 +51,7 @@ defmodule Explorer.SmartContract.WriterTest do
       "name" => "upgradeToAndCall",
       "inputs" => [
         %{"type" => "uint256", "name" => "version"},
-        %{"type" => "address", "name" => "impl"},
+        %{"type" => "address", "name" => "implementation"},
         %{"type" => "bytes", "name" => "data"}
       ],
       "constant" => false
@@ -80,7 +80,7 @@ defmodule Explorer.SmartContract.WriterTest do
       "name" => "Upgraded",
       "inputs" => [
         %{"type" => "uint256", "name" => "version", "indexed" => false},
-        %{"type" => "address", "name" => "impl", "indexed" => true}
+        %{"type" => "address", "name" => "implementation", "indexed" => true}
       ],
       "anonymous" => false
     }
@@ -248,7 +248,7 @@ defmodule Explorer.SmartContract.WriterTest do
                  "name" => "upgradeTo",
                  "inputs" => [
                    %{"type" => "uint256", "name" => "version"},
-                   %{"type" => "address", "name" => "impl"}
+                   %{"type" => "address", "name" => "implementation"}
                  ],
                  "constant" => false
                },
@@ -260,7 +260,7 @@ defmodule Explorer.SmartContract.WriterTest do
                  "name" => "upgradeToAndCall",
                  "inputs" => [
                    %{"type" => "uint256", "name" => "version"},
-                   %{"type" => "address", "name" => "impl"},
+                   %{"type" => "address", "name" => "implementation"},
                    %{"type" => "bytes", "name" => "data"}
                  ],
                  "constant" => false

@@ -6580,6 +6580,7 @@ defmodule Explorer.Chain do
       abi
       |> Enum.find(fn method ->
         Map.get(method, "name") == "impl" ||
+        Map.get(method, "name") == "implementation" ||
           master_copy_pattern?(method)
       end)
 
@@ -6608,7 +6609,8 @@ defmodule Explorer.Chain do
     implementation_method_abi =
       abi
       |> Enum.find(fn method ->
-        Map.get(method, "name") == "impl" && Map.get(method, "stateMutability") == "view"
+        (Map.get(method, "name") == "impl" || Map.get(method, "name") == "implementation") &&
+          Map.get(method, "stateMutability") == "view"
       end)
 
     master_copy_method_abi =
@@ -6673,6 +6675,13 @@ defmodule Explorer.Chain do
         "outputs" => [%{"type" => "address", "name" => "", "internalType" => "address"}],
         "name" => "impl",
         "inputs" => []
+      },
+      %{
+        "type" => "function",
+        "stateMutability" => "view",
+        "outputs" => [%{"type" => "address", "name" => "", "internalType" => "address"}],
+        "name" => "implementation",
+        "inputs" => []
       }
     ]
 
@@ -6703,21 +6712,39 @@ defmodule Explorer.Chain do
   end
 
   defp get_implementation_address_hash_basic(proxy_address_hash, abi) do
-    # 8abf6077 = keccak256(impl())
+    # 5c60da1b = keccak256(implementation())
     implementation_address =
       case Reader.query_contract(
              proxy_address_hash,
              abi,
              %{
-               "8abf6077" => []
+               "5c60da1b" => []
              },
              false
            ) do
-        %{"8abf6077" => {:ok, [result]}} -> result
+        %{"5c60da1b" => {:ok, [result]}} -> result
         _ -> nil
       end
 
-    address_to_hex(implementation_address)
+    # 8abf6077 = keccak256(impl())
+    if (is_nil(implementation_address)) do
+      impl_address =
+        case Reader.query_contract(
+                proxy_address_hash,
+                abi,
+                %{
+                  "8abf6077" => []
+                },
+                false
+              ) do
+          %{"8abf6077" => {:ok, [result]}} -> result
+          _ -> nil
+        end
+
+      address_to_hex(impl_address)
+    else
+      address_to_hex(implementation_address)
+    end
   end
 
   defp get_implementation_address_hash_from_master_copy_pattern(proxy_address_hash) do
@@ -6810,7 +6837,8 @@ defmodule Explorer.Chain do
       abi
       |> Enum.find(fn method ->
         Map.get(method, "name") == "impl" ||
-          master_copy_pattern?(method)
+          Map.get(method, "name") == "implementation" ||
+            master_copy_pattern?(method)
       end)
 
     if implementation_method_abi do

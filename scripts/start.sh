@@ -12,7 +12,7 @@ SCHEMA_NAME="explorer_schema"
 # Catch all for local test only
 if [[ -z $CI_COMMIT_SHA ]]
 then
-    CI_COMMIT_SHA=bs123456
+    CI_COMMIT_SHA=be123456
 fi
 
 # Base Image 
@@ -21,9 +21,6 @@ then
     BASE_IMAGE_LATEST="explorer_base_image:latest"
 fi
 export ALPINE_VERSION=3.15.0
-export ALPINE_MIN_VERSION=$( echo $ALPINE_VERSION | sed -ne 's/[^0-9]*\(\([0-9]\.\)\{0,4\}[0-9][^.]\).*/\1/p' )
-export ELIXIR_VERSION=$( cat ../.tool-versions | grep elixir | awk '{print $2}' | awk -F\- '{print $1}' )
-export ELIXIR_MIN_VERSION=$( echo $ELIXIR_VERSION | sed -ne 's/[^0-9]*\(\([0-9]\.\)\{0,4\}[0-9][^.]\).*/\1/p' )
 export ERLANG_VERSION=24.1.5
 
 # Check script arguments
@@ -80,6 +77,10 @@ fi
 case $TODO in
     build_base_image)
         echo "==> Build blockscout webapp"
+        export ALPINE_MIN_VERSION=$( echo $ALPINE_VERSION | sed -ne 's/[^0-9]*\(\([0-9]\.\)\{0,4\}[0-9][^.]\).*/\1/p' )
+        export ELIXIR_VERSION=$( cat ../.tool-versions | grep elixir | awk '{print $2}' | awk -F\- '{print $1}' )
+        export ELIXIR_MIN_VERSION=$( echo $ELIXIR_VERSION | sed -ne 's/[^0-9]*\(\([0-9]\.\)\{0,4\}[0-9][^.]\).*/\1/p' )
+
         docker build -f ${APPDIR}/scripts/Dockerfile_base_image \
             --build-arg ALPINE_VERSION=${ALPINE_VERSION} \
             --build-arg ALPINE_MIN_VERSION=${ALPINE_MIN_VERSION} \

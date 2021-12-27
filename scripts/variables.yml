@@ -96,7 +96,7 @@ variables:
 .sandbox_webapp_variables:
   variables:
     WEBPORT: 4000
-    DBPOOLSIZE: 50
+    DBPOOLSIZE: 20
     ENVIRONMENT: "develop"
     ENVFILE: "develop_webapp.env"
     ENV_PREFIX: "SANDBOX"
@@ -179,7 +179,7 @@ variables:
 .testnet_webapp1_variables:
   variables:
     WEBPORT: 4000
-    DBPOOLSIZE: 50
+    DBPOOLSIZE: 20
     ENVIRONMENT: "testnet"
     ENVFILE: "testnet_webapp.env"
     ENV_PREFIX: "TESTNET"
@@ -207,7 +207,7 @@ variables:
 .mainnet_schema_variables:
   variables:
     WEBPORT: 4100
-    DBPOOLSIZE: 200
+    DBPOOLSIZE: 100
     INDEXER_MEM: 7
     ENVIRONMENT: "mainnet"
     ISINDEXER: "yes"
@@ -234,7 +234,7 @@ variables:
 .mainnet_indexer_variables:
   variables:
     WEBPORT: 4100
-    DBPOOLSIZE: 200
+    DBPOOLSIZE: 100
     INDEXER_MEM: 7
     ENVIRONMENT: "mainnet"
     ENVFILE: "mainnet_indexer.env"
@@ -262,7 +262,7 @@ variables:
 .mainnet_webapp1a_variables:
   variables:
     WEBPORT: 4000
-    DBPOOLSIZE: 50
+    DBPOOLSIZE: 20
     ENVIRONMENT: "mainnet"
     ENVFILE: "mainnet_webapp.env"
     ENV_PREFIX: "MAINNET"
@@ -289,7 +289,7 @@ variables:
 .mainnet_webapp1b_variables:
   variables:
     WEBPORT: 4001
-    DBPOOLSIZE: 50
+    DBPOOLSIZE: 20
     ENVIRONMENT: "mainnet"
     ENVFILE: "mainnet_webapp.env"
     ENV_PREFIX: "MAINNET"
@@ -316,7 +316,7 @@ variables:
 .mainnet_webapp2a_variables:
   variables:
     WEBPORT: 4000
-    DBPOOLSIZE: 50
+    DBPOOLSIZE: 20
     ENVIRONMENT: "mainnet"
     ENVFILE: "mainnet_webapp.env"
     ENV_PREFIX: "MAINNET"
@@ -343,7 +343,7 @@ variables:
 .mainnet_webapp2b_variables:
   variables:
     WEBPORT: 4001
-    DBPOOLSIZE: 50
+    DBPOOLSIZE: 20
     ENVIRONMENT: "mainnet"
     ENVFILE: "mainnet_webapp.env"
     ENV_PREFIX: "MAINNET"

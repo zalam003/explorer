@@ -12,15 +12,8 @@
                 class="token-icon mr-1"
                 data-address-hash="<%= address_hash_checksummed %>"
             >
-            <%= if System.get_env("DISPLAY_TOKEN_ICONS") === "true" do %>
-                <% chain_id_for_token_icon = if @result.foreign_chain_id, do: @result.foreign_chain_id |> Decimal.to_integer() |> to_string(), else: System.get_env("CHAIN_ID") %>
-                <% address_hash = if @result.foreign_token_hash, do: @result.foreign_token_hash, else: @result.address_hash %>
-                <%=
-                    render BlockScoutWeb.TokensView,
-                    "_token_icon.html",
-                    chain_id: chain_id_for_token_icon,
-                    address: address_hash
-                %>
+            <%= if System.get_env("DISPLAY_TOKEN_ICONS") === "true" and !is_nil(@token.symbol) do %>
+                <img width="15" height="15" style="min-height: 15px; min-width: 15px;" src="<%= "/images/tokens/#{BlockScoutWeb.TokensView.check_nrg_symbol(@token.symbol)}.svg" %>" onerror="this.style.display='none'" alt=""/>
             <% end %>
             </span>
             <% res = @result.name <> " (" <> @result.symbol <> ")" %>

@@ -24,7 +24,7 @@
               <% end %>
               <% foreign_chain_id = if Map.has_key?(@token, :foreign_chain_id), do: @token.foreign_chain_id, else: nil %>
               <% tag = Chain.chain_id_display_name(foreign_chain_id) %>
-              <%= if token_name?(@token) do %>
+              <%= if token_name?(@token) and !is_nil(@token.symbol) do %>
                   <span
                     id="token-icon"
                     data-chain-id="<%= System.get_env("CHAIN_ID") %>"
@@ -32,6 +32,12 @@
                     data-foreign-chain-id="<%= foreign_chain_id %>"
                     data-foreign-address-hash="<%= if Map.has_key?(@token, :foreign_token_contract_address_hash), do: Address.checksum(@token.foreign_token_contract_address_hash), else: "" %>"
                     data-display-token-icons="<%= System.get_env("DISPLAY_TOKEN_ICONS") %>">
+                    <%= if String.contains?(@token.symbol, "/") do %>
+                      <img width="20" height="20" style="position: relative; z-index: 2;" src="<%= "/images/tokens/#{BlockScoutWeb.TokensView.split_lp_token_symbol(@token.symbol,0)}.svg" %>" alt="" />
+                      <img width="20" height="20" style="position: relative; z-index: 1; margin-left: -10px; " src="<%= "/images/tokens/#{BlockScoutWeb.TokensView.split_lp_token_symbol(@token.symbol,1)}.svg" %>" alt="" />
+                    <% else %>
+                      <img width="20" height="20" src="<%= "/images/tokens/#{BlockScoutWeb.TokensView.check_nrg_symbol(@token.symbol)}.svg"%>" onerror="this.style.display='none'">
+                    <% end %>
                   </span>
                   <div class="title-with-label"><%= @token.name %></div>
                   <%= if tag !== "" do %>

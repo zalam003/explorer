@@ -147,6 +147,7 @@ build-dev-image:
     - docker_runner
   script:
     - apk add git
+    - git config credential.helper store
     - git submodule update --init --recursive
     - cp submodules/assets/tokens/* apps/block_scout_web/assets/static/images/tokens
     - cd scripts

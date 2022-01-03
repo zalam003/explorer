@@ -257,6 +257,10 @@ $slash-icon: #21d34f;
   &.in-footer {
     color: #fff;
   }
+
+  &.no-logo {
+    margin-left: 0px;
+  }
 }
 
 @include media-breakpoint-up(md) {

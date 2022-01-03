@@ -6,7 +6,7 @@
   </td>
   <td class="token-icon">
     <span
-        class="token-icon mr-1"
+      class="token-icon mr-1"
     >
     <%= if System.get_env("DISPLAY_TOKEN_ICONS") === "true" and !is_nil(@token.symbol) do %>
       <%= if String.contains?(@token.symbol, "/") do %>
@@ -17,8 +17,8 @@
       <% end %>
     <% end %>
     </span>
-    </td>
-    <td class="stakes-td">
+  </td>
+  <td class="stakes-td">
     <%= link(
           to: address_token_transfers_path(@conn, :index, to_string(@address.hash), to_string(@token.contract_address_hash)),
           class: "tile-title-lg",

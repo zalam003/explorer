@@ -1,3 +1,4 @@
 [submodule "token-icons"]
 	path = submodules
 	url = ../../common/libraries/default-token-list
+	branch = master

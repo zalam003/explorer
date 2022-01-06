@@ -74,10 +74,15 @@ textarea.form-control {
 
 .contract-address {
   display: inline-block;
+  color: $energi-text-green;
   text-decoration-style: dashed;
   &:hover {
     text-decoration-style: none;
   }
+}
+
+.fa-file-alt {
+  color: $energi-text-green;
 }
 
 .text {

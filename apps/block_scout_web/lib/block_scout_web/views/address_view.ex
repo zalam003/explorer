@@ -118,6 +118,29 @@ defmodule BlockScoutWeb.AddressView do
     |> Kernel.<>(" #{gettext("ETH")}")
   end
 
+  def parse_nrg_balance(%Address{fetched_coin_balance: nil}, _short_format), do: ""
+
+  def parse_nrg_balance(%Address{fetched_coin_balance: balance}, short_format) do
+    balance
+    |> Wei.to(:ether)
+    |> thousands_separator(short_format)
+    |> Kernel.<>(" #{gettext("ETH")}")
+  end
+
+  def thousands_separator(value, short_format) do
+    {:ok, value_in_string} =
+      if (short_format == true) do
+        if Decimal.to_float(value) > 999999 do
+          Cldr.Number.to_string(value, format: :short, fractional_digits: 2)
+        else
+          Cldr.Number.to_string(value, fractional_digits: 2)
+        end
+      else
+        Cldr.Number.to_string(value, fractional_digits: 8)
+      end
+    value_in_string
+  end
+
   def balance_percentage_enabled?(total_supply) do
     Application.get_env(:block_scout_web, :show_percentage) && total_supply > 0
   end

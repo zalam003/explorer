@@ -5,7 +5,7 @@ defmodule Explorer.Counters.AverageBlockTime do
   Caches the number of token holders of a token.
   """
 
-  import Ecto.Query, only: [from: 2, where: 2]
+  import Ecto.Query, only: [from: 2]
 
   alias Explorer.Chain.Block
   alias Explorer.Repo
@@ -64,22 +64,14 @@ defmodule Explorer.Counters.AverageBlockTime do
   defp refresh_timestamps do
     base_query =
       from(block in Block,
-        limit: 100,
-        offset: 100,
+        limit: 2000,
+        offset: 2000,
         order_by: [desc: block.number],
         select: {block.number, block.timestamp}
       )
 
-    timestamps_query =
-      if Application.get_env(:explorer, :include_uncles_in_average_block_time) do
-        base_query
-      else
-        base_query
-        |> where(consensus: true)
-      end
-
     timestamps_row =
-      timestamps_query
+      base_query
       |> Repo.all()
 
     timestamps =
@@ -88,7 +80,6 @@ defmodule Explorer.Counters.AverageBlockTime do
       |> Enum.map(fn {number, timestamp} ->
         {number, DateTime.to_unix(timestamp, :millisecond)}
       end)
-
     %{timestamps: timestamps, average: average_distance(timestamps)}
   end
 
@@ -97,7 +88,6 @@ defmodule Explorer.Counters.AverageBlockTime do
 
   defp average_distance(timestamps) do
     durations = durations(timestamps)
-
     {sum, count} =
       Enum.reduce(durations, {0, 0}, fn duration, {sum, count} ->
         {sum + duration, count + 1}

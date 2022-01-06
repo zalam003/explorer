@@ -103,9 +103,89 @@ defmodule BlockScoutWeb.DecimalUpgradeHandler do
     else
       # testnet
       %{
-        "0x6EAdB8BA9b1054fC7D82B4129EbBEFF807852190" =>  %{       # BTC
+        "0x6EAdB8BA9b1054fC7D82B4129EbBEFF807852190" =>  %{        # BTC
           "old_decimals" => Decimal.new(18),
           "upgrade_block_number" => 959415
+        },
+        "0x582A1b770465F838bEc408b19aAd609E7645d70a" =>  %{        # CRO
+          "old_decimals" => Decimal.new(18),
+          "upgrade_block_number" => 1002853
+        },
+        "0x573CAF5D46BC0273985C68e2512DE063C6B68E8F" =>  %{        # CEL
+          "old_decimals" => Decimal.new(18),
+          "upgrade_block_number" => 1002853
+        },
+        "0xCDEabF84ECa4B1bcb596b3DB78f478bfae986D27" =>  %{        # ZIL
+          "old_decimals" => Decimal.new(18),
+          "upgrade_block_number" => 1002853
+        },
+        "0x7f2626377a4f77b1Ac8241096E4E540214dE894a" =>  %{        # VGX
+          "old_decimals" => Decimal.new(18),
+          "upgrade_block_number" => 1002853
+        },
+        "0xA2962DCC41b4a6bF6eE121f5581C43b1C4cF37F5" =>  %{        # CHSB
+          "old_decimals" => Decimal.new(18),
+          "upgrade_block_number" => 1002853
+        },
+        "0xf32ad72B317CaEBE7Cf977C4c8e0466DCEeF4595" =>  %{        # SCRT
+          "old_decimals" => Decimal.new(18),
+          "upgrade_block_number" => 1002853
+        },
+        "0xB445423563c24CF04DD1c7b176Af3326d3De9EF2" =>  %{        # ORN
+          "old_decimals" => Decimal.new(18),
+          "upgrade_block_number" => 1002853
+        },
+        "0x943378aCE4a9F6a85BbacE950A288E8A1E4b51Fb" =>  %{        # AMPL
+          "old_decimals" => Decimal.new(18),
+          "upgrade_block_number" => 1002853
+        },
+        "0x1D5D8F5C820f05128709EC1a423Fb6700326c45F" =>  %{        # FUN
+          "old_decimals" => Decimal.new(18),
+          "upgrade_block_number" => 1002853
+        },
+        "0xF078abE9Af3202952172d78830509757c099EDa3" =>  %{        # UBT
+          "old_decimals" => Decimal.new(18),
+          "upgrade_block_number" => 1002853
+        },
+        "0x3766Ad5E3294f857bb99588f6227C229123cFa7C" =>  %{        # CVC
+          "old_decimals" => Decimal.new(18),
+          "upgrade_block_number" => 1002853
+        },
+        "0x03fA58cfce1A46CE326505c4304ABbD7b0a65a5D" =>  %{        # SRM
+          "old_decimals" => Decimal.new(18),
+          "upgrade_block_number" => 1002853
+        },
+        "0xA0A37314971c992F970dd8B2B1ee9494349C0B1e" =>  %{        # AION
+          "old_decimals" => Decimal.new(18),
+          "upgrade_block_number" => 1002853
+        },
+        "0x978613EEe42f1808ED6dF68E0Fa13A6649a075c9" =>  %{        # PPT
+          "old_decimals" => Decimal.new(18),
+          "upgrade_block_number" => 1002853
+        },
+        "0x81A39E1Ad6F8F1fD67E2a726e986953122B1CafB" =>  %{        # STORJ
+          "old_decimals" => Decimal.new(18),
+          "upgrade_block_number" => 1002853
+        },
+        "0xd4F16Fbc222C3Da193E5f3e67aae63A008EFcF92" =>  %{        # MTL
+          "old_decimals" => Decimal.new(18),
+          "upgrade_block_number" => 1002853
+        },
+        "0x4b9e624C7ae53da783d83AC0FAF56775e778F6A2" =>  %{        # POWR
+          "old_decimals" => Decimal.new(18),
+          "upgrade_block_number" => 1002853
+        },
+        "0x1DaCA316cbd6992A029147f8fc92A0Dd715E62B2" =>  %{        # RLC
+          "old_decimals" => Decimal.new(18),
+          "upgrade_block_number" => 1002853
+        },
+        "0x9a70c5867eb344E093eB13eeE9283Df37211CC23" =>  %{        # MAPS
+          "old_decimals" => Decimal.new(18),
+          "upgrade_block_number" => 1002853
+        },
+        "0x4ed322A3eCC527C7703785c57Cd05137D3eDDDC1" =>  %{        # FRM
+          "old_decimals" => Decimal.new(18),
+          "upgrade_block_number" => 1002853
         }
       }
     end

@@ -47,9 +47,6 @@ defmodule Explorer.ExchangeRates.Source do
     if(is_nil(energiswap_api_url)) do
       nil
     else
-      IO.inspect("#############################################")
-      IO.inspect("### FETCHING TOKEN PRICES FROM ENERGISWAP ###")
-      IO.inspect("#############################################")
       {:ok, body} = http_request(energiswap_assets_url(), energiswap_headers())
       {:ok, result} = parse_http_success_response(body)
       result
@@ -76,9 +73,6 @@ defmodule Explorer.ExchangeRates.Source do
     if(is_nil(lp_url)) do
       nil
     else
-      IO.inspect("################################################")
-      IO.inspect("### FETCHING LP TOKEN PRICES FROM ENERGISWAP ###")
-      IO.inspect("################################################")
       {:ok, body} = http_request(lp_url, energiswap_headers())
       {:ok, result} = parse_http_success_response(body)
       format_lp_tokens(result)
@@ -87,9 +81,6 @@ defmodule Explorer.ExchangeRates.Source do
 
   @spec fetch_token_price(String.t()) :: [any]
   def fetch_token_price(token_address_str) do
-    IO.inspect("#################################")
-    IO.inspect("###### FETCHING WNRG PRICE ######")
-    IO.inspect("#################################")
     result = fetch_energiswap_exchange_rates_for_tokens()
     parse_token_price(result, token_address_str)
   end

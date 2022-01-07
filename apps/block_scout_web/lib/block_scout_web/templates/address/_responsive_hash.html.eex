@@ -1,4 +1,4 @@
-<span class="<%= if @contract do %>contract-address<% end %>" data-address-hash="<%= @address %>">
+<span class="<%= if @contract do %>far fa-file-alt mr-1"></span><span class="contract-address<% end %>" data-address-hash="<%= @address %>">
   <%= if name = primary_name(@address) do %>
     <%= if assigns[:no_tooltip] do %>
       <%= if @use_custom_tooltip == true do %>

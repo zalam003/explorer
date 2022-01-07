@@ -143,12 +143,18 @@ build-base:
 ############################################################
 build-dev-image:
   stage: build-dev-image
+  cache: []
   tags:
     - docker_runner
-  script:
+  before_script:
     - apk add git
-    - git config credential.helper store
+    - git config --global url."https://gitlab-ci-token:${CI_JOB_TOKEN}@git.energi.software".insteadOf https://git.energi.software
+  script:
     - git submodule update --init --recursive
+    - cd submodules
+    - git config credential.helper store
+    - git pull origin master
+    - cd ..
     - cp submodules/assets/tokens/* apps/block_scout_web/assets/static/images/tokens
     - cd scripts
     - sed -i "s|$DEFAULT_IMAGE|$BASE_IMAGE_LATEST|g" Dockerfile_webapp
@@ -193,12 +199,18 @@ build-indexer:
 ############################################################
 build-webapp:
   stage: build
+  cache: []
   tags:
     - docker_runner
-  script:
+  before_script:
     - apk add git
-    - git config credential.helper store
+    - git config --global url."https://gitlab-ci-token:${CI_JOB_TOKEN}@git.energi.software".insteadOf https://git.energi.software
+  script:
     - git submodule update --init --recursive
+    - cd submodules
+    - git config credential.helper store
+    - git pull origin master
+    - cd ..
     - cp submodules/assets/tokens/* apps/block_scout_web/assets/static/images/tokens
     - cd scripts
     - sed -i "s|$DEFAULT_IMAGE|$BASE_IMAGE_LATEST|g" Dockerfile_webapp

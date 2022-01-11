@@ -171,7 +171,13 @@
               <%= gettext("Balance") %>
             </dt>
             <dd class="col-sm-8 col-md-8 col-lg-9" data-test="address_balance">
-              <%= balance(@address) %>
+              <span
+                data-placement="top"
+                data-toggle="tooltip"
+                title='<%= parse_nrg_balance(@address, false) %>'
+              >
+              <%= parse_nrg_balance(@address, true) %>
+              </span>
               <%= if !match?({:pending, _}, @coin_balance_status) && !empty_exchange_rate?(@exchange_rate) do %>
                 <% usd_value = to_string(@exchange_rate.usd_value) %>
                 <span class="address-current-balance">

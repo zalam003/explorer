@@ -17,13 +17,16 @@
                         <% end %>
                   <% end %>}'
                   data-history_chart_config = '<%= @chart_config_json %>'
-                  width="350" height="152">
+                  width="800" height="236" style="display: block; box-sizing: border-box ;height: 147.5px; width: 500px;">
           </canvas>
         </div>
         <!-- Legend -->
         <script>
          numChartData = <%= Enum.reduce(@chart_config, 0, fn (source, acc) ->
                         acc + length(elem(source, 1)) end) %>
+         <%= if @gas_price do %>
+           numChartData = numChartData + 1
+         <% end %>
          document.documentElement.style.setProperty("--numChartData", numChartData);
         </script>
         <div class="dashboard-banner-chart-legend">
@@ -42,16 +45,6 @@
                     </span>
                     <div class="dashboard-banner-chart-legend-value-container">
                       <span class="dashboard-banner-chart-legend-value inline" data-selector="exchange-rate" data-wei-value="<%= Explorer.Chain.Wei.from(Decimal.new(1), :ether).value %>" data-usd-exchange-rate="<%= @exchange_rate.usd_value %>">
-                      </span>
-                      <%= if @gas_price do %>
-                        <span class="dashboard-banner-chart-legend-value inline ml-2">
-                          <span class="gas-price-icon">
-                            <%= render BlockScoutWeb.IconsView, "_gas_price_icon.html" %>
-                          </span>
-                          <%= @gas_price <> " " %>
-                          <%= gettext "Gwei" %>
-                        </span>
-                      <% end %>
                     </div>
                 </div>
             <% end %>
@@ -108,6 +101,19 @@
                 </span>
             </div>
             <% end %>
+          <% end %>
+          <%= if @gas_price do %>
+            <div class="dashboard-banner-chart-legend-item">
+                <span class="dashboard-banner-chart-legend-label">
+                <%= gettext "Gas Price" %>
+                </span>
+                <div class="dashboard-banner-chart-legend-value">
+                    <span style="display: contents;" class="dashboard-banner-chart-legend-value">
+                      <%= @gas_price %>
+                      <%= gettext "Gwei" %>
+                  </span>
+                </div>
+            </div>
           <% end %>
         </div>
       </div>
@@ -194,7 +200,7 @@
         <div hidden data-selector="loading-message" class="col-lg-3" >
          <div data-selector="chain-block">
            <div class="tile tile-type-block n-p d-flex flex-column">
-             <a class="tile-title"><span class="tile-loader tile-label-loader"></span> </a> 
+             <a class="tile-title"><span class="tile-loader tile-label-loader"></span> </a>
              <div class="tile-bottom-contents">
                <div class="dark-block-loader"></div>
                <div class="dark-block-loader"></div>
@@ -205,7 +211,7 @@
         <div hidden data-selector="loading-message" class="col-lg-3" >
          <div data-selector="chain-block">
            <div class="tile tile-type-block n-p d-flex flex-column">
-             <a class="tile-title"><span class="tile-loader tile-label-loader"></span> </a> 
+             <a class="tile-title"><span class="tile-loader tile-label-loader"></span> </a>
              <div class="tile-bottom-contents">
                <div class="dark-block-loader"></div>
                <div class="dark-block-loader"></div>
@@ -223,7 +229,7 @@
             </div>
            </div>
          </div>
-        </div>   
+        </div>
       </div>
     </div>
   </div>

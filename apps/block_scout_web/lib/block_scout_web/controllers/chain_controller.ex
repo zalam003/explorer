@@ -94,7 +94,8 @@ defmodule BlockScoutWeb.ChainController do
 
         gas_price_wei
         |> Wei.to(:gwei)
-        |> Decimal.to_integer()
+        |> Decimal.to_float()
+        |> Float.round(2)
 
       {:error, _reason} ->
         nil

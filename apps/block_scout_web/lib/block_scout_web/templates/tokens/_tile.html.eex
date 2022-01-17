@@ -10,13 +10,13 @@
       <div style="position: relative; display: flex; flex-direction: row;">
         <%= if String.contains?(@token.symbol, "/") do %>
           <div>
-            <img width="15" height="15" style="position: relative; margin-left: -5px; z-index: 2;" src="<%= "/images/tokens/#{BlockScoutWeb.TokensView.split_lp_token_symbol(@token.symbol,0)}.svg" %>" alt="" />
+            <img width="15" height="15" style="position: relative; margin-left: -5px; z-index: 2;" src="<%= "/images/tokens/#{BlockScoutWeb.TokensView.split_lp_token_symbol(@token.symbol,0)}.svg" %>" alt="" onerror="this.onerror=null;this.src='/images/Placeholder.svg';" />
           </div>
           <div>
-            <img width="15" height="15" style="position: relative; margin-left: -5px; z-index: 1;" src="<%= "/images/tokens/#{BlockScoutWeb.TokensView.split_lp_token_symbol(@token.symbol,1)}.svg" %>" alt="" />
+            <img width="15" height="15" style="position: relative; margin-left: -5px; z-index: 1;" src="<%= "/images/tokens/#{BlockScoutWeb.TokensView.split_lp_token_symbol(@token.symbol,1)}.svg" %>" alt="" onerror="this.onerror=null;this.src='/images/Placeholder.svg';" />
           </div>
         <% else %>
-          <img width="15" height="15" style="min-height: 15px; min-width: 15px;" src="<%= "/images/tokens/#{BlockScoutWeb.TokensView.check_nrg_symbol(@token.symbol)}.svg" %>" alt=""/>
+          <img width="15" height="15" style="min-height: 15px; min-width: 15px;" src="<%= "/images/tokens/#{BlockScoutWeb.TokensView.check_nrg_symbol(@token.symbol)}.svg" %>" alt="" onerror="this.onerror=null;this.src='/images/Placeholder.svg';" />
         <% end %>
       </div>
     <% end %>

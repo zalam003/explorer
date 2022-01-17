@@ -33,10 +33,10 @@
                     data-foreign-address-hash="<%= if Map.has_key?(@token, :foreign_token_contract_address_hash), do: Address.checksum(@token.foreign_token_contract_address_hash), else: "" %>"
                     data-display-token-icons="<%= System.get_env("DISPLAY_TOKEN_ICONS") %>">
                     <%= if String.contains?(@token.symbol, "/") do %>
-                      <img width="20" height="20" style="position: relative; z-index: 2;" src="<%= "/images/tokens/#{BlockScoutWeb.TokensView.split_lp_token_symbol(@token.symbol,0)}.svg" %>" alt="" />
-                      <img width="20" height="20" style="position: relative; z-index: 1; margin-left: -10px; " src="<%= "/images/tokens/#{BlockScoutWeb.TokensView.split_lp_token_symbol(@token.symbol,1)}.svg" %>" alt="" />
+                      <img width="20" height="20" style="position: relative; z-index: 2;" src="<%= "/images/tokens/#{BlockScoutWeb.TokensView.split_lp_token_symbol(@token.symbol,0)}.svg" %>" alt="" onerror="this.onerror=null;this.src='/images/Placeholder.svg';" />
+                      <img width="20" height="20" style="position: relative; z-index: 1; margin-left: -10px; " src="<%= "/images/tokens/#{BlockScoutWeb.TokensView.split_lp_token_symbol(@token.symbol,1)}.svg" %>" alt="" onerror="this.onerror=null;this.src='/images/Placeholder.svg';" />
                     <% else %>
-                      <img width="20" height="20" src="<%= "/images/tokens/#{BlockScoutWeb.TokensView.check_nrg_symbol(@token.symbol)}.svg"%>" onerror="this.style.display='none'">
+                      <img width="20" height="20" src="<%= "/images/tokens/#{BlockScoutWeb.TokensView.check_nrg_symbol(@token.symbol)}.svg"%>" alt="" onerror="this.onerror=null;this.src='/images/Placeholder.svg';" />
                     <% end %>
                   </span>
                   <div class="title-with-label"><%= @token.name %></div>

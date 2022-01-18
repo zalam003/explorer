@@ -10,10 +10,10 @@
     >
     <%= if System.get_env("DISPLAY_TOKEN_ICONS") === "true" and !is_nil(@token.symbol) do %>
       <%= if String.contains?(@token.symbol, "/") do %>
-        <img width="15" height="15" style="position: relative; z-index: 2; margin-left: -5px;" src="<%= "/images/tokens/#{BlockScoutWeb.TokensView.split_lp_token_symbol(@token.symbol,0)}.svg" %>" alt="" />
-        <img width="15" height="15" style="position: relative; z-index: 1; margin-left: -10px;" src="<%= "/images/tokens/#{BlockScoutWeb.TokensView.split_lp_token_symbol(@token.symbol,1)}.svg" %>" alt="" />
+        <img width="15" height="15" style="position: relative; z-index: 2; margin-left: -5px;" src="<%= "/images/tokens/#{BlockScoutWeb.TokensView.split_lp_token_symbol(@token.symbol,0)}.svg" %>" alt="" onerror="this.onerror=null;this.src='/images/Placeholder.svg';" />
+        <img width="15" height="15" style="position: relative; z-index: 1; margin-left: -10px;" src="<%= "/images/tokens/#{BlockScoutWeb.TokensView.split_lp_token_symbol(@token.symbol,1)}.svg" %>" alt="" onerror="this.onerror=null;this.src='/images/Placeholder.svg';" />
       <% else %>
-        <img width="15" height="15" src="<%= "/images/tokens/#{BlockScoutWeb.TokensView.check_nrg_symbol(@token.symbol)}.svg"%>" onerror="this.style.display='none'">
+        <img width="15" height="15" src="<%= "/images/tokens/#{BlockScoutWeb.TokensView.check_nrg_symbol(@token.symbol)}.svg"%>" alt="" onerror="this.onerror=null;this.src='/images/Placeholder.svg';" />
       <% end %>
     <% end %>
     </span>
@@ -21,7 +21,7 @@
   <td class="stakes-td">
     <%= link(
           to: address_token_transfers_path(@conn, :index, to_string(@address.hash), to_string(@token.contract_address_hash)),
-          class: "tile-title-lg",
+          class: "color-nowrap tile-title-lg",
           "data-test": "token_transfers_#{@token_balance.token.contract_address_hash}"
       ) do %>
       <%= token_name(@token) %>

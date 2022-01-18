@@ -12,6 +12,8 @@ defmodule BlockScoutWeb.ChainController do
   alias Explorer.ExchangeRates.Token
   alias Explorer.Market
   alias Phoenix.View
+  alias EthereumJSONRPC
+  alias Explorer.Chain.Wei
 
   def show(conn, _params) do
     transaction_estimated_count = Chain.transaction_estimated_count()
@@ -57,7 +59,7 @@ defmodule BlockScoutWeb.ChainController do
       transactions_path: recent_transactions_path(conn, :index),
       transaction_stats: transaction_stats,
       block_count: block_count,
-      gas_price: Application.get_env(:block_scout_web, :gas_price)
+      gas_price: get_gas_price()
     )
   end
 
@@ -70,6 +72,33 @@ defmodule BlockScoutWeb.ChainController do
       [%{number_of_transactions: 0, gas_used: 0}]
     else
       transaction_stats
+    end
+  end
+
+  def get_gas_price do
+    json_rpc_named_arguments = Application.get_env(:explorer, :json_rpc_named_arguments)
+    request = %{
+      id: 0,
+      method: "eth_gasPrice",
+      params: []
+    }
+
+    result =
+      request
+      |> EthereumJSONRPC.request()
+      |> EthereumJSONRPC.json_rpc(json_rpc_named_arguments)
+
+    case result do
+      {:ok, response} ->
+        {:ok, gas_price_wei} = Explorer.Chain.Wei.cast(response)
+
+        gas_price_wei
+        |> Wei.to(:gwei)
+        |> Decimal.to_float()
+        |> Float.round(2)
+
+      {:error, _reason} ->
+        nil
     end
   end
 

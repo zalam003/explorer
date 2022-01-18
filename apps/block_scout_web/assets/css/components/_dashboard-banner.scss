@@ -7,6 +7,7 @@ $dashboard-banner-network-plain-container-background-color: lighten($dashboard-b
 $dashboard-line-color-price: lighten($dashboard-banner-gradient-end, 5%) !default;
 $dashboard-line-color-market: $secondary !default;
 $dashboard-line-color-transactions: $warning !default;
+$dashboard-line-color-gas-price: #93d7ff !default;
 $dashboard-stats-item-label-color: #fff !default;
 $dashboard-stats-item-value-color: rgba(#fff, 0.8) !default;
 $dashboard-banner-chart-legend-label-color: #fff !default;
@@ -60,7 +61,7 @@ $dashboard-banner-chart-axis-font-color-alt: #333;
 .dashboard-banner-chart {
   flex-grow: 1;
   margin: 15px 0 20px 0;
-  max-width: 350px;
+  max-width: 500px;
   position: relative;
   min-height: 100px;
   height: calc(100% - 86px);
@@ -81,7 +82,7 @@ $dashboard-banner-chart-axis-font-color-alt: #333;
 
 .dashboard-banner-chart-legend {
   display: grid;
-  grid-template-columns: repeat(var(--numChartData), 0.9fr);
+  grid-template-columns: repeat(var(--numChartData), 0.6fr);
   padding-bottom: 12px;
   padding-left:20px;
 
@@ -123,6 +124,10 @@ $dashboard-banner-chart-axis-font-color-alt: #333;
 
     &:nth-child(3)::before {
         background-color: $dashboard-line-color-transactions;
+    }
+
+    &:nth-child(4)::before {
+      background-color: $dashboard-line-color-gas-price;
     }
   }
 

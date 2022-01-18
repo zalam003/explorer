@@ -23,10 +23,10 @@
         <div class="row">
           <%= if System.get_env("DISPLAY_TOKEN_ICONS") === "true" and !is_nil(token.symbol) do %>
             <%= if String.contains?(token.symbol, "/") do %>
-              <img width="15" height="15" style="min-height: 15px; min-width: 15px; height: fit-content; margin-top: -3px; position: relative; z-index: 2; margin-left: -3px;" src="<%= "/images/tokens/#{BlockScoutWeb.TokensView.split_lp_token_symbol(token.symbol,0)}.svg" %>" alt="" />
-              <img width="15" height="15" style="min-height: 15px; min-width: 15px; height: fit-content; margin-top: -3px; position: relative; z-index: 1; margin-left: -5px; margin-right:-3px" src="<%= "/images/tokens/#{BlockScoutWeb.TokensView.split_lp_token_symbol(token.symbol,1)}.svg" %>" alt="" />
+              <img width="15" height="15" style="min-height: 15px; min-width: 15px; height: fit-content; margin-top: -3px; position: relative; z-index: 2; margin-left: -3px;" src="<%= "/images/tokens/#{BlockScoutWeb.TokensView.split_lp_token_symbol(token.symbol,0)}.svg" %>" alt="" onerror="this.onerror=null;this.src='/images/Placeholder.svg';" />
+              <img width="15" height="15" style="min-height: 15px; min-width: 15px; height: fit-content; margin-top: -3px; position: relative; z-index: 1; margin-left: -5px; margin-right:-3px" src="<%= "/images/tokens/#{BlockScoutWeb.TokensView.split_lp_token_symbol(token.symbol,1)}.svg" %>" alt="" onerror="this.onerror=null;this.src='/images/Placeholder.svg';" />
             <% else %>
-              <img width="15" height="15" style="min-height: 15px; min-width: 15px; height: fit-content; margin-top: -2px; margin-right: 5px;" src="<%= "/images/tokens/#{BlockScoutWeb.TokensView.check_nrg_symbol(token.symbol)}.svg"%>" onerror="this.style.display='none'">
+              <img width="15" height="15" style="min-height: 15px; min-width: 15px; height: fit-content; margin-top: -2px; margin-right: 5px;" src="<%= "/images/tokens/#{BlockScoutWeb.TokensView.check_nrg_symbol(token.symbol)}.svg"%>" alt="" onerror="this.onerror=null;this.src='/images/Placeholder.svg';" />
             <% end %>
           <% end %>
           <p class="mb-0 col-md-6" style="padding-left: 10px; padding-right: 0;"><%= token_name(token) %>
@@ -42,7 +42,7 @@
           <% else %>
             <%= if token_balance.token.usd_value do %>
               <p class="mb-0 col-md-6 text-right" style="padding-left: 5px; padding-right: 0; max-width: 40%;">
-                <span data-selector="token-balance-usd" data-usd-value="<%= Chain.balance_in_usd(token_balance) %>"></span>
+                <span data-selector="token-balance-usd"><%= BlockScoutWeb.ChainView.format_currency_value(Chain.balance_in_usd(token_balance),"$") <> " USD" %></span>
               </p>
             <% end %>
           <% end %>
@@ -60,7 +60,7 @@
             <% end %>
           </p>
           <%= if token_balance.token.usd_value do %>
-            <p class="mb-0 col-md-6 text-right text-muted" style="max-width: 40%; padding-right: 0;">
+            <p class="mb-0 col-md-6 text-right text-drop" style="max-width: 40%; padding-right: 0;">
               <span data-selector="token-price"><%= BlockScoutWeb.ChainView.format_currency_value(Decimal.to_float(token_balance.token.usd_value), "@ $") %></span>
             </p>
           <% end %>

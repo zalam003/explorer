@@ -1,51 +1,42 @@
-<% address_hash_checksummed = @result.address_hash %>
 <tr data-identifier-hash="<%= @result.address_hash %>-<%= if @result.tx_hash, do: Base.encode16(@result.tx_hash, case: :lower), else: "" %>-<%= if @result.block_hash, do: Base.encode16(@result.block_hash, case: :lower), else: "" %>">
-  <td class="stakes-td">
-      <!-- incremented number by order in the list -->
-      <span class="color-lighten">
-      </span>
-  </td>
-<%= case @result.type do %>
-    <% "token" -> %>
-        <td class="token-icon">
-            <span
-                class="token-icon mr-1"
-                data-address-hash="<%= address_hash_checksummed %>"
-            >
+  <!-- incremented number by order in the list -->
+  <%= render BlockScoutWeb.SearchView, "_empty_td.html" %>
+  <%= case @result.type do %>
+        <% "token" -> %>
+            <td class="token-icon">
+                <span
+                    class="token-icon mr-1"
+                    data-address-hash="<%= @result.address_hash %>"
+                >
             <%= if System.get_env("DISPLAY_TOKEN_ICONS") === "true" and !is_nil(@token.symbol) do %>
-                <img width="15" height="15" style="min-height: 15px; min-width: 15px;" src="<%= "/images/tokens/#{BlockScoutWeb.TokensView.check_nrg_symbol(@token.symbol)}.svg" %>" onerror="this.style.display='none'" alt=""/>
-            <% end %>
-            </span>
-        </td>
-        <td class="stakes-td">
-            <% res = @result.name <> " (" <> @result.symbol <> ")" %>
-            <a href="<%= token_path(@conn, :show, address_hash_checksummed) %>">
-                <%= highlight_search_result(res, @query) %>
-            </a>
-    <% "address" -> %>
-        <td class="stakes-td">
-            <%= if @result.name do %>
-                <a href="<%= address_path(@conn, :show, address_hash_checksummed) %>">
-                    <%= highlight_search_result(@result.name, @query) %>
+                <img width="15" height="15" style="min-height: 15px; min-width: 15px;" src="<%= "/images/tokens/#{BlockScoutWeb.TokensView.check_nrg_symbol(@token.symbol)}.svg" %>" alt="" onerror="this.onerror=null;this.src='/images/Placeholder.svg';" />
+                <% end %>
+                </span>
+            </td>
+            <td class="stakes-td">
+                <% res = @result.name <> " (" <> @result.symbol <> ")" %>
+                <a href="<%= token_path(@conn, :show, @result.address_hash) %>">
+                    <%= highlight_search_result(res, @query) %>
                 </a>
-            <% end %>
-    <% "contract" -> %>
-        <td class="stakes-td">
-            <%= if @result.name do %>
-                <a href="<%= address_path(@conn, :show, address_hash_checksummed) %>">
-                    <%= highlight_search_result(@result.name, @query) %>
-                </a>
-            <% end %>
-    <% "block" -> %>
-        <td class="stakes-td">
-            <%= link(
-                highlight_search_result(to_string(@result.block_number), @query),
-                to: block_path(@conn, :show, @result.block_number)
-            ) %>
-    <% _ -> %>
-        <td class="stakes-td">
-<% end %>
-  </td>
+            </td>
+        <% "address" -> %>
+            <%= render BlockScoutWeb.SearchView, "_empty_td.html" %>
+            <%= render BlockScoutWeb.SearchView, "_name_td.html", result: @result, query: @query, conn: @conn %>
+        <% "contract" -> %>
+            <%= render BlockScoutWeb.SearchView, "_empty_td.html" %>
+            <%= render BlockScoutWeb.SearchView, "_name_td.html", result: @result, query: @query, conn: @conn %>
+        <% "block" -> %>
+            <%= render BlockScoutWeb.SearchView, "_empty_td.html" %>
+            <td class="stakes-td">
+                <%= link(
+                    highlight_search_result(to_string(@result.block_number), @query),
+                    to: block_path(@conn, :show, @result.block_number)
+                ) %>
+            </td>
+        <% _ -> %>
+            <%= render BlockScoutWeb.SearchView, "_empty_td.html" %>
+            <%= render BlockScoutWeb.SearchView, "_empty_td.html" %>
+  <% end %>
   <td class="stakes-td">
     <%= case @result.type do %>
         <% "token" -> %>
@@ -87,6 +78,7 @@
                 "0x" <> Base.encode16(@result.block_hash, case: :lower),
                 to: block_path(@conn, :show, @result.block_number)
             ) %>
+        <% _ -> %>
     <% end %>
   </td>
   <td class="stakes-td">

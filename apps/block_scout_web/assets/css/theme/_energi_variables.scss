@@ -4,14 +4,14 @@ $secondary: #263238;
 $tertiary: #bdbdbd;
 $additional-font: #fff;
 
-$body-dark: #18191A; // body background
+$body-dark: #18191a; // body background
 $dark-bg: #2d2e2f; // hero shade
 $dark-light-bg: #242526; // pills bg shade
 $dark-light: #141619; // tile light top share
 $labels-dark: #8f9090; // header nav, labels
+$nav-links: $labels-dark; // blocks,transactions, tokens, apis
 $dark-gray: #474849; // drop-down
-$tile-span: #adadad; // data-address-hash
-
+$tile-span: #a3a9b5; // data-address-hash
 $energi-text-green: #25e47b; // energi specific text color
 
 //header
@@ -36,14 +36,14 @@ $dashboard-banner-gradient-end: lighten(#212121, 5); // gradient end
 $dashboard-banner-chart-legend-value-color: $header-links-color; // chart labels
 $dashboard-banner-chart-legend-label-color: $header-links-color;
 $dashboard-line-color-price: $primary; // price left border
-$dashboard-line-color-market: #4B89FB; // price left border
+$dashboard-line-color-market: #4b89fb; // price left border
 $dashboard-stats-item-border-color: $primary; // stat border
 $dashboard-stats-item-label-color: $primary;
 $dashboard-stats-item-value-color: $header-links-color; // stat values
 
 .dashboard-banner-container {
   background-color: #212121;
-  background-image:none;
+  background-image: none;
   margin-bottom: 3rem;
   overflow: hidden;
   padding: 0;
@@ -51,19 +51,15 @@ $dashboard-stats-item-value-color: $header-links-color; // stat values
 }
 
 .layout-container {
-	.dashboard-banner-container {
-	  background-image: linear-gradient(
-	    to bottom,
-	    $dashboard-banner-gradient-start,
-	    $dashboard-banner-gradient-end
-	  );
-	}
+  .dashboard-banner-container {
+    background-image: linear-gradient(to bottom, $dashboard-banner-gradient-start, $dashboard-banner-gradient-end);
+  }
 }
 
 // navigation
 //.navbar { box-shadow: 0px 0px 30px 0px rgba(21, 53, 80, 0.12); } // header shadow
 $dropdown-menu-item-hover-color: $primary !default;
-$dropdown-menu-item-hover-background: rgba($primary, .1) !default;
+$dropdown-menu-item-hover-background: rgba($primary, 0.1) !default;
 $dropdown-menu-item-color: $secondary;
 
 // buttons
@@ -77,7 +73,9 @@ $btn-address-card-icon-color: $primary; // btn address color
 $tile-body-a-color: $primary;
 $tile-type-block-color: $primary;
 $tile-type-progress-bar-color: $primary;
-a.tile-title { color: $primary !important; }
+a.tile-title {
+  color: $primary !important;
+}
 $tile-type-transaction-color: $primary;
 .tile.tile-type-transaction .tile-label {
   color: #212121 !important;
@@ -89,7 +87,7 @@ $card-tab-active: $primary;
 
 // Badges
 $badge-neutral-color: $primary;
-$badge-neutral-background-color: rgba($primary, .1);
+$badge-neutral-background-color: rgba($primary, 0.1);
 $api-text-monospace-color: $primary;
 
 // Tokens dropdown
@@ -101,5 +99,6 @@ $api-text-monospace-color: $primary;
 
 // Dark theme
 $dark-primary: #01e676;
+$hover-dark-primary: #00ab58;
 $dark-secondary: #00e676;
-$dark-primary-alternate: #28a745; 
+$dark-primary-alternate: #28a745;

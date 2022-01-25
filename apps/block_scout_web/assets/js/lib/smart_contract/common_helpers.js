@@ -152,6 +152,25 @@ export const getCurrentAccountFromMMPromise = () => {
   })
 }
 
+
+export const registerToken = (data) => {
+  return new Promise((resolve, reject) => {
+    window.ethereum.request({ 
+      method: 'wallet_watchAsset',
+      params: {
+        type: 'ERC20',
+        options: data,
+      },
+    })
+    .then(success => {
+      resolve(success)
+    })
+    .catch(err => {
+      reject(err)
+    })
+  })
+}
+
 function hideConnectedToContainer () {
   document.querySelector(connectedToSelector) && document.querySelector(connectedToSelector).classList.add('hidden')
 }

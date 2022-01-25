@@ -68,6 +68,7 @@ stages:
     - sed -i "s|SECRETKEYBASE|${SECRET_KEY_BASE}|g" ${ENVFILE}
     - sed -i "s|ENERGISWAPAPIURL|${ENERGISWAP_API_URL}|g" ${ENVFILE}
     - sed -i "s|WNRGTOKENADDRESS|${WNRG_TOKEN_ADDRESS}|g" ${ENVFILE}
+    - sed -i "s|NODEAPI|${NODEAPI}|g" ${ENVFILE}
     - sed -i "s/DBUSERNAME/${DB_USERNAME}/g" ${ENVFILE}
     - sed -i "s|DBPASSWORD|${DB_PASSWORD}|g" ${ENVFILE}
     - sed -i "s/DBNAME/${DB_NAME}/g" ${ENVFILE}

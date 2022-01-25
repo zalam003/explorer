@@ -22,6 +22,7 @@ import './locale'
 import './pages/layout'
 import './pages/dark-mode-switcher'
 import './pages/stakes'
+import './pages/token/add_to_metamask'
 
 import './lib/clipboard_buttons'
 import './lib/currency'

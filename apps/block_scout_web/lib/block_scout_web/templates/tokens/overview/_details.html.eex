@@ -72,7 +72,22 @@
             <% end %>
           <% end %>
 
-          <h3 class="token-address-mobile"><%= Address.checksum(@token.contract_address_hash) %></h3>
+          <h3 class="token-address-mobile"><%= Address.checksum(@token.contract_address_hash) %>
+            <span
+              add-token
+              id="<%= "token-details-#{@token.symbol}" %>"
+              class="btn-add-to-mm ml-1"
+              aria-label="<%= "Add #{@token.symbol} to MetaMask" %>"
+              data-token-address="<%= Address.checksum(@token.contract_address_hash) %>"
+              data-token-decimals="<%= @token.decimals %>"
+              data-token-symbol="<%= @token.symbol %>"
+              data-chain-id="<%= System.get_env("CHAIN_ID") %>"
+              data-toggle="tooltip"
+              data-placement="top"
+              data-original-title=""
+              title="<%= "Add #{@token.symbol} to MetaMask" %>">
+            </span>
+          </h3>
 
           <div class="d-flex flex-column flex-md-row justify-content-start text-muted">
             <span class="mr-4 mb-3 mb-md-0">

@@ -599,3 +599,17 @@ $cube-quantity: 5;
     line-height: 20px;
   }
 }
+
+.btn-add-chain-to-mm, .btn-add-to-mm {
+  background-image: url("/images/Metamask.svg");
+  background-repeat: no-repeat;
+  background-size: 25px 25px;
+}
+
+.btn-add-to-mm {
+  cursor: pointer;
+  display: inline-block;
+  height: 25px;
+  vertical-align: middle;
+  width: 25px;
+}

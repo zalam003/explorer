@@ -91,6 +91,7 @@ const appJs =
       'non-critical': './css/non-critical.scss',
       'main-page': './css/main-page.scss',
       'tokens': './js/pages/token/search.js',
+      'add-to-metamask': './js/pages/token/add_to_metamask.js',
       'ad': './js/lib/ad.js',
       'text_ad': './js/lib/text_ad.js',
       'banner': './js/lib/banner.js',

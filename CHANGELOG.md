@@ -1,14 +1,34 @@
 ## Current
 
 ### Features
-- [#5090](https://github.com/blockscout/blockscout/pull/5090) - Allotted rate limit by IP
-- [#5080](https://github.com/blockscout/blockscout/pull/5080) - Alloted rate limit by a global API key
+- [#5105](https://github.com/blockscout/blockscout/pull/5105) - Redesign token page
+- [#4690](https://github.com/blockscout/blockscout/pull/4690) - Improve pagination: introduce pagination with random access to pages; Integrate it to the Transactions List page
 
 ### Fixes
+- [#5154](https://github.com/blockscout/blockscout/pull/5154) - Fix token counters bug
+
+### Chore
+- [#5153](https://github.com/blockscout/blockscout/pull/5153) - Discord link instead of Gitter
+- [#5142](https://github.com/blockscout/blockscout/pull/5142) - Updated some outdated npm packages
+- [#5140](https://github.com/blockscout/blockscout/pull/5140) - Babel minor and core-js major updates
+- [#5139](https://github.com/blockscout/blockscout/pull/5139) - Eslint major update
+- [#5138](https://github.com/blockscout/blockscout/pull/5138) - Webpack minor update
+- [#5119](https://github.com/blockscout/blockscout/pull/5119) - Inventory controller refactoring
+- [#5118](https://github.com/blockscout/blockscout/pull/5118) - Fix top navigation template
+
+
+## 4.1.1-beta
+
+### Features
+- [#5090](https://github.com/blockscout/blockscout/pull/5090) - Allotted rate limit by IP
+- [#5080](https://github.com/blockscout/blockscout/pull/5080) - Allotted rate limit by a global API key
+
+### Fixes
+- [#5085](https://github.com/blockscout/blockscout/pull/5085) - Fix wallet style
 - [#5088](https://github.com/blockscout/blockscout/pull/5088) - Store address transactions/token transfers in the DB
 - [#5071](https://github.com/blockscout/blockscout/pull/5071) - Fix write page contract tuple input
 - [#5066](https://github.com/blockscout/blockscout/pull/5066) - Fix read contract page bug
-- [#5034](https://github.com/blockscout/blockscout/pull/5034) - Fix broken functions input at transation page
+- [#5034](https://github.com/blockscout/blockscout/pull/5034) - Fix broken functions input at transaction page
 - [#5025](https://github.com/blockscout/blockscout/pull/5025) - Add standard input JSON files validation
 - [#5051](https://github.com/blockscout/blockscout/pull/5051) - Fix 500 response when ABI method was parsed as nil
 

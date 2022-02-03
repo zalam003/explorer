@@ -165,6 +165,7 @@ build-dev-image:
         - submodules/src/assets/*
         - .gitlab-ci.yml
         - scripts/Dockerfile_{indexer,webapp,base_image}
+        - scripts/start.sh
       when: manual
 
 ############################################################
@@ -183,6 +184,7 @@ build-indexer:
   rules:
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
       changes:
+        - .gitlab-ci.yml
         - apps/**/*
         - scripts/Dockerfile_{indexer,webapp,base_image}
         - scripts/start.sh
@@ -207,6 +209,7 @@ build-webapp:
   rules:
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
       changes:
+        - .gitlab-ci.yml
         - apps/**/*
         - submodules/src/assets/*
         - scripts/Dockerfile_{indexer,webapp,base_image}

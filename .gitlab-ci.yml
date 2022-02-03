@@ -149,7 +149,7 @@ build-dev-image:
   variables:
     GIT_SUBMODULE_STRATEGY: recursive
   script:
-    - cp submodules/assets/tokens/* apps/block_scout_web/assets/static/images/tokens
+    - cp submodules/src/assets/* apps/block_scout_web/assets/static/images/tokens
     - cd scripts
     - sed -i "s|$DEFAULT_IMAGE|$BASE_IMAGE_LATEST|g" Dockerfile_webapp
     - docker build --cache-from $TAG2_LATEST -f ./Dockerfile_webapp -t $TAG2_COMMIT ../
@@ -162,7 +162,7 @@ build-dev-image:
     - if: '$CI_COMMIT_REF_PROTECTED == "false" && $CI_PIPELINE_SOURCE == "push"'
       changes:
         - apps/**/*
-        - submodules/assets/tokens/*
+        - submodules/src/assets/*
         - .gitlab-ci.yml
         - scripts/Dockerfile_{indexer,webapp,base_image}
       when: manual
@@ -198,7 +198,7 @@ build-webapp:
   variables:
     GIT_SUBMODULE_STRATEGY: recursive
   script:
-    - cp submodules/assets/tokens/* apps/block_scout_web/assets/static/images/tokens
+    - cp submodules/src/assets/* apps/block_scout_web/assets/static/images/tokens
     - cd scripts
     - sed -i "s|$DEFAULT_IMAGE|$BASE_IMAGE_LATEST|g" Dockerfile_webapp
     - docker build --cache-from $TAG2_LATEST -f ./Dockerfile_webapp -t $TAG2_COMMIT -t $TAG2_LATEST ../
@@ -208,7 +208,7 @@ build-webapp:
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
       changes:
         - apps/**/*
-        - submodules/assets/tokens/*
+        - submodules/src/assets/*
         - scripts/Dockerfile_{indexer,webapp,base_image}
         - scripts/start.sh
     - if: $CI_COMMIT_TAG

@@ -161,9 +161,9 @@ build-dev-image:
   rules:
     - if: '$CI_COMMIT_REF_PROTECTED == "false" && $CI_PIPELINE_SOURCE == "push"'
       changes:
+        - .gitlab-ci.yml
         - apps/**/*
         - submodules/src/assets/*
-        - .gitlab-ci.yml
         - scripts/Dockerfile_{indexer,webapp,base_image}
         - scripts/start.sh
       when: manual
@@ -251,6 +251,7 @@ scan-webapp:
   rules:
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
       changes:
+        - .gitlab-ci.yml
         - apps/**/*
         - scripts/Dockerfile_{indexer,webapp,base_image}
         - scripts/start.sh
@@ -291,6 +292,7 @@ scan-indexer:
   rules:
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
       changes:
+        - .gitlab-ci.yml
         - apps/**/*
         - scripts/Dockerfile_{indexer,webapp,base_image}
         - scripts/start.sh

@@ -71,22 +71,6 @@
               text: gettext("Address of the token contract") %>
               <%= gettext("Contract") %>
             </dt>
-          <h3 class="token-address-mobile"><%= Address.checksum(@token.contract_address_hash) %></h3>
-            <span
-              add-token
-              id="<%= "token-details-#{@token.symbol}" %>"
-              class="btn-add-to-mm ml-1"
-              aria-label="<%= "Add #{@token.symbol} to MetaMask" %>"
-              data-token-address="<%= Address.checksum(@token.contract_address_hash) %>"
-              data-token-decimals="<%= @token.decimals %>"
-              data-token-symbol="<%= @token.symbol %>"
-              data-chain-id="<%= System.get_env("CHAIN_ID") %>"
-              data-toggle="tooltip"
-              data-placement="top"
-              data-original-title=""
-              title="<%= "Add #{@token.symbol} to MetaMask" %>">
-            </span>
-          </h3>
             <dd class="col-sm-8 col-md-8 col-lg-9 contract-address">
               <%= link(
                   @token.contract_address_hash,
@@ -95,6 +79,20 @@
                   "data-test": "token_contract_address"
                   ) 
               %>
+              <span
+                add-token
+                id="<%= "token-details-#{@token.symbol}" %>"
+                class="btn-add-to-mm ml-1"
+                aria-label="<%= "Add #{@token.symbol} to MetaMask" %>"
+                data-token-address="<%= Address.checksum(@token.contract_address_hash) %>"
+                data-token-decimals="<%= @token.decimals %>"
+                data-token-symbol="<%= @token.symbol %>"
+                data-chain-id="<%= System.get_env("CHAIN_ID") %>"
+                data-toggle="tooltip"
+                data-placement="top"
+                data-original-title=""
+                title="<%= "Add #{@token.symbol} to MetaMask" %>">
+              </span>
             </dd>
           </dl>
           <%= if total_supply?(@token) do %>
@@ -117,7 +115,7 @@
                 <dt class="col-sm-4 col-md-4 col-lg-3 text-muted">
                   <%= render BlockScoutWeb.CommonComponentsView, "_i_tooltip_2.html",
                   text: gettext("Total Supply * Price") %>
-                  <%= gettext("Market Cap") %>
+                  <%= gettext("Total Value") %>
                 </dt>
                 <dd class="col-sm-8 col-md-8 col-lg-9">
                   <span data-selector="token-supply-usd" data-usd-value="<%= total_supply_usd(@token) %>"></span>
@@ -128,7 +126,7 @@
                   <dt class="col-sm-4 col-md-4 col-lg-3 text-muted">
                     <%= render BlockScoutWeb.CommonComponentsView, "_i_tooltip_2.html",
                     text: gettext("Price per token on the exchanges") %>
-                    <%= gettext("Price") %>
+                    <%= gettext("Token Price") %>
                   </dt>
                   <dd class="col-sm-8 col-md-8 col-lg-9">
                     <span data-selector="token-price" data-token-usd-value="<%= @token.usd_value %>"></span>

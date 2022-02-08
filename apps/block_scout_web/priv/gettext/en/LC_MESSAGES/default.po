@@ -1511,6 +1511,11 @@ msgid "Market Cap"
 msgstr ""
 
 #, elixir-format
+#: lib/block_scout_web/templates/tokens/overview/_details.html.eex:118
+msgid "Total Value"
+msgstr ""
+
+#, elixir-format
 #: lib/block_scout_web/templates/stakes/_stakes_modal_move.html.eex:42
 msgid "Max Amount to Move:"
 msgstr ""
@@ -1853,6 +1858,11 @@ msgstr ""
 #: lib/block_scout_web/templates/layout/app.html.eex:44 lib/block_scout_web/templates/tokens/overview/_details.html.eex:109
 msgid "Price"
 msgstr "NRG Price"
+
+#, elixir-format
+#: lib/block_scout_web/templates/tokens/overview/_details.html.eex:129
+msgid "Token price"
+msgstr ""
 
 #, elixir-format
 #: lib/block_scout_web/templates/transaction/overview.html.eex:352

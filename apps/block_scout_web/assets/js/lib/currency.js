@@ -12,7 +12,7 @@ export function formatUsdValue (value) {
 }
 
 function formatTokenUsdValue (value) {
-  return formatCurrencyValue(value, '@')
+  return formatCurrencyValue(value, '$')
 }
 
 function formatCurrencyValue (value, symbol) {

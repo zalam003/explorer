@@ -1,0 +1,26 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: restart-indexer
+  namespace: {{ .Values.namespace }}
+spec:
+  concurrencyPolicy: Forbid # Do not run concurrently!
+  schedule: '0 */12 * * *'     # Run every 12 hours 
+  jobTemplate:
+    spec:
+      ttlSecondsAfterFinished: 1
+      backoffLimit: 2 
+      activeDeadlineSeconds: 600 
+      template:
+        spec:
+          serviceAccountName: restart-indexer # Run under the service account created above
+          restartPolicy: Never
+          containers:
+            - name: kubectl
+              image: bitnami/kubectl # Specify the kubectl image
+              command: # The kubectl command to execute
+                - kubectl
+                - rollout
+                - restart
+                - deployment
+                - {{ .Values.name }}-indexer

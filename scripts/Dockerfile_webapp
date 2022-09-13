@@ -1,4 +1,4 @@
-FROM bitwalker/alpine-elixir-phoenix:1.12.2
+FROM bitwalker/alpine-elixir-phoenix:1.13.1
 
 RUN apk update
 RUN apk upgrade
@@ -85,7 +85,7 @@ RUN npm install --global npm@8
 
 # Add blockscout npm deps
 RUN cd apps/block_scout_web/assets/ && \
-    npm install && \
+    npm install --force && \
     node_modules/webpack/bin/webpack.js --mode production && \
     cd -
 

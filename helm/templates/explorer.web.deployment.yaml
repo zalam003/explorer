@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.name }}-web
+  annotations:
+spec:
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 20%
+  replicas: 1
+  selector:
+    matchLabels:
+      app: explorer
+      component: explorer-webapp
+  template:
+    metadata:
+      labels:
+        app: explorer
+        release: energi-explorer
+        component: explorer-webapp
+    spec:
+      serviceAccountName: {{ .Values.name }}-rbac
+      containers:
+      - name: {{ .Values.name }}-webapp
+        image: "{{ .Values.image.explorerWebapp.repository }}:{{ .Values.image.explorerWebapp.tag }}" 
+        imagePullPolicy: {{ .Values.imagePullPolicy }}
+        command:
+        - /bin/sh
+        - -c
+        args:
+        - mix phx.server
+        ports:
+        - name: http
+          containerPort: 4000
+        resources:
+          requests:
+            memory: {{ .Values.resources.explorerWebapp.requests.memory }}
+            cpu: {{ .Values.resources.explorerWebapp.requests.cpu }}
+          limits:
+            memory: {{ .Values.resources.explorerWebapp.limits.memory }}
+            cpu: {{ .Values.resources.explorerWebapp.limits.cpu }}
+        envFrom:
+          - configMapRef:
+              name: {{ .Values.name }}-configmap-global
+          - configMapRef:
+              name: {{ .Values.name }}-configmap-webapp
+          - secretRef:
+              name: {{ .Values.name }}-secret-global
+          - secretRef:
+              name: {{ .Values.name }}-secret-db
+          - secretRef:
+              name: {{ .Values.name }}-secret-captcha
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

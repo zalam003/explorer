@@ -1,0 +1,156 @@
+# Default values for volume-indexer.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+namespace: ${NAMESPACE}
+name: ${APP_PROJECT}-${APP_NAME}-${APP_ENV}
+replicaCount: 1
+
+deploymentStrategy:
+  rollingUpdate:
+    maxSurge: 1
+    maxUnavailable: 20%
+
+image:
+  explorerWebapp:
+    repository: ${AWS_ECR}/${REPOSITORY_NAME_WEBAPP}
+    pullPolicy: Always
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: latest
+    containerPort: 4000
+  explorerIndexer:
+    repository: ${AWS_ECR}/${REPOSITORY_NAME_INDEXER}
+    pullPolicy: Always
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: testnet-${CI_COMMIT_SHORT_SHA}
+    containerPort: 4001
+
+resources:
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  explorerWebapp:
+    limits:
+      cpu: 1500m
+      memory: 1024Mi
+    requests:
+      cpu: 700m
+      memory: 512Mi
+
+  explorerIndexer:
+    limits:
+      cpu: 2000m
+      memory: 2000Mi
+    requests:
+      cpu: 2000m
+      memory: 2000Mi
+
+service:
+  type: ClusterIP
+  port: 4000
+
+ingress:
+  enabled: true
+  dns: ${APP_DNS}
+  certificatearn: ${CERTIFICATE_ARN}
+
+explorer:
+  web:
+    host: ${APP_DNS}
+
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 2
+  targetCPUUtilizationPercentage: 90
+
+nodeSelector: { appType: standard }
+
+
+# Secrets Configurations  
+envDataBaseSecrets:
+  PGHOST: ${TESTNET_DB_HOSTNAME}
+  PGPORT: ${TESTNET_DB_PORT}
+  PGDATABASE: ${TESTNET_DB_NAME}
+  PGUSER: ${TESTNET_DB_USERNAME}
+  PGPASSWORD: ${TESTNET_DB_PASSWORD} 
+  DATABASE_URL: ${TESTNET_DATABASE_URL}
+
+envGlobalSecrets:
+  ENERGISWAP_AUTH_SECRET: ${TESTNET_AUTHORIZATION_SECRET}  
+  WNRG_TOKEN_ADDRESS: ${TESTNET_WNRG_TOKEN_ADDRESS} 
+  SECRET_KEY_BASE: ${TESTNET_SECRET_KEY_BASE} 
+  REWARDS_CONTRACT: ${TESTNET_REWARDS_CONTRACT} 
+
+envCaptchaSecrets:  
+  RE_CAPTCHA_SECRET_KEY: ${CAPTCHASECRET} 
+  RE_CAPTCHA_CLIENT_KEY: ${CAPTCHACLIENT} 
+
+# Environment Variables Configuration  
+envIndexerVariables:
+  HEALTH_CHECK_PORT: "4001"
+  DISABLE_WEBAPP: "true"
+  POOL_SIZE: "20"
+
+envWebappVariables:
+  PORT: "4000"
+  DISABLE_INDEXER: "true"
+  POOL_SIZE: "20"
+  EXPLORER_HOST: ${APP_DNS}
+
+envGlobalVariables:
+  ## Explorer Global Vars
+  MIX_ENV: "prod"
+  BLOCKSCOUT_VERSION: "v4.1.1"
+  BLOCKSCOUT_PROTOCOL: "http"
+  BLOCK_TRANSFORMER: "base"
+  BLOCKSCOUT_HOST: "explorer.test.energi.network"
+  WOBSERVER_ENABLED: "false"
+
+  ## BlockChain CoreNode connexion config
+  ETHEREUM_JSONRPC_TRANSPORT: "http"
+  ETHEREUM_JSONRPC_MAXCONN: "20"
+  ETHEREUM_JSONRPC_HTTP_URL: "https://nodeapi.test.energi.network/rpc"
+  ETHEREUM_JSONRPC_WS_URL: "wss://nodeapi.test.energi.network/ws"
+  ETHEREUM_JSONRPC_TRACE_URL: "https://nodeapi.test.energi.network/rpc"
+  ETHEREUM_JSONRPC_VARIANT: "geth"
+  ENABLE_TXS_STATS: "true"
+  JSON_RPC: "https://nodeapi.test.energi.network/v1/jsonrpc"
+  ENERGISWAP_API_URL: "http://energiswap-api-testnet.energiswap-testnet.svc.cluster.local:443/v1"
+  
+  ## Divers var configuration
+  HISTORY_FETCH_INTERVAL: "30"
+  API_RATE_LIMIT: "50"
+  SHOW_TXS_CHART: "true"
+  ALLOWED_EVM_VERSIONS: "petersburg,homestead,tangerineWhistle,spuriousDragon,byzantium,constantinople,istanbul"
+  
+  ## BlockChain Configurations
+  COINGECKO_COIN_ID: "energi"
+  COIN: "NRG"
+  NETWORK: "Energi"
+  SUBNETWORK: "Testnet"
+  CHAIN_ID: "49797"
+  EMISSION_FORMAT: "MNRG"
+  MAX_SKIPPING_DISTANCE: "2"
+  CHECK_ORIGIN: "true"
+  CHAIN_SPEC_PATH: "chain_spec_energi_testnet.json"
+
+  ## Token configuration variables 
+  TOKEN_EXCHANGE_RATE_CACHE_PERIOD: "300"
+  TOKEN_METADATA_UPDATE_INTERVAL: "3600"
+  DISPLAY_TOKEN_ICONS: "true"
+  ECTO_USE_SSL: "false"
+  
+  ## Front Display and Menus Configurations
+  LOGO: "/images/EnergiLogoLight.png"
+  LOGO_FOOTER: "/images/EnergiLogoLight.png"
+  RELEASE_LINK: "https://github.com/energicryptocurrency/energi3-blockscout/releases"
+  LINK_TO_OTHER_EXPLORERS: "false"
+  SUPPORTED_CHAINS: '[{"url":"https://explorer.test.energi.network/", "title":"Explorer Testnet",}]'
+  APPS_MENU: "false"
+  EXTERNAL_APPS: '[]'
+  
+  ## Maintenance Configuration
+  SHOW_MAINTENANCE_ALERT: "false"
+  MAINTENANCE_ALERT_MESSAGE: "Test Energi Explorer"
+  

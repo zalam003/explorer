@@ -308,7 +308,5 @@ helm deploy mainnet:
     CERTIFICATE_ARN: "arn:aws:acm:us-west-2:930210061793:certificate/be0e042a-10b7-4d8d-b432-a8b3622c30ee"
   tags: [docker_runner]
   extends: .helm_charts_deploy
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "main"'
   only:
     <<: *mainnet_triggers 

@@ -1,0 +1,10 @@
+apiVersion: v1
+name: explorer
+version: 0.0.2
+description: Chart which is used to deploy a explorer setup for Energi networks
+keywords:
+- ethereum
+- blockchain
+- energi
+- explorer
+appVersion: v1.0.0

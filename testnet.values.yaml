@@ -31,19 +31,19 @@ resources:
   # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   explorerWebapp:
     limits:
-      cpu: 1500m
+      cpu: 1
       memory: 1024Mi
     requests:
-      cpu: 700m
-      memory: 512Mi
+      cpu: 100m
+      memory: 128Mi
 
   explorerIndexer:
     limits:
-      cpu: 2000m
-      memory: 2000Mi
+      cpu: 1.5
+      memory: 2048Mi
     requests:
-      cpu: 2000m
-      memory: 2000Mi
+      cpu: 100m
+      memory: 128Mi
 
 service:
   type: ClusterIP

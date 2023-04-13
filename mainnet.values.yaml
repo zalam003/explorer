@@ -51,8 +51,13 @@ service:
 
 ingress:
   enabled: true
+  albName: eks-ing-dweb-mainnet-external
+  groupName: eks-ing-dweb-mainnet-external
   dns: ${APP_DNS}
   certificatearn: ${CERTIFICATE_ARN}
+  cfSecurityGroup: true
+  securityGroupId: "sg-095a970b7cecb500d, sg-06bd1982d92c76294"
+  scheme: "internet-facing"
 
 explorer:
   web:

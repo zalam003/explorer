@@ -55,7 +55,7 @@ spec:
         - mix phx.server
         ports:
         - name: health
-          containerPort: 4001
+          containerPort: {{ .Values.image.explorerIndexer.containerPort }}
         resources:
           requests:
             memory: {{ .Values.resources.explorerIndexer.requests.memory }}

@@ -33,7 +33,7 @@ spec:
         - mix phx.server
         ports:
         - name: http
-          containerPort: 4000
+          containerPort: {{ .Values.image.explorerWebapp.containerPort }}
         resources:
           requests:
             memory: {{ .Values.resources.explorerWebapp.requests.memory }}
@@ -41,6 +41,18 @@ spec:
           limits:
             memory: {{ .Values.resources.explorerWebapp.limits.memory }}
             cpu: {{ .Values.resources.explorerWebapp.limits.cpu }}
+        readinessProbe:
+          httpGet:
+            path: /
+            port: {{ .Values.image.explorerWebapp.containerPort }}
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /
+            port: {{ .Values.image.explorerWebapp.containerPort }}
+          initialDelaySeconds: 50
+          periodSeconds: 10
         envFrom:
           - configMapRef:
               name: {{ .Values.name }}-configmap-global

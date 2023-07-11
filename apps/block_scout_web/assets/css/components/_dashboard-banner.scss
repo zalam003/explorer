@@ -36,7 +36,7 @@ $dashboard-banner-chart-axis-font-color-alt: #333;
   display: flex;
   justify-content: space-between;
   position: relative;
-  z-index: 9;
+  z-index: 0;
 
   @include media-breakpoint-between(lg, xl) {
     height: 249px;

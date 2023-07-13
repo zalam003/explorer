@@ -15,13 +15,13 @@ image:
     repository: ${AWS_ECR}/${REPOSITORY_NAME_WEBAPP}
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
-    tag: latest
+    tag: master-${CI_COMMIT_SHORT_SHA}
     containerPort: 4000
   explorerIndexer:
     repository: ${AWS_ECR}/${REPOSITORY_NAME_INDEXER}
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
-    tag: latest
+    tag: master-${CI_COMMIT_SHORT_SHA}
     containerPort: 4001
 
 resources:
@@ -71,7 +71,7 @@ autoscaling:
 
 nodeSelector: { appType: standard }
 
-  
+
 # Secrets Configurations  
 envDataBaseSecrets:
   PGHOST: ${MAINNET_DB_HOSTNAME}
@@ -115,7 +115,7 @@ envGlobalVariables:
   BLOCK_TRANSFORMER: "base"
   BLOCKSCOUT_HOST: "explorer.energi.network"
   WOBSERVER_ENABLED: "false"
-  
+
   ## BlockChain CoreNode connexion config
   ETHEREUM_JSONRPC_TRANSPORT: "http"
   ETHEREUM_JSONRPC_MAXCONN: "30"

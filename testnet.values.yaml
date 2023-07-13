@@ -15,13 +15,13 @@ image:
     repository: ${AWS_ECR}/${REPOSITORY_NAME_WEBAPP}
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
-    tag: latest
+    tag: develop-${CI_COMMIT_SHORT_SHA}
     containerPort: 4000
   explorerIndexer:
     repository: ${AWS_ECR}/${REPOSITORY_NAME_INDEXER}
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
-    tag: testnet-${CI_COMMIT_SHORT_SHA}
+    tag: develop-${CI_COMMIT_SHORT_SHA}
     containerPort: 4001
 
 resources:
@@ -122,13 +122,13 @@ envGlobalVariables:
   ENABLE_TXS_STATS: "true"
   JSON_RPC: "https://nodeapi.test.energi.network/v1/jsonrpc"
   ENERGISWAP_API_URL: "http://energiswap-api-testnet.energiswap-testnet.svc.cluster.local:443/v1"
-  
+
   ## Divers var configuration
   HISTORY_FETCH_INTERVAL: "30"
   API_RATE_LIMIT: "50"
   SHOW_TXS_CHART: "true"
   ALLOWED_EVM_VERSIONS: "petersburg,homestead,tangerineWhistle,spuriousDragon,byzantium,constantinople,istanbul"
-  
+
   ## BlockChain Configurations
   COINGECKO_COIN_ID: "energi"
   COIN: "NRG"
@@ -145,7 +145,7 @@ envGlobalVariables:
   TOKEN_METADATA_UPDATE_INTERVAL: "3600"
   DISPLAY_TOKEN_ICONS: "true"
   ECTO_USE_SSL: "false"
-  
+
   ## Front Display and Menus Configurations
   LOGO: "/images/EnergiLogoLight.png"
   LOGO_FOOTER: "/images/EnergiLogoLight.png"
@@ -154,8 +154,7 @@ envGlobalVariables:
   SUPPORTED_CHAINS: '[{"url":"https://explorer.test.energi.network/", "title":"Explorer Testnet",}]'
   APPS_MENU: "false"
   EXTERNAL_APPS: '[]'
-  
+
   ## Maintenance Configuration
   SHOW_MAINTENANCE_ALERT: "false"
   MAINTENANCE_ALERT_MESSAGE: "Test Energi Explorer"
-  

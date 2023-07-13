@@ -1,0 +1,11 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: restart-indexer
+  namespace: {{ .Values.namespace }}
+rules:
+  - apiGroups: ["apps", "extensions"]
+    resources: ["deployments"]
+    resourceNames:
+      - {{ .Values.name }}-indexer
+    verbs: ["get", "patch"]

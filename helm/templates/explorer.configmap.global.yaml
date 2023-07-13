@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.name }}-configmap-global 
+data:
+  {{- toYaml .Values.envGlobalVariables | nindent 3 }}
+  

@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.name }}-indexer
+  annotations:
+spec:
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  replicas: 1
+  selector:
+    matchLabels:
+      app: explorer
+      component: explorer-indexer
+  template:
+    metadata:
+      labels:
+        app: explorer
+        release: explorer
+        component: explorer-indexer
+    spec:
+      serviceAccountName: {{ .Values.name }}-rbac
+      terminationGracePeriodSeconds: 60
+      initContainers:
+      - name: "explorer-init"
+        image: "{{ .Values.image.explorerIndexer.repository }}:{{ .Values.image.explorerIndexer.tag }}"
+        imagePullPolicy: Always
+        command:
+        - /bin/sh
+        - -c
+        args:
+        - |
+           mix do ecto.create, ecto.migrate
+        envFrom:
+          - configMapRef:
+              name: {{ .Values.name }}-configmap-global
+          - configMapRef:
+              name: {{ .Values.name }}-configmap-indexer
+          - secretRef:
+              name: {{ .Values.name }}-secret-global
+          - secretRef:
+              name: {{ .Values.name }}-secret-db
+          - secretRef:
+              name: {{ .Values.name }}-secret-captcha
+      containers:
+      - name: {{ .Values.name }}-indexer
+        image: "{{ .Values.image.explorerIndexer.repository }}:{{ .Values.image.explorerIndexer.tag }}"
+        imagePullPolicy: Always
+        command:
+        - /bin/sh
+        - -c
+        args:
+        - mix phx.server
+        ports:
+        - name: health
+          containerPort: {{ .Values.image.explorerIndexer.containerPort }}
+        resources:
+          requests:
+            memory: {{ .Values.resources.explorerIndexer.requests.memory }}
+            cpu: {{ .Values.resources.explorerIndexer.requests.cpu }}
+          limits:
+            memory: {{ .Values.resources.explorerIndexer.limits.memory }}
+            cpu: {{ .Values.resources.explorerIndexer.limits.cpu }}
+        envFrom:
+          - configMapRef:
+              name: {{ .Values.name }}-configmap-global
+          - configMapRef:
+              name: {{ .Values.name }}-configmap-indexer
+          - secretRef:
+              name: {{ .Values.name }}-secret-global
+          - secretRef:
+              name: {{ .Values.name }}-secret-db
+          - secretRef:
+              name: {{ .Values.name }}-secret-captcha
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

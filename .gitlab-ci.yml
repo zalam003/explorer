@@ -1,122 +1,39 @@
 ############################################################
+#               Include SharedLibraries                    #
+############################################################
+# Include all SharedLibraries
+include:
+  - local: '/scripts/variables.yml'
+  - project: "energi/tech/devops/gitlab-ci-shared-jobs"
+    ref: "develop"
+    file:
+      - "libs/gitlab/cd/templates/jobs/kube/k8s-jobs.yml"
+############################################################
 #                      Variables                           #
 ############################################################
 # Include all variables
-include:
-  - local: '/scripts/variables.yml'
-
+variables:
+  PROJECT: "energi"
+  CLUSTERNAME: $PROJECT-$ENV-eks-cluster
+  APP_PROJECT: "energi"
+  APP_NAME: "explorer"
+  HELM_CHART_PATH: "./helm"
+  REPOSITORY_NAME_WEBAPP: "energi/explorer/webapp"
+  REPOSITORY_NAME_INDEXER: "energi/explorer/indexer"
+  NAMESPACE: ${APP_PROJECT}-${APP_NAME}-${APP_ENV}
+  HELM_CHART: ${APP_PROJECT}-${APP_NAME}-${APP_ENV}
+  AWS_ECR: 769325152790.dkr.ecr.us-west-2.amazonaws.com
+  AWS_REGION: "us-west-2"
 ############################################################
 #                         Stages                           #
 ############################################################
 stages:
   - build-base
   - build-dev-image
+  - checks
   - build
   - scan
-  - deploy-sbx-schema
-  - deploy-sbx-indexer
-  - deploy-sbx-webapp
-  - deploy-testnet-schema
-  - deploy-testnet-indexer
-  - deploy-testnet-webapp1
-  - deploy-testnet-webapp2
-  - deploy-mainnet-schema
-  - deploy-mainnet-indexer
-  - deploy-mainnet-webapp1
-  - deploy-mainnet-webapp2
-
-############################################################
-#                       Triggers                           #
-############################################################
-.sbx_triggers: &sbx_triggers
-  refs:
-    - sandbox
-    
-.testnet_triggers: &testnet_triggers
-  refs:
-    - develop
-
-.mainnet_triggers: &mainnet_triggers
-  refs:
-    - master
-
-############################################################
-#                        Runner                            #
-############################################################
-.runner:
-  tags: [docker_runner]
-
-############################################################
-#                        Scripts                           #
-############################################################
-
-# Update variables and generate environment file
-.set_variables:
-  before_script:
-    - echo "create environment file"
-    - cd scripts
-    - sed -i "11iECRHOST=$CONTAINER_REGISTRY" start.sh
-    - cp template.env ${ENVFILE}
-    - if [[ ${ISINDEXER} == no ]]; then echo "Disable indexer on webapp"; sed -i '19iDISABLE_INDEXER=true' ${ENVFILE}; fi
-    - if [[ ${ISINDEXER} == yes ]]; then cp ../apps/indexer/config/config.exs . ; sed -i "s/1 <<< 30/${INDEXER_MEM} <<< 30/g" config.exs; fi
-    - if [[ "${ENV_PREFIX}" == "MAINNET" || "${ENV_PREFIX}" == "SANDBOX" ]]; then echo "Switch to mainnet"; sed -i "s/Testnet/Mainnet/g" ${ENVFILE}; sed -i "s/testnet.json/mainnet.json/g" ${ENVFILE}; fi
-    - sed -i "s/CORENODEIP/${CORENODE_IP}/g" ${ENVFILE}
-    - sed -i "s/WSPORT/${WSPORT}/g" ${ENVFILE}
-    - sed -i "s/HTTPPORT/${HTTPPORT}/g" ${ENVFILE}
-    - sed -i "s/CHAINID/${CHAINID}/g" ${ENVFILE}
-    - sed -i "s/WEBPORT/${WEBPORT}/g" ${ENVFILE}
-    - sed -i "s|SECRETKEYBASE|${SECRET_KEY_BASE}|g" ${ENVFILE}
-    - sed -i "s|ENERGISWAPAPIURL|${ENERGISWAP_API_URL}|g" ${ENVFILE}
-    - sed -i "s|WNRGTOKENADDRESS|${WNRG_TOKEN_ADDRESS}|g" ${ENVFILE}
-    - sed -i "s|NODEAPI|${NODEAPI}|g" ${ENVFILE}
-    - sed -i "s/DBUSERNAME/${DB_USERNAME}/g" ${ENVFILE}
-    - sed -i "s|DBPASSWORD|${DB_PASSWORD}|g" ${ENVFILE}
-    - sed -i "s/DBNAME/${DB_NAME}/g" ${ENVFILE}
-    - sed -i "s/DBHOST/${DB_HOSTNAME}/g" ${ENVFILE}
-    - sed -i "s/DBPOOLSIZE/${DBPOOLSIZE}/g" ${ENVFILE}
-    - sed -i "s/REWARDSCONTRACT/${REWARDSCONTRACT}/g" ${ENVFILE}
-    - sed -i "s|ESAUTHSECRET|${AUTHORIZATION_SECRET}|g" ${ENVFILE}
-    - sed -i "s/EXPLORERHOST/${SERVER_HOST}/g" ${ENVFILE}
-    - sed -i "s/CAPTCHASECRET/${CAPTCHASECRET}/g" ${ENVFILE}
-    - sed -i "s/CAPTCHACLIENT/${CAPTCHACLIENT}/g" ${ENVFILE}
-    - cd -
-
-# Script to deploy Docker image to server
-.deploy_image:
-  script:
-    - apk add --no-cache git curl build-base autoconf automake linux-headers openssl-dev openssh bash
-    - eval $(ssh-agent -s)
-    - echo "$SSH_RSA_KEY" | tr -d '\r' | ssh-add -
-    - mkdir -p ~/.ssh
-    - chmod 700 ~/.ssh
-    - echo "Deploy $ENVIRONMENT $RUN_APP as $SERVER_USER on $DEPLOY_SERVER_IP"
-    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$DEPLOY_SERVER_IP 'export AWS_REGION=$AWS_REGION'
-    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$DEPLOY_SERVER_IP 'if [[ -d $APP_DIR/scripts ]]; then rm -rf $APP_DIR/scripts; fi'
-    - scp -o StrictHostKeyChecking=no -r ./scripts $SERVER_USER@$DEPLOY_SERVER_IP:$APP_DIR/.
-    - echo "TAG $TAG_LATEST App Name $APP_NAME"
-    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$DEPLOY_SERVER_IP "docker pull $TAG_LATEST"
-    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$DEPLOY_SERVER_IP "docker container rm -f ${APP_NAME}_${ENVIRONMENT} || true"
-    - ssh -tt -o StrictHostKeyChecking=no $SERVER_USER@$DEPLOY_SERVER_IP "cd $APP_DIR/scripts && ./start.sh -e ${ENVIRONMENT} -r ${RUN_APP} -i ${CONTAINER_REGISTRY}"
-
-# Script to update schema
-.update_schema:
-  script:
-    - apk add --no-cache git curl build-base autoconf automake linux-headers openssl-dev openssh bash
-    - eval $(ssh-agent -s)
-    - echo "$SSH_RSA_KEY" | tr -d '\r' | ssh-add -
-    - mkdir -p ~/.ssh
-    - chmod 700 ~/.ssh
-    - echo "Deploy schema as $SERVER_USER on $DEPLOY_SERVER_IP"
-    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$DEPLOY_SERVER_IP 'sudo su - && export AWS_REGION=$AWS_REGION'
-    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$DEPLOY_SERVER_IP 'if [[ -d $APP_DIR/scripts ]]; then rm -rf $APP_DIR/scripts; fi'
-    - scp -o StrictHostKeyChecking=no -r ./scripts $SERVER_USER@$DEPLOY_SERVER_IP:$APP_DIR/.
-    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$DEPLOY_SERVER_IP "docker pull $TAG1_LATEST"
-    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$DEPLOY_SERVER_IP "docker container rm -f $SCHEMA_NAME || true"
-    - echo "Create or update DB schema"
-    - ssh -tt -o StrictHostKeyChecking=no $SERVER_USER@$DEPLOY_SERVER_IP "cd $APP_DIR/scripts && ./start.sh -e ${ENVIRONMENT} -r ${RUN_APP} -i $CONTAINER_REGISTRY"
-    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$DEPLOY_SERVER_IP "cd $APP_DIR/scripts && ./token_remove.sh ${ENVIRONMENT}"
-    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$DEPLOY_SERVER_IP "cd $APP_DIR/scripts && ./token_rename.sh ${ENVIRONMENT}"
-    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$DEPLOY_SERVER_IP "cd $APP_DIR/scripts && ./remove_moniker.sh ${ENVIRONMENT}"
+  - deploy
 
 ############################################################
 #                     Build Base Image                     #
@@ -142,7 +59,7 @@ build-base:
 ############################################################
 #                  Build Developer Image                   #
 ############################################################
-build-dev-image:
+.build-dev-image:
   stage: build-dev-image
   tags:
     - docker_runner
@@ -169,32 +86,50 @@ build-dev-image:
       when: manual
 
 ############################################################
+#                Check Vuln and configs                    #
+############################################################
+check-explorer:
+  stage: checks
+  tags:
+    - docker_runner
+  image:
+    name: aquasec/trivy:latest
+    entrypoint: ['']
+  services:
+    - docker:dind
+  script:
+    - echo "Scan $APP_NAME Docker Image for the $ENVIRONMENT"
+    - trivy fs --severity CRITICAL,HIGH --security-checks vuln,config .
+  cache:
+    paths:
+      - .trivycache/
+  artifacts:
+    reports:
+      container_scanning: gl-container-scanning-report.json
+  allow_failure: true
+
+############################################################
 #                      Build indexer                       #
 ############################################################
 build-indexer:
   stage: build
+  needs: [check-explorer]
   tags:
     - docker_runner
   script:
     - cd scripts
     - sed -i "s|$DEFAULT_IMAGE|$BASE_IMAGE_LATEST|g" Dockerfile_indexer
-    - docker build --cache-from $TAG1_LATEST -f ./Dockerfile_indexer -t $TAG1_COMMIT -t $TAG1_LATEST ../
+    - docker build --cache-from $TAG1_LATEST -f ./Dockerfile_indexer -t $TAG1_COMMIT -t $TAG1_LATEST -t ${AWS_ECR}/${REPOSITORY_NAME_INDEXER}:${CI_COMMIT_BRANCH}-${CI_COMMIT_SHORT_SHA} ../
     - docker push $TAG1_COMMIT
     - docker push $TAG1_LATEST
-  rules:
-    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
-      changes:
-        - .gitlab-ci.yml
-        - apps/**/*
-        - scripts/Dockerfile_{indexer,webapp,base_image}
-        - scripts/start.sh
-    - if: $CI_COMMIT_TAG
+    - docker push ${AWS_ECR}/${REPOSITORY_NAME_INDEXER}:${CI_COMMIT_BRANCH}-${CI_COMMIT_SHORT_SHA}
 
 ############################################################
 #                       Build webapp                       #
 ############################################################
 build-webapp:
   stage: build
+  needs: [check-explorer]
   tags:
     - docker_runner
   variables:
@@ -203,18 +138,10 @@ build-webapp:
     - cp submodules/src/assets/* apps/block_scout_web/assets/static/images/tokens
     - cd scripts
     - sed -i "s|$DEFAULT_IMAGE|$BASE_IMAGE_LATEST|g" Dockerfile_webapp
-    - docker build --cache-from $TAG2_LATEST -f ./Dockerfile_webapp -t $TAG2_COMMIT -t $TAG2_LATEST ../
+    - docker build --cache-from $TAG2_LATEST -f ./Dockerfile_webapp -t $TAG2_COMMIT -t $TAG2_LATEST -t ${AWS_ECR}/${REPOSITORY_NAME_WEBAPP}:${CI_COMMIT_BRANCH}-${CI_COMMIT_SHORT_SHA} ../
     - docker push $TAG2_COMMIT
     - docker push $TAG2_LATEST
-  rules:
-    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
-      changes:
-        - .gitlab-ci.yml
-        - apps/**/*
-        - submodules/src/assets/*
-        - scripts/Dockerfile_{indexer,webapp,base_image}
-        - scripts/start.sh
-    - if: $CI_COMMIT_TAG
+    - docker push ${AWS_ECR}/${REPOSITORY_NAME_WEBAPP}:${CI_COMMIT_BRANCH}-${CI_COMMIT_SHORT_SHA}
 
 ############################################################
 #                       Scan webapp                       #
@@ -222,8 +149,6 @@ build-webapp:
 scan-webapp:
   stage: scan
   needs: [build-webapp]
-  variables:
-    ENVIRONMENT: testnet
   tags:
     - docker_runner
   image:
@@ -233,8 +158,7 @@ scan-webapp:
     - docker:dind
   script:
     - echo "Scan $APP_NAME Docker Image for the $ENVIRONMENT"
-    - trivy --no-progress --output gl-container-scanning-report.json $CONTAINER_REGISTRY/$APP2_NAME:latest
-    - trivy --exit-code 1 --no-progress --severity CRITICAL $CONTAINER_REGISTRY/$APP2_NAME:latest
+    - trivy image --exit-code 1 --no-progress --severity CRITICAL $CONTAINER_REGISTRY/$APP2_NAME:${CI_COMMIT_BRANCH}-${CI_COMMIT_SHORT_SHA}
   cache:
     paths:
       - .trivycache/
@@ -242,20 +166,6 @@ scan-webapp:
     reports:
       container_scanning: gl-container-scanning-report.json
   allow_failure: true
-  retry:
-    max: 2
-    when:
-      - script_failure
-      - runner_system_failure
-      - stuck_or_timeout_failure  
-  rules:
-    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
-      changes:
-        - .gitlab-ci.yml
-        - apps/**/*
-        - scripts/Dockerfile_{indexer,webapp,base_image}
-        - scripts/start.sh
-    - if: $CI_COMMIT_TAG
 
 ############################################################
 #                       Scan indexer                       #
@@ -263,8 +173,6 @@ scan-webapp:
 scan-indexer:
   stage: scan
   needs: [build-indexer]
-  variables:
-    ENVIRONMENT: testnet
   tags:
     - docker_runner
   image:
@@ -274,8 +182,7 @@ scan-indexer:
     - docker:dind
   script:
     - echo "Scan $APP_NAME Docker Image for the $ENVIRONMENT"
-    - trivy --no-progress --output gl-container-scanning-report.json $CONTAINER_REGISTRY/$APP1_NAME:latest
-    - trivy --exit-code 1 --no-progress --severity CRITICAL $CONTAINER_REGISTRY/$APP1_NAME:latest
+    - trivy image --exit-code 1 --no-progress --severity CRITICAL $CONTAINER_REGISTRY/$APP1_NAME:${CI_COMMIT_BRANCH}-${CI_COMMIT_SHORT_SHA}
   cache:
     paths:
       - .trivycache/
@@ -283,222 +190,45 @@ scan-indexer:
     reports:
       container_scanning: gl-container-scanning-report.json
   allow_failure: true
-  retry:
-    max: 2
-    when:
-      - script_failure
-      - runner_system_failure
-      - stuck_or_timeout_failure 
-  rules:
-    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
-      changes:
-        - .gitlab-ci.yml
-        - apps/**/*
-        - scripts/Dockerfile_{indexer,webapp,base_image}
-        - scripts/start.sh
-    - if: $CI_COMMIT_TAG
-
-############################################################
-#                         Sandbox                          #
-############################################################
-
-# Update sandbox schema
-sbx-schema:
-  image: alpine:latest
-  services:
-    - docker:dind
-  stage: deploy-sbx-schema
-  needs: 
-    - job: scan-indexer
-      optional: true
-  tags:
-    - docker_runner
-  variables: !reference [.sandbox_schema_variables, variables]
-  extends:
-    - .set_variables
-    - .update_schema
-  only:
-    <<: *sbx_triggers
-
-# Deploy indexer in Sandbox
-sbx-idxr:
-  image: alpine:latest
-  services:
-    - docker:dind
-  stage: deploy-sbx-indexer
-  needs: [sbx-schema]
-  tags:
-    - docker_runner
-  variables: !reference [.sandbox_indexer_variables, variables]
-  extends:
-    - .deploy_image
-  only:
-    <<: *sbx_triggers
-
-# Deploy webapp in Sandbox
-sbx-web1:
-  image: alpine:latest
-  services:
-    - docker:dind
-  stage: deploy-sbx-webapp
-  needs: 
-    - job: scan-webapp
-      optional: true
-  tags:
-    - docker_runner
-  variables: !reference [.sandbox_webapp_variables, variables]
-  extends:
-    - .set_variables
-    - .deploy_image
-  only:
-    <<: *sbx_triggers
 
 ############################################################
 #                        Testnet                           #
 ############################################################
 
-# Update testnet schema
-tnet-schema:
-  image: alpine:latest
-  services:
-    - docker:dind
-  stage: deploy-testnet-schema
-  needs: []
-  tags:
-    - docker_runner
-  variables: !reference [.testnet_schema_variables, variables]
-  extends:
-    - .set_variables
-    - .update_schema
-  only:
-    <<: *testnet_triggers
-
-# Deploy indexer in Testnet
-tnet-idxr:
-  image: alpine:latest
-  services:
-    - docker:dind
-  stage: deploy-testnet-indexer
-  needs: [tnet-schema]
-  tags:
-    - docker_runner
-  variables: !reference [.testnet_indexer_variables, variables]
-  extends:
-    - .deploy_image
-  only:
-    <<: *testnet_triggers
-
-# Deploy webapp in Testnet
-tnet-web1:
-  image: alpine:latest
-  services:
-    - docker:dind
-  stage: deploy-testnet-webapp1
-  needs: [tnet-schema]
-  tags:
-    - docker_runner
-  variables: !reference [.testnet_webapp1_variables, variables]
-  extends:
-    - .set_variables
-    - .deploy_image
-  only:
-    <<: *testnet_triggers
+# Deploy Explorer in Testnet
+helm deploy testnet:
+  stage: deploy
+  needs: [scan-indexer,scan-webapp]
+  variables:
+    ENV: "dev"
+    APP_ENV: "testnet"
+    ENVSUBST: "true"
+    ACCOUNT: "769325152790"
+    APP_DNS: "explorer.test.energi.network"
+    CERTIFICATE_ARN: "arn:aws:acm:us-west-2:769325152790:certificate/c4296fa6-2670-4b95-b7c2-34d0a4c543ed"
+  tags: [docker_runner]
+  extends: .helm_charts_deploy
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "develop"'
 
 ############################################################
-#                         Mainnet                          #
+#                        Mainnet                           #
 ############################################################
 
-# Update mainnet schema
-mnet-schema:
-  image: alpine:latest
-  services:
-    - docker:dind
-  stage: deploy-mainnet-schema
-  needs: []
-  tags:
-    - docker_runner
-  variables: !reference [.mainnet_schema_variables, variables]
-  extends:
-    - .set_variables
-    - .update_schema
-  only:
-    <<: *mainnet_triggers
-
-# Deploy indexer in Mainnet
-mnet-idxr:
-  image: alpine:latest
-  services:
-    - docker:dind
-  stage: deploy-mainnet-indexer
-  needs: [mnet-schema]
-  tags:
-    - docker_runner
-  variables: !reference [.mainnet_indexer_variables, variables]
-  extends:
-    - .deploy_image
-  only:
-    <<: *mainnet_triggers
-
-# Deploy webapp #1 in Mainnet
-mnet-web1a:
-  image: alpine:latest
-  services:
-    - docker:dind
-  stage: deploy-mainnet-webapp1
-  needs: []
-  tags:
-    - docker_runner
-  variables: !reference [.mainnet_webapp1a_variables, variables]
-  extends:
-    - .set_variables
-    - .deploy_image
-  only:
-    <<: *mainnet_triggers
-
-# # Deploy webapp #2 in Mainnet
-# mnet-web1b:
-#   image: alpine:latest
-#   services:
-#     - docker:dind
-#   stage: deploy-mainnet-webapp2
-#   needs: [mnet-web1a]
-#   tags:
-#     - docker_runner
-#   variables: !reference [.mainnet_webapp1b_variables, variables]
-#   extends:
-#     - .set_variables
-#     - .deploy_image
-#   only:
-#     <<: *mainnet_triggers
-
-# Deploy webapp #3 in Mainnet
-mnet-web2a:
-  image: alpine:latest
-  services:
-    - docker:dind
-  stage: deploy-mainnet-webapp2
-  needs: [mnet-web1a]
-  tags:
-    - docker_runner
-  variables: !reference [.mainnet_webapp2a_variables, variables]
-  extends:
-    - .set_variables
-    - .deploy_image
-  only:
-    <<: *mainnet_triggers
-
-# # Deploy webapp #4 in Mainnet
-# mnet-web2b:
-#   image: alpine:latest
-#   services:
-#     - docker:dind
-#   stage: deploy-mainnet-webapp2
-#   needs: []
-#   tags:
-#     - docker_runner
-#   variables: !reference [.mainnet_webapp2b_variables, variables]
-#   extends:
-#     - .set_variables
-#     - .deploy_image
-#   only:
-#     <<: *mainnet_triggers
+# Deploy Explorer in Mainnet
+helm deploy mainnet:
+  stage: deploy
+  needs: [scan-indexer,scan-webapp]
+  variables:
+    ENV: "mainnet"
+    APP_ENV: "mainnet"
+    ENVSUBST: "true"
+    ACCOUNT: "930210061793"
+    ROLE_NAME: "energi-automation"
+    ROLE_ARN: "arn:aws:iam::930210061793:role/energi-automation"
+    APP_DNS: "explorer.energi.network"
+    CERTIFICATE_ARN: "arn:aws:acm:us-west-2:930210061793:certificate/89843d55-8dbc-4e82-8c80-7aabbe1fca9a"
+  tags: [docker_runner]
+  extends: .helm_charts_deploy
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "master"'

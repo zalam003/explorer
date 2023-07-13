@@ -34,23 +34,6 @@ stages:
   - build
   - scan
   - deploy
-############################################################
-#                       Triggers                           #
-############################################################
-    
-.testnet_triggers: &testnet_triggers
-  refs:
-    - develop
-
-.mainnet_triggers: &mainnet_triggers
-  refs:
-    - master
-
-############################################################
-#                        Runner                            #
-############################################################
-.runner:
-  tags: [docker_runner]
 
 ############################################################
 #                     Build Base Image                     #
@@ -76,7 +59,7 @@ build-base:
 ############################################################
 #                  Build Developer Image                   #
 ############################################################
-build-dev-image:
+.build-dev-image:
   stage: build-dev-image
   tags:
     - docker_runner
@@ -107,7 +90,6 @@ build-dev-image:
 ############################################################
 check-explorer:
   stage: checks
-  needs: [build-base]
   tags:
     - docker_runner
   image:
@@ -125,51 +107,29 @@ check-explorer:
     reports:
       container_scanning: gl-container-scanning-report.json
   allow_failure: true
-  retry:
-    max: 2
-    when:
-      - script_failure
-      - runner_system_failure
-      - stuck_or_timeout_failure  
-  rules:
-    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
-      changes:
-        - .gitlab-ci.yml
-        - apps/**/*
-        - scripts/Dockerfile_{indexer,webapp,base_image}
-        - scripts/start.sh
-    - if: $CI_COMMIT_TAG
 
 ############################################################
 #                      Build indexer                       #
 ############################################################
 build-indexer:
   stage: build
-  needs: [build-base,check-explorer]
+  needs: [check-explorer]
   tags:
     - docker_runner
   script:
     - cd scripts
     - sed -i "s|$DEFAULT_IMAGE|$BASE_IMAGE_LATEST|g" Dockerfile_indexer
-    - docker build --cache-from $TAG1_LATEST -f ./Dockerfile_indexer -t $TAG1_COMMIT -t $TAG1_LATEST -t ${AWS_ECR}/${REPOSITORY_NAME_INDEXER}:${CI_COMMIT_SHORT_SHA} ../
+    - docker build --cache-from $TAG1_LATEST -f ./Dockerfile_indexer -t $TAG1_COMMIT -t $TAG1_LATEST -t ${AWS_ECR}/${REPOSITORY_NAME_INDEXER}:${CI_COMMIT_BRANCH}-${CI_COMMIT_SHORT_SHA} ../
     - docker push $TAG1_COMMIT
     - docker push $TAG1_LATEST
-    - docker push ${AWS_ECR}/${REPOSITORY_NAME_INDEXER}:${CI_COMMIT_SHORT_SHA}
-  rules:
-    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
-      changes:
-        - .gitlab-ci.yml
-        - apps/**/*
-        - scripts/Dockerfile_{indexer,webapp,base_image}
-        - scripts/start.sh
-    - if: $CI_COMMIT_TAG
+    - docker push ${AWS_ECR}/${REPOSITORY_NAME_INDEXER}:${CI_COMMIT_BRANCH}-${CI_COMMIT_SHORT_SHA}
 
 ############################################################
 #                       Build webapp                       #
 ############################################################
 build-webapp:
   stage: build
-  needs: [build-base,check-explorer]
+  needs: [check-explorer]
   tags:
     - docker_runner
   variables:
@@ -178,20 +138,10 @@ build-webapp:
     - cp submodules/src/assets/* apps/block_scout_web/assets/static/images/tokens
     - cd scripts
     - sed -i "s|$DEFAULT_IMAGE|$BASE_IMAGE_LATEST|g" Dockerfile_webapp
-    - docker build --cache-from $TAG2_LATEST -f ./Dockerfile_webapp -t $TAG2_COMMIT -t $TAG2_LATEST -t ${AWS_ECR}/${REPOSITORY_NAME_WEBAPP}:${CI_COMMIT_SHORT_SHA} ../
+    - docker build --cache-from $TAG2_LATEST -f ./Dockerfile_webapp -t $TAG2_COMMIT -t $TAG2_LATEST -t ${AWS_ECR}/${REPOSITORY_NAME_WEBAPP}:${CI_COMMIT_BRANCH}-${CI_COMMIT_SHORT_SHA} ../
     - docker push $TAG2_COMMIT
     - docker push $TAG2_LATEST
-    - docker push ${AWS_ECR}/${REPOSITORY_NAME_WEBAPP}:${CI_COMMIT_SHORT_SHA}
-
-  rules:
-    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
-      changes:
-        - .gitlab-ci.yml
-        - apps/**/*
-        - submodules/src/assets/*
-        - scripts/Dockerfile_{indexer,webapp,base_image}
-        - scripts/start.sh
-    - if: $CI_COMMIT_TAG
+    - docker push ${AWS_ECR}/${REPOSITORY_NAME_WEBAPP}:${CI_COMMIT_BRANCH}-${CI_COMMIT_SHORT_SHA}
 
 ############################################################
 #                       Scan webapp                       #
@@ -208,7 +158,7 @@ scan-webapp:
     - docker:dind
   script:
     - echo "Scan $APP_NAME Docker Image for the $ENVIRONMENT"
-    - trivy image --exit-code 1 --no-progress --severity CRITICAL $CONTAINER_REGISTRY/$APP2_NAME:latest
+    - trivy image --exit-code 1 --no-progress --severity CRITICAL $CONTAINER_REGISTRY/$APP2_NAME:${CI_COMMIT_BRANCH}-${CI_COMMIT_SHORT_SHA}
   cache:
     paths:
       - .trivycache/
@@ -216,20 +166,6 @@ scan-webapp:
     reports:
       container_scanning: gl-container-scanning-report.json
   allow_failure: true
-  retry:
-    max: 2
-    when:
-      - script_failure
-      - runner_system_failure
-      - stuck_or_timeout_failure  
-  rules:
-    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
-      changes:
-        - .gitlab-ci.yml
-        - apps/**/*
-        - scripts/Dockerfile_{indexer,webapp,base_image}
-        - scripts/start.sh
-    - if: $CI_COMMIT_TAG
 
 ############################################################
 #                       Scan indexer                       #
@@ -246,7 +182,7 @@ scan-indexer:
     - docker:dind
   script:
     - echo "Scan $APP_NAME Docker Image for the $ENVIRONMENT"
-    - trivy image --exit-code 1 --no-progress --severity CRITICAL $CONTAINER_REGISTRY/$APP1_NAME:latest
+    - trivy image --exit-code 1 --no-progress --severity CRITICAL $CONTAINER_REGISTRY/$APP1_NAME:${CI_COMMIT_BRANCH}-${CI_COMMIT_SHORT_SHA}
   cache:
     paths:
       - .trivycache/
@@ -254,20 +190,6 @@ scan-indexer:
     reports:
       container_scanning: gl-container-scanning-report.json
   allow_failure: true
-  retry:
-    max: 2
-    when:
-      - script_failure
-      - runner_system_failure
-      - stuck_or_timeout_failure 
-  rules:
-    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
-      changes:
-        - .gitlab-ci.yml
-        - apps/**/*
-        - scripts/Dockerfile_{indexer,webapp,base_image}
-        - scripts/start.sh
-    - if: $CI_COMMIT_TAG
 
 ############################################################
 #                        Testnet                           #
@@ -283,11 +205,11 @@ helm deploy testnet:
     ENVSUBST: "true"
     ACCOUNT: "769325152790"
     APP_DNS: "explorer.test.energi.network"
-    CERTIFICATE_ARN: "arn:aws:acm:us-west-2:769325152790:certificate/1d7ee6f5-2c79-4afc-adbb-63dfa9e14080"
+    CERTIFICATE_ARN: "arn:aws:acm:us-west-2:769325152790:certificate/c4296fa6-2670-4b95-b7c2-34d0a4c543ed"
   tags: [docker_runner]
   extends: .helm_charts_deploy
-  only:
-    <<: *testnet_triggers 
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "develop"'
 
 ############################################################
 #                        Mainnet                           #
@@ -305,8 +227,8 @@ helm deploy mainnet:
     ROLE_NAME: "energi-automation"
     ROLE_ARN: "arn:aws:iam::930210061793:role/energi-automation"
     APP_DNS: "explorer.energi.network"
-    CERTIFICATE_ARN: "arn:aws:acm:us-west-2:930210061793:certificate/be0e042a-10b7-4d8d-b432-a8b3622c30ee"
+    CERTIFICATE_ARN: "arn:aws:acm:us-west-2:930210061793:certificate/89843d55-8dbc-4e82-8c80-7aabbe1fca9a"
   tags: [docker_runner]
   extends: .helm_charts_deploy
-  only:
-    <<: *mainnet_triggers 
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "master"'

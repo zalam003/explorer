@@ -1,241 +1,439 @@
-\xb880e3da550bd421cd6ab9aacdb0d3351390af1a	        #  eETH
-\x6e46317d5686e885972a871e141fc81c9b48cd61	        #  eETH
-\xb7051d4d603e86a964f58fe2fbc37f9a4e533d01	        #  ETH
-\x6ea708144d2e609588c0d151dc524f504c60c706	        #  eBTC
-\xef48a8c64a7edd6feaa65531d25d867deb7df1de	        #  eBTC
-\x7aa8ca4d3a7d2218237ad5c932d462e4e69e292d	        #  BTC
-\xda23820eeb8b5e659ecb59d2fedce892ac3e9f65	        #  eDAI
-\x35f105a903ff58a8938735dd20a42803a0bf2e80	        #  eDAI
-\x72588fc2aa8cead4b8dd65a4748464fe18bf4e09	        #  DAI
-\x300cf82d9ec415f146c1e1811936ea34386a393b	        #  eUNI
-\xff8f439dda32a10f551bb09702f96b72abbb682a	        #  eUNI
-\xbcfe27b62dd7211752457a2ffb71d29734217526	        #  UNI
-\x1CcE87124899ce1c613C31D2462C3E7f5EDAf554	        #  eLINK
-\x5e9d563db04d92002803b3192c2c49612260cd58	        #  eLINK
-\xefe5de5f5179ff7d1e16423b429571c9549571f1	        #  LINK
-\xc517f6e4a1bf693d483c6f1ec42ddb7e97cf5b6f	        #  eAAVE
-\x53bf82873a8ab23293b92bbd4721e0b4df30996f	        #  eAAVE
-\xb103ec874b34a1292e3563332fc1dc186771f23c	        #  AAVE
-\x9ec3f8380601d11f9578d804c5d721aa6098135e	        #  eSNX
-\x04581a0e7ef76f337d6b1d39768f03b68e5267a9	        #  eSNX
-\xc6d6c6f90517c620bb78a76b179026869a7d010f	        #  SNX
-\x28cbb891400bd3ccf52c50f30fd24ee503718054	        #  e1INCH
-\xd054cB997f0b67Ad31F841c1b37cb5D849066DBA	        #  e1INCH
-\x760f8015d085637351d7b846b6cf0203a2c92972	        #  1INCH
-\xcd89b3e45ae81aaa8b08f27c756657dd68accf72	        #  eYFI
-\x4b009f92d59084eb248445cfb3745c98ad7703be	        #  eYFI
-\x0ef575c257c2c1e6f53e4f290f84f53e4386c73a	        #  YFI
-\x233fb42c8737adb0c879c61c00c643e378f2c863	        #  eDOT
-\x4091f115615f9f8b9768a4a7d0907dc14e6cd740	        #  DOT
-\x5af69ae2622f08ad4fa40fd46da2c73eb95257fa	        #  eBNB
-\xa3a6a951b80eab9315ef4c284c29603b54e80140	        #  BNB
-\x68a41b4a20d44c0436e21246f8db9e27bf07f477	        #  eAVAX
-\xd09a8756f241e6f3b288c6233e022cc5424a9257	        #  AVAX
-\x4d1081566572c74205f5bceee4a3e67cf7b1cf23	        #  eCRV
-\x614bde2bca0b50f2b95beb8212f87518e4edfd22	        #  CRV
-\xd252a516ccba4fe616a1760c9a9c952c0d73f399	        #  eLTC
-\xa1e5e9ba2370adbcdfbe8400fc07b6d4cb96f62c	        #  LTC
-\xa8bf0e68a52358e0d9982acf9acb0138e06e9e39	        #  eBCH
-\x5a70fa53f31282b879912b53d3645d6e07625175	        #  BCH
-\x284a840e325fb9127739e49372dca59cafbca3cc	        #  eDOGE
-\x759a5452d73db97d6122754adeba11b57b81dc8c	        #  DOGE
-\x4fe7cc211bdce59942ff1d37009be96131fb583b	        #  eCAKE
-\x9bcad8e6a3378aa8ca240a2458a94b10be64cdeb	        #  CAKE
-\x5d28b22a4ee7b608b2df596e0526dcb115e5a712	        #  eADA
-\x432436363a4e79888508dd6a50d20ab6d7952aa9	        #  ADA
-\x9c0ae883ffaad119fb62d4ead6f207ec0516875f	        #  eXRP
-\xa89a5a8e6180666624026d1dde94fed468ab5bf3	        #  XRP
-\x55e1eebf06ffe65542c86ede80872a8f19f4f17d	        #  eXLM
-\xd92f436999bb03e06027055c01bc9ca57b5d1f61	        #  XLM
-\x47f9fc7686341e53bd3ae2e82894d05ab90aa2cf	        #  eDASH
-\xd99ab97ff11183a2cf1769f00581dedb32fc46f3	        #  DASH
-\x3eecf9d81dc817e6a638b85ebd6d3ad4b25a2d71	        #  eXMR
-\x9b9de6ca84554ea0ef7b794bcfdc1ae1a34f9eaa	        #  eATOM
-\x715fa3e4d869cebedfc12ad09c37db0e6ff0d255	        #  ATOM
-\x22d57d41f1860f7c3617c2085ab64cbc44f0a1fe	        #  eSUSHI
-\x7ff67ecc7771ad01404c8049388a36f3345da66d	        #  SUSHI
-\xb9241caf43af55ef1719007fbd9e8526e62f2363	        #  eBADGER
-\xa82185efc56f4428e46058552ce49e1460364deb	        #  BADGER
-\xd6dcd2eafd76a76a621dd12868eddec00eff6c18	        #  eLRC
-\xfce23d66725c390a5c4b0970a2c01439eeef28cc	        #  LRC
-\x6b49bf554066fb975b6767dfabdacc3f8b226bab	        #  eBAL
-\x61b4ba3e59ed1e98afbcf79465ace99e9e51ac0c	        #  BAL
-\x92585a9a19900cda39663459e06749ee9678125f	        #  eRUNE
-\x12733161a8b57e6cd83a0f17a74e6fe8166382ef	        #  RUNE
-\xb7d9965c6fe2e78953bb6b6e1f6007689bf4dae2	        #  eGRT
-\xc61384b63870f905f15a4ec5a1d50b46ebe659a3	        #  GRT
-\x4cf9df69c31ef3b92d13a7abb2985d167a139046	        #  eFIL
-\xb49d54898d2373f9c0109edf97a4f6128b7829a4	        #  FIL
-\xdca0feb7df06bb855ef315a53322101cff98336a	        #  eXEM
-\xef0eebee882f99e04a1a8743ffd82c75e89cae7d	        #  XEM
-\xe64039d636ebcef638ba8022e4c6c67435c98ea9	        #  eHEGIC
-\xd37d1d3e599615041a891b7f66b63329b0a8980a	        #  HEGIC
-\x1800e06770c17c3a00f9698760d6881529346070	        #  eSOL
-\x239c469c85f6bc23a681d3428607c0618ac839d2	        #  SOL
-\x3ef98b25f75278899ccad7edfda0d98989eee170	        #  eBNT
-\x83137236f22d6a815abda8e91ac3fa1c3c9e7f7d	        #  BNT
-\x24d0b1487e7cef7b026e15a1c2a272258ab38b16	        #  eDODO
-\x93f555ce2057451e73c568c5e13d481407159216	        #  DODO
-\x4fec4e046e6b8de5d22785c3fbdb104f14f5a306	        #  eMKR
-\xd569c5f802e1ceddfaf7051fd08c9f97e126c929	        #  MKR
-\xf981c89ea1a3ab949e8d8275e1b585f596054282	        #  eNEO
-\xa8b66b49a448c1f1e70ff2eb91f2f7a407683970	        #  NEO
-\xd0b711f450d24bf2bf5663cdda7e18a6b90fd6d6	        #  eEOS
-\xdd75c978338d264bffd270c647363c2e7a993181	        #  EOS
-\x1e003080dbd53c1da4d7911ea365c5e95059ed40	        #  eIOTA
-\xfa46149cf0055789be9781fb7bb65fb911eed11d	        #  MIOTA
-\xef8e5d15dbe2facbf807a0774da4408dc029319c	        #  eXTZ
-\x6bdc294756f21a8b2d407de8fe1bb6a9bbae2fa1	        #  XTZ
-\x1255c3f436394383f7be62499bd674163df33bbf	        #  eTHETA
-\x071dc10ff1ff5ecd3e88128b9ab40ea41010ab7a	        #  THETA
-\x1da4fe1f1286482fb99f19d2223bc8c93676eb7c	        #  eCOMP
-\xa894e47519b6ecc5da2cb52fecbd35ebb0c87619	        #  COMP
-\x4ff5d29beba7ab392ccbfec7701a1ee9b9b92f24	        #  eTRX
-\x9db7e49090b19ee90a04a2532e369b8e15d3ff9c	        #  TRX
-\xecfdf7ea9b3c8f663c8374df4895727a12775ec3	        #  OKB
-\x43007b7527c886a8ca653eed669d9a2a23631bfa	        #  CRO
-\x7af46fff53f7af29438970226c9322c08e1bc363	        #  VET
-\x672a4b323ca2c97fdbf37f27ff280a2acad584ae	        #  LUNA
-\x746ce4561d9df171b62a24808e95696dc5420a78	        #  BSV
-\xea8bd961ab16c43b19f4e50ed7cc46742d6c227a	        #  HT
-\xda802473e85ad89aad531af59a3a0bf1e7a3c16a	        #  FTT
-\x968634c2c754e7765f19d63bb695211dd962b776	        #  EGLD
-\xdecdf387a8a72d2fb0de80e6188b6bc90487a94b	        #  KSM
-\xd4fa02c9c331a4e3489efdd9e69a535afee960a3	        #  DCR
-\xd024770b28e0b70eeaa23317876f65529bf8fce8	        #  LEO
-\xf74f87d9dd1a1955c25d2358195efcb2d1774ec9	        #  CEL
-\x81bd4b24c6f43ff627d61da0bfdc7ed37d2c04ad	        #  ZIL
-\xc19c15e3cbf44c1700b7267fd30b84fbc5f2c537	        #  STX
-\x862adad4100482dd78697024d9a2b5d1449b5a02	        #  ZEC
-\xf1e93f2b040bd340aa38d51a4ecab7d79412d218	        #  VGX
-\x5a3fa5321cd647b1ff9e781ad68a7ceace5dce48	        #  NEAR
-\x398fec66cfe9aef2de2f58b3db77fadd91d23947	        #  RVN
-\x1bc5eb7a732763fa9aaa8143ad941d38192876f0	        #  ETC
-\xc8a3ac2152cf1bde2ca8a8905cc2ea28c3927ea9	        #  FTM
-\x4867aeebf09b5e79e91b0463dcb48fcbd14cbe66	        #  NEXO
-\x0fa57e8c3a3346f84d735fc9c7c9970e362deb53	        #  ENJ
-\x28ddb217ec0d4719e944099ab5c13f73e68fc68f	        #  UMA
-\xe8111b4c0560631dec74c98d9232c1bf3a5eb9c5	        #  HBAR
-\xdadd6653abefffb98e9d678841b9bbbb33a6acc8	        #  CHSB
-\x09573b876224dcfd82312e5679a28393da9324c1	        #  ICX
-\x05932b3b9eb4663e9e129df07ea451bbbf174c35	        #  MATIC
-\x0d9f780a7a47f94253aae1732fe6dabb7e405b60	        #  ZRX
-\x457faf793cf80b42bee92ff048ce6139044feebd	        #  BAT
-\xe84c6f596ec5d4acc304e2601db61271b9130bbe	        #  WAVES
-\x4c36da230be592bd7db00768a0c86e5c6416a16d	        #  REN
-\xd045192d422c64d8674e05e65a1573192dc0a680	        #  IOST
-\xeca71f1e5735055ea96ae2fd5e3473e06fbfde1b	        #  ALGO
-\xa8176f7834203591179bf54ddc1ab0b1cac676bb	        #  BTT
-\x46bcbd8e7119a47c0723ae686bf04122a6a2b253	        #  ONT
-\x85fdb8abfe02bee7d25fe08840e1dabb813cc7a5	        #  AMP
-\x9c2eeac4f24afcf9386ea7de2524fc11dc00a791	        #  BNT
-\x303401f8e49f80d2f3bde8eddfc97b70157c5ab5	        #  DGB
-\xd54d1ded17d2094f897fb91ac370aec438c95b9e	        #  NANO
-\xa7bb78d632429155a360abf3480ebf182f0a220e	        #  ZKS
-\xe06943c5ad5634f2471ffe60ad7b78a364222bfe	        #  OMG
-\x6e9c76445d2133b8ddf65f31970a8a8e4f8bbd84	        #  QTUM
-\x3f2d9a763c2407487ad01d462b517b6ed6705ffd	        #  AR
-\xb7fc8d3e9113e682e86f969a5aa7a111c5979b13	        #  MDX
-\x2a3ceefea5a30ae49452d586f91f4767aace7eb9	        #  CHZ
-\x7b39528860ac16e9903cc84d305c822df726127c	        #  HOT
-\xa0f0f6e75d3e77512a786f93fb0d13f951468821	        #  RSR
-\xfe55b717803158cea93e63eabfbfb4c3eaa73675	        #  EWT
-\x57f42853701a67cefbd7f324535d076b66e896e5	        #  SC
-\x4e5ede4798832810c9fe63ba68866a07d3a3508a	        #  MANA
-\x322841935a42c0307a73a253410badb7e4ebebf3	        #  OCEAN
-\xca31f94b1fd05950d48be16360da904062a89214	        #  ALPHA
-\x521f0867383d4bc61b26eeccf7d60be16df25b5d	        #  REEF
-\x1ee8eff17d4646a88c068a61e16a0bfe9402304e	        #  NPXS
-\xf8bc1b21408676e5512e6e6492dca34a8c80fd84	        #  QNT
-\x78f8ade79fdfc269f5fb2f0e7de80facd69c2b78	        #  KNC
-\xee287f0e3a2e1565373a28cf607b615050196901	        #  CELO
-\x5723325636e09f8cd1fb7be262ad7823b6872a98	        #  LSK
-\x4aa911d5fdd2dc00a9ff521399f34ebf91397138	        #  ONE
-\xd5cc152095ef95b28927ccd1e8e8b1e44b3f0fc1	        #  NXM
-\x35f80ff902625c85fce23543b96edcaca166e1eb	        #  CKB
-\x50271a9d2bf28e8a754b9d59ae3245f74c8b70f0	        #  SNT
-\x4aba1f0d50ef7775a509803ccd623295a3529a83	        #  ARDR
-\x8d79588bc58bb50764bb63ce2d431f19f0b7b2fb	        #  HNT
-\x36bc24a818390db53c7b22b42a801c5327cf3630	        #  SCRT
-\x28044c421f5beafb18cb8c87a5caab8db5282004	        #  KAVA
-\xcf1e93b82ab9cd4bcf5e0eb945a6f7a83bab926c	        #  RIF
-\x7853b9784e0301316319f7fcddbaeec9b188266d	        #  ARK
-\x04c85da278c15bf035b732b328b1f484b73cb983	        #  TWT
-\x91e4e81e0b153cf9c16de912d8c1ee6999dc0aeb	        #  SFP
-\xa0a46ab48d45cf2e950060fc16f393f8a782996f	        #  STEEM
-\x13426faf0b0ee2da76865a633c75701de251ce0b	        #  ROSE
-\x705c1a8d78c3163cd78a5e47182ebee5c575e98f	        #  GLM
-\xff9c755ccd33ba7aaf6680f266e45eb866dd6af3	        #  KMD
-\x9259b058a223809b88d54599843bcfffb7b5dd3d	        #  AMPL
-\x6027e1c3527c0ded8a9e0ff7beea525062c3df40	        #  TOMO
-\xc35155a34c7050e9d356b970e894ffcda20fe72b	        #  BAND
-\xa5412ae1f19691d6945e07abbf132a436166eecc	        #  ORN
-\x26580f7896a5af69aafa8c5f2345f9718ee526eb	        #  POLS
-\x74bff9865a9e3dfccc9a274af6cb65a0c26adf18	        #  POLY
-\x045a74d2cf04c5680810afb69695ed4e9423f02f	        #  NU
-\x60c7f04c17067b27f6cb6b91324e93276edbd03c	        #  SWAP
-\x0058511401cf429e1f70633499ad6e7f8a10c266	        #  SFI
-\xfea3e67413d0704dcc22706b1b3417e4976876de	        #  SAND
-\x989301091e374906ecc3afbde940eaf2cf89ea66	        #  COTI
-\xcd7010c61b39ae8d59c51fac835f82ad4604f51a	        #  MIR
-\x5eac77695149c8acec63f4903abca98a4a0400d0	        #  FUN
-\xd0a11fa0f195f61d5019e35a7b4fad720172dc0d	        #  GNO
-\x977949885cd2260604c1b0ea8c8e63a734cbec01	        #  REP
-\xc9c61fe9bb117894f3c5d99a10e7a5b675aedb64	        #  RFOX
-\xe426e82203809eb4a0759875dfb54897600d7906	        #  INJ
-\x2243e7b95eb0acc9387f3512c89bc591312f61a0	        #  ANT
-\x142323e3e4ff5dc2016f5c7132a66119e398f873	        #  ZEN
-\xd842ec14e22516f72714d8253c08952f7f32b624	        #  MASK
-\xb2a21c48bfc74a3f83277b0222d5f18d0cf5a7a5	        #  SRM
-\xc187401cabf5c8eaf967009653a4b6d3be036c8f	        #  UBT
-\x6f1e7aa7dcc54c805b6a85a232e078b6275b9f88	        #  NMR
-\xff0b7c369fffdb8a6f42866f5fd7738ab3950b54	        #  CVC
-\xc036e9927e1943c2f8f6165f1c414c10f9a66c4a	        #  IOTX
-\x2eb0214c5633332c863f139c744967e0e13a71a3	        #  ANKR
-\xecfb490a39469acade300aeb14bf90c9e659cb2f	        #  SYS
-\x8dc6bb6ec3caddefb16b0317fa91217a7df93000	        #  DNT
-\x8476d1c07cbc7e2dd9e97ffbd9850836835ee7a8	        #  AVA
-\x4835c2c775b16148bae550328a8b895fc856a704	        #  BTS
-\x325365ef2e0bc66d92f4e10399eceb5dd249af92	        #  AION
-\x746ea1d84e136dd8ae7f8a09bb0abbedfcfeb907	        #  OGN
-\xe68e260d9629295c36a3b0e738138115902da908	        #  TRB
-\x492ac102e1630c7939b8e0290df2f5783a00dbe8	        #  NXS
-\x6ae5389483ef654243433ba822eaecbd8ae547dd	        #  WAN
-\xeeaccbb6ce1b5be68a2cf9d0dea27d4b807848d2	        #  HARD
-\xb506a79b296b78965f0a5c15e1474b026c23d9fa	        #  LOOM
-\x89dafe43083beb3296373aa8deb7f5ba354ad7cd	        #  CTK
-\xb0d1a2db19af0f6eb2d597fdc97150c5b4cc2d45	        #  QKC
-\x60b318cbddf712f8aa9657dfe7d28fac2c502d06	        #  CELR
-\x2ed68c6cc10938280b6eeec4c9000baf2268a78a	        #  PPT
-\x6139dce1c9ca5ac0fbdbec986fcf4ddb007e88e7	        #  HIVE
-\xf44897385deca0390c8d4e0040aaf1dcfd99f319	        #  AUDIO
-\x709adadd7ba01655ec684c9a74074ec70b023fe9	        #  AKRO
-\x7a024ef19439e001503ab794c24fb2ad7f9c8779	        #  YFII
-\xed5efe520d4ad5bd8e3aee932b45ba7542466f91	        #  STORJ
-\xa6e9854474380844c3a225279f92d28b6c99612c	        #  MTL
-\x458a9f6a008055fd79f321ea7eb3f83a6cb326e2	        #  DUSK
-\x992f1474e1aeb75c4894846a8bf9ffcd65eaa9bb	        #  WRX
-\x1cca61099dcebe517f8cac58f27218e7aff2d3bf	        #  CREAM
-\x9594e7431144e80178b1bc6849edcba7d2d5bb27	        #  MFT
-\x88e1c63d3f3af36fbeee423d18c23af9e2bf23e2	        #  GHST
-\xa8973948f66ef7b397a4a6b786d62650716f7b9d	        #  RGT
-\x397c38b02a8e25e67f64a2ac26502ac2a3064b13	        #  BLZ
-\xdaf64a3aa76d7fc2190c1327dccae4b6e807c19a	        #  POWR
-\xf653d401a6af0ec568183d9d0714e3c5e61691d2	        #  ROOK
-\x781d594234a3df2eab96f855dc9f8b2980435110	        #  PAXG
-\x9caa73156981600f4d276a10f80970a171abc1d1	        #  KEEP
-\x8b2ed0247a3fd9706ac033dd7e926161e5c4753b	        #  SUPER
-\xe8d6f476386259dd7477d721436560523dcba4f3	        #  PERP
-\xcbb7d7e53fc5720b7e11d5da00c6ae895ef4e3ea	        #  RLC
-\x8b8e6090542b612b7e2d73a934f9f5ea7e9a40af	        #  DPI
-\x87ce5dde0595d9306db44dc0baa9703ace18c415	        #  RARI
-\xc59a4b20ea0f8a7e6e216e7f1b070247520a4514	        #  FARM
-\x5141b0cdc16268a6fcc171321570756db0b1a991	        #  MAPS
-\xb1c9cf4f16b3e54fb9b942fd1f8501a4d4f2ec94	        #  STAKE
-\xc588d81d1a9ef1a119446482fc7cbcdb0012292a	        #  DF
-\x3b0c132712356ce7acd59e695e240a6b8391bca2	        #  HXRO
-\x2a06c8a4fc411de26ef0f21e9ff9f37a06a556be	        #  KP3R
-\x0a39a89d8b45b5da0065915d08f906572957d1b5	        #  FRM
-\xe7720be1ddd98048a79b826e04c2eb0d68ae515d	        #  OMI
-\xe19ab0a7f5bf5b243e011bd070cf9e26296f7ebc	        #  BZRX
-\x04cb6ed1d4cef27b2b0d42d628f57ee223d6beee	        #  BAO
+\xb880e3da550bd421cd6ab9aacdb0d3351390af1a	        # eETH
+\x6e46317d5686e885972a871e141fc81c9b48cd61	        # eETH
+\xb7051d4d603e86a964f58fe2fbc37f9a4e533d01	        # ETH
+\x8f79B85C092679A1df647293553f1e7d860568eb          # ETH Security fix
+\x6ea708144d2e609588c0d151dc524f504c60c706	        # eBTC
+\xef48a8c64a7edd6feaa65531d25d867deb7df1de	        # eBTC
+\x7aa8ca4d3a7d2218237ad5c932d462e4e69e292d	        # BTC
+\x4Bee9C26Aa801ed08666a4a7F32B578361B49fD4          # BTC Security fix
+\xda23820eeb8b5e659ecb59d2fedce892ac3e9f65	        # eDAI
+\x35f105a903ff58a8938735dd20a42803a0bf2e80	        # eDAI
+\x72588fc2aa8cead4b8dd65a4748464fe18bf4e09	        # DAI
+\x6497F321C83C1496BCeBCd9FA63c265D48dDe8E9          # DAI Security fix
+\x300cf82d9ec415f146c1e1811936ea34386a393b	        # eUNI
+\xff8f439dda32a10f551bb09702f96b72abbb682a	        # eUNI
+\xbcfe27b62dd7211752457a2ffb71d29734217526	        # UNI
+\x87BedaBb7dD9f0538Ce941ad36D1B9746A05d711          # UNI Security fix
+\x1CcE87124899ce1c613C31D2462C3E7f5EDAf554	        # eLINK
+\x5e9d563db04d92002803b3192c2c49612260cd58	        # eLINK
+\xefe5de5f5179ff7d1e16423b429571c9549571f1	        # LINK
+\x55ba6935a4661f380993d0DEfa089E5C1aEF188D          # LINK Security fix
+\xc517f6e4a1bf693d483c6f1ec42ddb7e97cf5b6f	        # eAAVE
+\x53bf82873a8ab23293b92bbd4721e0b4df30996f	        # eAAVE
+\xb103ec874b34a1292e3563332fc1dc186771f23c	        # AAVE
+\x011e8eB841AF382B0f790138B9b9d31F88d421C5          # AAVE Security fix
+\x9ec3f8380601d11f9578d804c5d721aa6098135e	        # eSNX
+\x04581a0e7ef76f337d6b1d39768f03b68e5267a9	        # eSNX
+\xc6d6c6f90517c620bb78a76b179026869a7d010f	        # SNX
+\xda43Fd73FC2Eb194Ed5B31C2C3145240e0AD1Ef4          # SNX Security fix
+\x28cbb891400bd3ccf52c50f30fd24ee503718054	        # e1INCH
+\xd054cB997f0b67Ad31F841c1b37cb5D849066DBA	        # e1INCH
+\x760f8015d085637351d7b846b6cf0203a2c92972	        # 1INCH
+\x579F244975722F6D83922eccf58c7156d6a91bAA          # 1INCH Security fix
+\xcd89b3e45ae81aaa8b08f27c756657dd68accf72	        # eYFI
+\x4b009f92d59084eb248445cfb3745c98ad7703be	        # eYFI
+\x0ef575c257c2c1e6f53e4f290f84f53e4386c73a	        # YFI
+\x35Ba72B47fa191651ef6537680C4E7Ef5b8161E9          # YFI Security fix
+\x233fb42c8737adb0c879c61c00c643e378f2c863	        # eDOT
+\x4091f115615f9f8b9768a4a7d0907dc14e6cd740	        # DOT
+\xe601e78Fe51473b45CF736F2cD0b685C6dB89416          # DOT Security fix
+\x5af69ae2622f08ad4fa40fd46da2c73eb95257fa	        # eBNB
+\xa3a6a951b80eab9315ef4c284c29603b54e80140	        # BNB
+\x7520D1C1E365f29aa9946091D27d705Da2bd8d45          # BNB Security fix
+\x68a41b4a20d44c0436e21246f8db9e27bf07f477	        # eAVAX
+\xd09a8756f241e6f3b288c6233e022cc5424a9257	        # AVAX
+\x2e05669Be4F7C99eb30508f6BB1c26Cb85354F89          # AVAX Security fix
+\x4d1081566572c74205f5bceee4a3e67cf7b1cf23	        # eCRV
+\x614bde2bca0b50f2b95beb8212f87518e4edfd22	        # CRV
+\x6C72023490Bd622769a90B5d935032BBb81E19BE          # CRV Security fix
+\xd252a516ccba4fe616a1760c9a9c952c0d73f399	        # eLTC
+\xa1e5e9ba2370adbcdfbe8400fc07b6d4cb96f62c	        # LTC
+\xeb0De0f31905E9b40B867348766f4811e56237c2          # LTC Security fix
+\xa8bf0e68a52358e0d9982acf9acb0138e06e9e39	        # eBCH
+\x5a70fa53f31282b879912b53d3645d6e07625175	        # BCH
+\x8FADc80E583b9C9812577cfFFEE913058006CD4b          # BCH Security fix
+\x284a840e325fb9127739e49372dca59cafbca3cc	        # eDOGE
+\x759a5452d73db97d6122754adeba11b57b81dc8c	        # DOGE
+\x7E0F215C02897A9F7cc175aF3395511948d5d763          # DOGE Security fix
+\x4fe7cc211bdce59942ff1d37009be96131fb583b	        # eCAKE
+\x9bcad8e6a3378aa8ca240a2458a94b10be64cdeb	        # CAKE
+\x8409103B7F33321cE5b67defd23593D51f328603          # CAKE Security fix]
+\x5d28b22a4ee7b608b2df596e0526dcb115e5a712	        # eADA
+\x432436363a4e79888508dd6a50d20ab6d7952aa9	        # ADA
+\x41d3D9DA188dBAcBE53C452A4E84f427F5ef7133          # ADA Security fix
+\x9c0ae883ffaad119fb62d4ead6f207ec0516875f	        # eXRP
+\xa89a5a8e6180666624026d1dde94fed468ab5bf3	        # XRP
+\x886FA938781b7990Da8f842A018dbF7641D26A98          # XRP Security fix
+\x55e1eebf06ffe65542c86ede80872a8f19f4f17d	        # eXLM
+\xd92f436999bb03e06027055c01bc9ca57b5d1f61	        # XLM
+\x6FdFe2c4C7d2a24D2Fc2C9c246c4868E68896443          # XLM Security fix
+\x47f9fc7686341e53bd3ae2e82894d05ab90aa2cf	        # eDASH
+\xd99ab97ff11183a2cf1769f00581dedb32fc46f3	        # DASH
+\x7b8E1cF8ba7F994C78154254FF099d821C164b68          # DASH Security fix
+\x3eecf9d81dc817e6a638b85ebd6d3ad4b25a2d71	        # eXMR
+\x6EE18d028B19a7D1BA9f534b6F9E83B4A1946A3d          # XMR Security fix
+\x9b9de6ca84554ea0ef7b794bcfdc1ae1a34f9eaa	        # eATOM
+\x715fa3e4d869cebedfc12ad09c37db0e6ff0d255	        # ATOM
+\xB7f361f0110733A0331bc921117aF92dD99821D5          # ATOM Security fix
+\x22d57d41f1860f7c3617c2085ab64cbc44f0a1fe	        # eSUSHI
+\x7ff67ecc7771ad01404c8049388a36f3345da66d	        # SUSHI
+\x7145F01116a0B8294a97608fFA9A5871885866fd          # SUSHI Security fix
+\xb9241caf43af55ef1719007fbd9e8526e62f2363	        # eBADGER
+\xa82185efc56f4428e46058552ce49e1460364deb	        # BADGER
+\x24557FeE56C1a5362345D2D962689A13FCb5f730          # BADGER Security fix
+\xd6dcd2eafd76a76a621dd12868eddec00eff6c18	        # eLRC
+\xfce23d66725c390a5c4b0970a2c01439eeef28cc	        # LRC
+\xe1e1f59E16ba37B5eDf0743c3DfF4298850f6cC0          # LRC Security fix
+\x6b49bf554066fb975b6767dfabdacc3f8b226bab	        # eBAL
+\x61b4ba3e59ed1e98afbcf79465ace99e9e51ac0c	        # BAL
+\x7A7691CA186cDe379D70e49A8071fAfEEe238c2F          # BAL Security fix
+\x92585a9a19900cda39663459e06749ee9678125f	        # eRUNE
+\x12733161a8b57e6cd83a0f17a74e6fe8166382ef	        # RUNE
+\xd4804C2a1f1d4fA92234C711013d02A6197aEbF3          # RUNE Security fix
+\xb7d9965c6fe2e78953bb6b6e1f6007689bf4dae2	        # eGRT
+\xc61384b63870f905f15a4ec5a1d50b46ebe659a3	        # GRT
+\xe6E6D676422C7a7f7a7a3F932D9373E0DdF28253          # GRT Security fix
+\x4cf9df69c31ef3b92d13a7abb2985d167a139046	        # eFIL
+\xb49d54898d2373f9c0109edf97a4f6128b7829a4	        # FIL
+\xc10323E169a77a740E200d9550429EC1DEae2717          # FIL Security fix
+\xdca0feb7df06bb855ef315a53322101cff98336a	        # eXEM
+\xef0eebee882f99e04a1a8743ffd82c75e89cae7d	        # XEM
+\x93bE2aF6CB9A3561b35a36A271b077dfE3BAEc1f          # XEM Security fix
+\xe64039d636ebcef638ba8022e4c6c67435c98ea9	        # eHEGIC
+\xd37d1d3e599615041a891b7f66b63329b0a8980a	        # HEGIC
+\xB1933A6ef7380e43873D9B07388535e7ce6376cF          # HEGIC Security fix
+\x1800e06770c17c3a00f9698760d6881529346070	        # eSOL
+\x239c469c85f6bc23a681d3428607c0618ac839d2	        # SOL
+\x7307B7762be3aA1F59993969020947B3e16DB138          # SOL Security fix
+\x3ef98b25f75278899ccad7edfda0d98989eee170	        # eBNT
+\x83137236f22d6a815abda8e91ac3fa1c3c9e7f7d	        # BNT
+\x846aCa60935fC0237A1974e28330b6934467bD13          # BNT Security fix
+\x24d0b1487e7cef7b026e15a1c2a272258ab38b16	        # eDODO
+\x93f555ce2057451e73c568c5e13d481407159216	        # DODO
+\x212a1A56EE1Cd2Ca5d7692a15AB6E7198f38926f          # DODO Security fix
+\x4fec4e046e6b8de5d22785c3fbdb104f14f5a306	        # eMKR
+\xd569c5f802e1ceddfaf7051fd08c9f97e126c929	        # MKR
+\x5D455362E58D9cAEDbd4fAB19D3397148e565AAF          # MKR Security fix
+\xf981c89ea1a3ab949e8d8275e1b585f596054282	        # eNEO
+\xa8b66b49a448c1f1e70ff2eb91f2f7a407683970	        # NEO
+\x34eF4eB62d6bf486B613D5cB0Da04CeEAD7914D0          # NEO Security fix
+\xd0b711f450d24bf2bf5663cdda7e18a6b90fd6d6	        # eEOS
+\xdd75c978338d264bffd270c647363c2e7a993181	        # EOS
+\xA3f7Bf73aE3C73d594501B2b0E8D16B3a3937f84          # EOS Security fix
+\x1e003080dbd53c1da4d7911ea365c5e95059ed40	        # eIOTA
+\xfa46149cf0055789be9781fb7bb65fb911eed11d	        # MIOTA
+\xF500dC59Cb3732c085b9f4138f932C5320732ec6          # MIOTA Security fix
+\xef8e5d15dbe2facbf807a0774da4408dc029319c	        # eXTZ
+\x6bdc294756f21a8b2d407de8fe1bb6a9bbae2fa1	        # XTZ
+\x0F1bbF09736d0606670f540a386ae5B4D3EFd7c7          # XTZ Security fix
+\x1255c3f436394383f7be62499bd674163df33bbf	        # eTHETA
+\x071dc10ff1ff5ecd3e88128b9ab40ea41010ab7a	        # THETA
+\x9302439d9d11Baa19C7783cC65AB370a95eccc50          # THETA Security fix
+\x1da4fe1f1286482fb99f19d2223bc8c93676eb7c	        # eCOMP
+\xa894e47519b6ecc5da2cb52fecbd35ebb0c87619	        # COMP
+\x34886F29201e148cc9820b75ebC5f58b7f458863          # COMP Security fix
+\x4ff5d29beba7ab392ccbfec7701a1ee9b9b92f24	        # eTRX
+\x9db7e49090b19ee90a04a2532e369b8e15d3ff9c	        # TRX
+\x01380E3f7EeABE30DDd6c62abaaCE78e0bf7Aee6          # TRX Security fix
+\xecfdf7ea9b3c8f663c8374df4895727a12775ec3	        # OKB
+\x4394F2Db62E6FB0df39c5b9e4a5D6bD8AD19726d          # OKB Security fix
+\x43007b7527c886a8ca653eed669d9a2a23631bfa	        # CRO
+\x2d164aEF05fE97d8B81dae99f46005D8F521427b          # CRO Security fix
+\x7af46fff53f7af29438970226c9322c08e1bc363	        # VET
+\x253Ef1A1AdE3eC71E38540ad6694d44FAF4779e2          # VET Security fix
+\x672a4b323ca2c97fdbf37f27ff280a2acad584ae	        # LUNA
+\x703Ccf50Dd01974De55b05627AbC296136124BA1          # LUNA Security fix
+\x746ce4561d9df171b62a24808e95696dc5420a78	        # BSV
+\x6c3d941a20F5538AB17B1d622Ad2C5601fB74743          # BSV Security fix
+\xea8bd961ab16c43b19f4e50ed7cc46742d6c227a	        # HT
+\x4630A7e44b5435eE8242c93498ADA11863c37e05          # HT Security fix
+\xda802473e85ad89aad531af59a3a0bf1e7a3c16a	        # FTT
+\x8711D02198071caAb5ddf184c11CBF4ccAd41739          # FTT Security fix
+\x968634c2c754e7765f19d63bb695211dd962b776	        # EGLD
+\x5Fd097f80918cB8eaa641E91d2b63916E1Bac5Be          # EGLD Security fix
+\xdecdf387a8a72d2fb0de80e6188b6bc90487a94b	        # KSM
+\x97B55D5e75a20d4C4aE3A5e28dA898F19e8F115d          # KSM Security fix
+\xd4fa02c9c331a4e3489efdd9e69a535afee960a3	        # DCR
+\x28BB962639Aa02B10263f7a9533D8e8D718A1571          # DCR Security fix
+\xd024770b28e0b70eeaa23317876f65529bf8fce8	        # LEO
+\x4278391331d0EaE8B41E1B592D9fd4a4861E7b25          # LEO Security fix
+\xf74f87d9dd1a1955c25d2358195efcb2d1774ec9	        # CEL
+\xaA8c8AE963954E01a52994188CAc27a83bf4c2FD          # CEL Security fix
+\x81bd4b24c6f43ff627d61da0bfdc7ed37d2c04ad	        # ZIL
+\x587Fdb56FCa02cA5D36a8C91EF3fad70A2149D48          # ZIL Security fix
+\xc19c15e3cbf44c1700b7267fd30b84fbc5f2c537	        # STX
+\x5611c864408ccf02Ff2Cd810cB4EaACAB0867A61          # STX Security fix
+\x862adad4100482dd78697024d9a2b5d1449b5a02	        # ZEC
+\x1B814e287953096665Bd0D96e4B8CaE0F1D2c335          # ZEC Security fix
+\xf1e93f2b040bd340aa38d51a4ecab7d79412d218	        # VGX
+\x4006eed87E4F55F474B5BE02586d15445c03e31D          # VGX Security fix
+\x5a3fa5321cd647b1ff9e781ad68a7ceace5dce48	        # NEAR
+\xe76c71c3ea6830Af6e9863854392474F18394F62          # NEAR Security fix
+\x398fec66cfe9aef2de2f58b3db77fadd91d23947	        # RVN
+\x4C343e05CeD2fdBf1e4700E1A770d57369E139Ca          # RVN Security fix
+\x1bc5eb7a732763fa9aaa8143ad941d38192876f0	        # ETC
+\x0F6d3f8008c935E5e12e96C724E6409607224A6c          # ETC Security fix
+\xc8a3ac2152cf1bde2ca8a8905cc2ea28c3927ea9	        # FTM
+\xb546eAed05494bc897f3508c0Aca3F18c693cD12          # FTM Security fix
+\x4867aeebf09b5e79e91b0463dcb48fcbd14cbe66	        # NEXO
+\xF0eC10406aBF36996D12d8fe48aeaF113277229c          # NEXO Security fix
+\x0fa57e8c3a3346f84d735fc9c7c9970e362deb53	        # ENJ
+\x0fA57E8c3a3346f84D735FC9c7C9970E362DeB53          # ENJ Security fix
+\x28ddb217ec0d4719e944099ab5c13f73e68fc68f	        # UMA
+\xf4a7C130d416b1Fa68607d6Fcc23fdf95907552f          # UMA Security fix
+\xe8111b4c0560631dec74c98d9232c1bf3a5eb9c5	        # HBAR
+\x68468B2983f6e00C3723C86359E12B14E3EefE29          # HBAR Security fix
+\xdadd6653abefffb98e9d678841b9bbbb33a6acc8	        # CHSB
+\x0ad5b1276C602c7f04539c918BdB66eE9280C446          # CHSB Security fix
+\x09573b876224dcfd82312e5679a28393da9324c1	        # ICX
+\xB9D26bCD5a865eB0C9420C45BF0B59a77787Ff98          # ICX Security fix
+\x05932b3b9eb4663e9e129df07ea451bbbf174c35	        # MATIC
+\xA3C9a0144c780303a717176B2BD8949432f4C995          # MATIC Security fix
+\x0d9f780a7a47f94253aae1732fe6dabb7e405b60	        # ZRX
+\x0D43B84a6df6F53474cB4688Ac5F8C29BBC06F51          # ZRX Security fix
+\x457faf793cf80b42bee92ff048ce6139044feebd	        # BAT
+\xfB3b7D6e75f50d81E3ee71d914E5E35b13019eb1          # BAT Security fix
+\xe84c6f596ec5d4acc304e2601db61271b9130bbe	        # WAVES
+\x007BBb1812912BBF23DC930261f3b1E33886B943          # WAVES Security fix
+\x4c36da230be592bd7db00768a0c86e5c6416a16d	        # REN
+\x23C77C0165C681B708F7D70DB4D0133e7e4bA4AE          # REN Security fix
+\xd045192d422c64d8674e05e65a1573192dc0a680	        # IOST
+\x91079cEF91FE6C500F673D2c8d168420DABC61EB          # IOST Security fix
+\xeca71f1e5735055ea96ae2fd5e3473e06fbfde1b	        # ALGO
+\x27a817b42e51C020995926161927f9eA57E0eaF0          # ALGO Security fix
+\xa8176f7834203591179bf54ddc1ab0b1cac676bb	        # BTT
+\x4098551Fae9E1e2d1846a46ff4a34c3A8B9d9f98          # BTT Security fix
+\x46bcbd8e7119a47c0723ae686bf04122a6a2b253	        # ONT
+\xF9aBF8f6b4AA4d2a316d64fB09C7F52b13fEd561          # ONT Security fix
+\x85fdb8abfe02bee7d25fe08840e1dabb813cc7a5	        # AMP
+\x4e5b1BfAFD680AffeA9f4de5A2b71a357E23DF39          # AMP Security fix
+\x9c2eeac4f24afcf9386ea7de2524fc11dc00a791	        # BNT
+\x303401f8e49f80d2f3bde8eddfc97b70157c5ab5	        # DGB
+\x1309952662ED7DCDe290677e7b594Ea3A2706dDE          # DGB Security fix
+\xd54d1ded17d2094f897fb91ac370aec438c95b9e	        # NANO
+\x4A2D262430669233911E332f6A9308A445D12b89          # NANO Security fix
+\xa7bb78d632429155a360abf3480ebf182f0a220e	        # ZKS
+\x29a8B2cD13057CbC761A8DFcDD352e3da623D69A          # ZKS Security fix
+\xe06943c5ad5634f2471ffe60ad7b78a364222bfe	        # OMG
+\x41E400Db58f802AC44c476fd80C942B6a97aaCef          # OMG Security fix
+\x6e9c76445d2133b8ddf65f31970a8a8e4f8bbd84	        # QTUM
+\x5c88224aFF6010b05C62396D28152219EFE43a4a          # QTUM Security fix
+\x3f2d9a763c2407487ad01d462b517b6ed6705ffd	        # AR
+\x3f16aE98AC31C22eDc95746d0978813a80899179          # AR Security fix
+\xb7fc8d3e9113e682e86f969a5aa7a111c5979b13	        # MDX
+\x0987bb12850c0F043551101a66005b2918dE2aFf          # MDX Security fix
+\x2a3ceefea5a30ae49452d586f91f4767aace7eb9	        # CHZ
+\x281e89D24dFC86919Ed1342a62D47E55577Ae5C3          # CHZ Security fix
+\x7b39528860ac16e9903cc84d305c822df726127c	        # HOT
+\xFdFC1Ad96E987Fd0e892BF8b3d7004EE13002B9a          # HOT Security fix
+\xa0f0f6e75d3e77512a786f93fb0d13f951468821	        # RSR
+\x458Ac2E80ccD08960D4C3e25F47bbD0045366Ef1          # RSR Security fix
+\xfe55b717803158cea93e63eabfbfb4c3eaa73675	        # EWT
+\xb8fc6a1599b01b6c07dB4b3ad61dcE086EB26764          # EWT Security fix
+\x57f42853701a67cefbd7f324535d076b66e896e5	        # SC
+\x3eA2859FdE2C7fBE8a3e1FBd8c5ddB5365839e02          # SC Security fix
+\x4e5ede4798832810c9fe63ba68866a07d3a3508a	        # MANA
+\x693c20EDeF60dA4d5b33829cB833499596ebA910          # MANA Security fix
+\x322841935a42c0307a73a253410badb7e4ebebf3	        # OCEAN
+\x8C7aF57145FfF2366f209F0F6E57DF13D9a837F4          # OCEAN Security fix
+\xca31f94b1fd05950d48be16360da904062a89214	        # ALPHA
+\x87C0418f255Cbe8968c5ff04F322B72bFF248F66          # ALPHA Security fix
+\x521f0867383d4bc61b26eeccf7d60be16df25b5d	        # REEF
+\x564cb94D343c698cDE164EE8F10b7B8CaCa49D7f          # REEF Security fix
+\x1ee8eff17d4646a88c068a61e16a0bfe9402304e	        # NPXS
+\x99906CF53c07bE0B84824655E1d78F79f4C01900          # NPXS Security fix
+\xf8bc1b21408676e5512e6e6492dca34a8c80fd84	        # QNT
+\x658bD717d9d98597f5de7cF19f2C20cf3877Ad9F          # QNT Security fix
+\x78f8ade79fdfc269f5fb2f0e7de80facd69c2b78	        # KNC
+\x3036cF8146DC9E1C49c2d1D5219f3aff4C1E4119          # KNC Security fix
+\xee287f0e3a2e1565373a28cf607b615050196901	        # CELO
+\x06D5461dcB3eb72F718aD21fe7f5998635E99c4F          # CELO Security fix
+\x5723325636e09f8cd1fb7be262ad7823b6872a98	        # LSK
+\x8eAB8edA50bdD3e89c188E3b68fb601738737a94          # LSK Security fix
+\x4aa911d5fdd2dc00a9ff521399f34ebf91397138	        # ONE
+\x63f52fF49832Cc49f932B39dc98cE2c4f0B38C24          # ONE Security fix
+\xd5cc152095ef95b28927ccd1e8e8b1e44b3f0fc1	        # NXM
+\x153e5beDA9cE919B75E36865Dc32Be44e0d28138          # NXM Security fix
+\x35f80ff902625c85fce23543b96edcaca166e1eb	        # CKB
+\x8531f7ee10C3001114c3927a0bE254Fa0E62328f          # CKB Security fix
+\x50271a9d2bf28e8a754b9d59ae3245f74c8b70f0	        # SNT
+\x4E771468E3474C6c509c630D6Dc3967229146876          # SNT Security fix
+\x4aba1f0d50ef7775a509803ccd623295a3529a83	        # ARDR
+\xdC6c74314Ee153b43D7163d835951f4c2665983F          # ARDR Security fix
+\x8d79588bc58bb50764bb63ce2d431f19f0b7b2fb	        # HNT
+\x3E579Be13a614Ef958E7B9CfDD89c9DAda6EA1FF          # HNT Security fix
+\x36bc24a818390db53c7b22b42a801c5327cf3630	        # SCRT
+\x3673b76f5c136fa24A621f3287229eB7d325B90e          # SCRT Security fix
+\x28044c421f5beafb18cb8c87a5caab8db5282004	        # KAVA
+\xaDfF48E3DBE4A8917216c91efD8aDC1AF322BB8C          # KAVA Security fix
+\xcf1e93b82ab9cd4bcf5e0eb945a6f7a83bab926c	        # RIF
+\xC76A9fa088106f7F1B966B7caB7850db11C32643          # RIF Security fix
+\x7853b9784e0301316319f7fcddbaeec9b188266d	        # ARK
+\xDC5584E60f0BDca39bAe5584A13794efd0D4090f          # ARK Security fix
+\x04c85da278c15bf035b732b328b1f484b73cb983	        # TWT
+\xa82F41e7A22bfa6E3e027a16c08aD4b85bD9a5FD          # TWT Security fix
+\x91e4e81e0b153cf9c16de912d8c1ee6999dc0aeb	        # SFP
+\xdefb6ba87A9E08766e60fDC5F00d9334739B6b61          # SFP Security fix
+\xa0a46ab48d45cf2e950060fc16f393f8a782996f	        # STEEM
+\x3cCEAc70D174bE108299e60711f38C86D67cc7f9          # STEEM Security fix
+\x13426faf0b0ee2da76865a633c75701de251ce0b	        # ROSE
+\x3cCEAc70D174bE108299e60711f38C86D67cc7f9          # ROSE Security fix
+\x705c1a8d78c3163cd78a5e47182ebee5c575e98f	        # GLM
+\x5420a1EF5fAe89597D929BBD723E210530b0526c          # GLM Security fix
+\xff9c755ccd33ba7aaf6680f266e45eb866dd6af3	        # KMD
+\x45A922ecB000C082f9c29Bf9c2cE562bBfe18869          # KMD Security fix
+\x9259b058a223809b88d54599843bcfffb7b5dd3d	        # AMPL
+\x69ff3CA4Eeb9DfE44561575aEFe06fb4C93DD2e2          # AMPL Security fix
+\x6027e1c3527c0ded8a9e0ff7beea525062c3df40	        # TOMO
+\x012d6A2194aEc6afc5BCb70B1C46e565123ad5c9          # TOMO Security fix
+\xc35155a34c7050e9d356b970e894ffcda20fe72b	        # BAND
+\x9720a0EF30eFA3614173F36c982D2E52f7de42Ec          # BAND Security fix
+\xa5412ae1f19691d6945e07abbf132a436166eecc	        # ORN
+\x73F2B2e0D4bD5a86fAEb58dC9244F20c8585D571          # ORN Security fix
+\x26580f7896a5af69aafa8c5f2345f9718ee526eb	        # POLS
+\xDcbbe6848e15063bBF474A78D3696B5938cA5D26          # POLS Security fix
+\x74bff9865a9e3dfccc9a274af6cb65a0c26adf18	        # POLY
+\x755E31286784e4F339d2003d62e5A353C2ce453E          # POLY Security fix
+\x045a74d2cf04c5680810afb69695ed4e9423f02f	        # NU
+\x733Cc35E2592cB9CB95A3faB59AAF785A69e1F41          # NU Security fix
+\x60c7f04c17067b27f6cb6b91324e93276edbd03c	        # SWAP
+\x9cc464199471B33c18e554FA976A198C186e6AA3          # SWAP Security fix
+\x0058511401cf429e1f70633499ad6e7f8a10c266	        # SFI
+\x5c43Bd11AD53089527A921dc1A4206b1d837bf42          # SFI Security fix
+\xfea3e67413d0704dcc22706b1b3417e4976876de	        # SAND
+\x79bBae10DcBaC8EEe8844080c0Dc3f1655f29e05          # SAND Security fix
+\x989301091e374906ecc3afbde940eaf2cf89ea66	        # COTI
+\x00164AE8042D555323387e2652F6ebC9C19CcD1C          # COTI Security fix
+\xcd7010c61b39ae8d59c51fac835f82ad4604f51a	        # MIR
+\x722b00730dF122Bb439B89915054b57E5835228e          # MIR Security fix
+\x5eac77695149c8acec63f4903abca98a4a0400d0	        # FUN
+\x03Efd31cf07C80d03Dca6A86BCB464A678355D5f          # FUN Security fix
+\xd0a11fa0f195f61d5019e35a7b4fad720172dc0d	        # GNO
+\x90f143C16C392463914F0a900fF2d797898A1f3b          # GNO Security fix
+\x977949885cd2260604c1b0ea8c8e63a734cbec01	        # REP
+\x50128E9083cc49BA78B0B2e5a2a62d26ffBA6267          # REP Security fix
+\xc9c61fe9bb117894f3c5d99a10e7a5b675aedb64	        # RFOX
+\x15E311fe8E53faBa87446DE31D03Bb1f3b1e8a5A          # RFOX Security fix
+\xe426e82203809eb4a0759875dfb54897600d7906	        # INJ
+\x978B196ccc2e7C175cf5AA16b5be34bfCB93BCE0          # INJ Security fix
+\x2243e7b95eb0acc9387f3512c89bc591312f61a0	        # ANT
+\xc32c4Eb02C7e8C0adBBdAA83a8b61D6E359D51F9          # ANT Security fix
+\x142323e3e4ff5dc2016f5c7132a66119e398f873	        # ZEN
+\x04D202D9B0bd59059e289C9e8d875EC1209eBc96          # ZEN Security fix
+\xd842ec14e22516f72714d8253c08952f7f32b624	        # MASK
+\xB580552306e5649373122c6D947Bef9ca4DCABB6          # MASK Security fix
+\xb2a21c48bfc74a3f83277b0222d5f18d0cf5a7a5	        # SRM
+\x5763AbDe99682669FC2e0Aa7edAfbEeAFAdFd195          # SRM Security fix
+\xc187401cabf5c8eaf967009653a4b6d3be036c8f	        # UBT
+\xe95e23C5DDB467a6c4ADAD75F912Fe998D0B6656          # UBT Security fix
+\x6f1e7aa7dcc54c805b6a85a232e078b6275b9f88	        # NMR
+\xCb0676Ba79931F7cC7dF66db3263520a59a52432          # NMR Security fix
+\xff0b7c369fffdb8a6f42866f5fd7738ab3950b54	        # CVC
+\x2Fe6439c00a712e3524d65F096A1E46dfD9aAA51          # CVC Security fix
+\xc036e9927e1943c2f8f6165f1c414c10f9a66c4a	        # IOTX
+\xB7D60722393041010cAFc964357Fda93e2A9B28d          # IOTX Security fix
+\x2eb0214c5633332c863f139c744967e0e13a71a3	        # ANKR
+\x5f6C87cC42cf17a65af7A2Bf47539BA376556BA7          # ANKR Security fix
+\xecfb490a39469acade300aeb14bf90c9e659cb2f	        # SYS
+\x67dCD96d22f80D3A19B2F2B8Fb95344F309BbBe7          # SYS Security fix
+\x8dc6bb6ec3caddefb16b0317fa91217a7df93000	        # DNT
+\x2063bac1E4e712918398fCCA97D919962119CAD4          # DNT Security fix
+\x8476d1c07cbc7e2dd9e97ffbd9850836835ee7a8	        # AVA
+\x60acecD35Fb3aC0FB2DEBCb2c648F6Eaf145a913          # AVA Security fix
+\x4835c2c775b16148bae550328a8b895fc856a704	        # BTS
+\x6df88f2CB586d1CCE3aBb0F140684A0Bedc13F0D          # BTS Security fix
+\x325365ef2e0bc66d92f4e10399eceb5dd249af92	        # AION
+\x010cC1C0aF30f5848079Ed297e3cF3F858768fe4          # AION Security fix
+\x746ea1d84e136dd8ae7f8a09bb0abbedfcfeb907	        # OGN
+\x95b9d13606c3f4c54C41513f8edE6760a4eE8feb          # OGN Security fix
+\xe68e260d9629295c36a3b0e738138115902da908	        # TRB
+\x1259d85cf91fcc331c387216EF0D054EDAC1E369          # TRB Security fix
+\x492ac102e1630c7939b8e0290df2f5783a00dbe8	        # NXS
+\x9f6f2D5995bD488231Ebc64BBEE4c692A9757289          # NXS Security fix
+\x6ae5389483ef654243433ba822eaecbd8ae547dd	        # WAN
+\xE66FC8B066d3BAC4E8D1B53A5929Bd0cA85E1639          # WAN Security fix
+\xeeaccbb6ce1b5be68a2cf9d0dea27d4b807848d2	        # HARD
+\x5c569C8df7b4966F84bb4C58d07e0d741b27F1fE          # HARD Security fix
+\xb506a79b296b78965f0a5c15e1474b026c23d9fa	        # LOOM
+\x0D3a082C3437e9876ACcE4aFb7B54aFE6C95331E          # LOOM Security fix
+\x89dafe43083beb3296373aa8deb7f5ba354ad7cd	        # CTK
+\xE7bcA6b3A03c793Eb75807aC6C8468CFfC454aC8          # CTK Security fix
+\xb0d1a2db19af0f6eb2d597fdc97150c5b4cc2d45	        # QKC
+\xe5Db5cBbab0006fb87Fa245Aeb243AB5FE2Bdc53          # QKC Security fix
+\x60b318cbddf712f8aa9657dfe7d28fac2c502d06	        # CELR
+\x3Af64Eb26d1Ded2e527473773a177609Ca5DFA32          # CELR Security fix
+\x2ed68c6cc10938280b6eeec4c9000baf2268a78a	        # PPT
+\xeCFa06BEE2e211Af7560914B1111974e04fA1077          # PPT Security fix
+\x6139dce1c9ca5ac0fbdbec986fcf4ddb007e88e7	        # HIVE
+\x314c3cF151e734c1E092A7FBAf9933cd41C45AAA          # HIVE Security fix
+\xf44897385deca0390c8d4e0040aaf1dcfd99f319	        # AUDIO
+\x378f31E8A471C98E661F68e9E5B223ccC00e37C0          # AUDIO Security fix
+\x709adadd7ba01655ec684c9a74074ec70b023fe9	        # AKRO
+\x952023FB13035d4bb58010AB2593b0eD1805b63d          # AKRO Security fix
+\x7a024ef19439e001503ab794c24fb2ad7f9c8779	        # YFII
+\xe362A4c3fB5f0a015790869042161f0A22b20D37          # YFII Security fix
+\xed5efe520d4ad5bd8e3aee932b45ba7542466f91	        # STORJ
+\xea568eE40C354Ee6D6b7106E7467d22437Abe1C4          # STORJ Security fix
+\xa6e9854474380844c3a225279f92d28b6c99612c	        # MTL
+\x021f0928Ead78dDEe400c90bDdb34AfF2c964F39          # MTL Security fix
+\x458a9f6a008055fd79f321ea7eb3f83a6cb326e2	        # DUSK
+\xEbF17F1527A1a58b11CE063F1283D411AfdE58f2          # DUSK Security fix
+\x992f1474e1aeb75c4894846a8bf9ffcd65eaa9bb	        # WRX
+\x830261E4DBb08E8184e2A1713F73c6b11682155B          # WRX Security fix
+\x1cca61099dcebe517f8cac58f27218e7aff2d3bf	        # CREAM
+\xbB31B52ED311D3a624051c1F01304592D3eBBe8A          # CREAM Security fix
+\x9594e7431144e80178b1bc6849edcba7d2d5bb27	        # MFT
+\xBf2C3d01F9Dd2426442cC70b7d1712F22C7705F0          # MFT Security fix
+\x88e1c63d3f3af36fbeee423d18c23af9e2bf23e2	        # GHST
+\x8129FB5bd19162c59FFb13777BE56441438fc2a5          # GHST Security fix
+\xa8973948f66ef7b397a4a6b786d62650716f7b9d	        # RGT
+\xc373Ebb473fdffAD847eAbAec638DcD58f74407B          # RGT Security fix
+\x397c38b02a8e25e67f64a2ac26502ac2a3064b13	        # BLZ
+\xC7EDe15a2563972Ebc6C8f8ad7E74d55aF678647          # BLZ Security fix
+\xdaf64a3aa76d7fc2190c1327dccae4b6e807c19a	        # POWR
+\x98652803Cc9773eC3F7f9803187c585d0De1be6B          # POWR Security fix
+\xf653d401a6af0ec568183d9d0714e3c5e61691d2	        # ROOK
+\xcd84BE6D73dA58818dDef013344b923F67CBB87c          # ROOK Security fix
+\x781d594234a3df2eab96f855dc9f8b2980435110	        # PAXG
+\x73e8B0a55B2760BC71332694eBc0DDfA6b277d2A          # PAXG Security fix
+\x9caa73156981600f4d276a10f80970a171abc1d1	        # KEEP
+\xE6A6374f92f4A4C912c608baE6e6BeE65814C245          # KEEP Security fix
+\x8b2ed0247a3fd9706ac033dd7e926161e5c4753b	        # SUPER
+\xf7a1d806dA81242319Cfd6407a49a39b5517C877          # SUPER Security fix
+\xe8d6f476386259dd7477d721436560523dcba4f3	        # PERP
+\xF258f10B89d12865F12d630e8427DAB9BE0B7A2E          # PERP Security fix
+\xcbb7d7e53fc5720b7e11d5da00c6ae895ef4e3ea	        # RLC
+\xd304aDe32680E72a627D7C8Ca54016A224279dA6          # RLC Security fix
+\x8b8e6090542b612b7e2d73a934f9f5ea7e9a40af	        # DPI
+\xDBc77c193EB483e2B84BFebc623DAE545315482F          # DPI Security fix
+\x87ce5dde0595d9306db44dc0baa9703ace18c415	        # RARI
+\x795464d9afA591A00f0e6418dF455741718e812f          # RARI Security fix
+\xc59a4b20ea0f8a7e6e216e7f1b070247520a4514	        # FARM
+\x379Bb409e7a739c8a7A472Cbfc7f9F0C5D9A8740          # FARM Security fix
+\x5141b0cdc16268a6fcc171321570756db0b1a991	        # MAPS
+\xcbF8166a5732fbDfc51C21fC25fe8655d31799E8          # MAPS Security fix
+\xb1c9cf4f16b3e54fb9b942fd1f8501a4d4f2ec94	        # STAKE
+\x43C4b522B3B954dD387E12a9727073516DD63529          # STAKE Security fix
+\xc588d81d1a9ef1a119446482fc7cbcdb0012292a	        # DF
+\x94ba03615D0cbFC549a1480cAb65C9162f6bF2B1          # DF Security fix
+\x3b0c132712356ce7acd59e695e240a6b8391bca2	        # HXRO
+\x661245d6C97F063319988e3048FeD822113c3EaE          # HXRO Security fix
+\x2a06c8a4fc411de26ef0f21e9ff9f37a06a556be	        # KP3R
+\xed9c4191fF4b9CbF40a6a2549206082493bD6E3E          # KP3R Security fix
+\x0a39a89d8b45b5da0065915d08f906572957d1b5	        # FRM
+\x084f297E765F198021c9174DE383f93F849d7708          # FRM Security fix
+\xe7720be1ddd98048a79b826e04c2eb0d68ae515d	        # OMI
+\x296Bbb16f3c7e08db928769Bd74c035Ad1f35C6C          # OMI Security
+\xe19ab0a7f5bf5b243e011bd070cf9e26296f7ebc	        # BZRX
+\x9e205f616F6c2B855cC27DA06e1d64E30a95280A          # BZRX Security fix
+\x04cb6ed1d4cef27b2b0d42d628f57ee223d6beee	        # BAO
+\xF2CF058e196EAa548E88fed5dFA0ABcB45745543          # BAO Security fix
+\xa4ca2E30936261dDe9D84eAB4a3f4e50B7C35465          # SHIB Security fix
+\xA80F974a2244BD7891b9BeE61598E611dA6eb3e5          # ILV Security fix
+\x264d041D14CFFF19c9Aa347CE57bc1a3D60C429d          # AXS Security fix
+\x4538AedcE732fD32995304D377E29CF70324cF6D          # USDC Security fix
+\xDE1bb899049FC23A5f6Ee7525C8bF1646247c53E          # SPELL Security fix
+\x36d0EE48684214c0eBb925dB3880A3C67a4fa304          # PREMIA Security fix
+\xFC55B71C92BFe8422Ce41169C7cB097af4193cA2          # ELON Security fix
+\x1b463631653c47A37fc653C45B981263887051FF          # SLP Security fix
+\x5bbD2c400996dbd75b1d660A9201D31E76683221          # PEPE

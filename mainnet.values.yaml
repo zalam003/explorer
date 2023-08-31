@@ -10,6 +10,10 @@ deploymentStrategy:
     maxSurge: 1
     maxUnavailable: 20%
 
+cronjob: 
+  name: remove_duplicate_token_address
+  env: mainnet
+
 image:
   explorerWebapp:
     repository: ${AWS_ECR}/${REPOSITORY_NAME_WEBAPP}

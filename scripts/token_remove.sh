@@ -10,12 +10,12 @@
 
 if [[ $1 == mainnet ]]
 then
-    . ./mainnet_indexer.env
+#    . ./mainnet_indexer.env
     export ADDRFILE=dup_contract_addr_mainnet.txt
 
 elif [[ $1 == testnet ]]
 then
-    . ./testnet_indexer.env
+#    . ./testnet_indexer.env
     export ADDRFILE=dup_contract_addr_testnet.txt
 
 elif [[ $1 == develop ]]
@@ -52,9 +52,7 @@ export TMPCONTRACTFILE=token_contract_address_hash.tmp
 # Install psql client if not there
 if [ ! -x "$( command -v psql )" ]
 then
-    sudo apt-get update
-    sudo apt -y install postgresql-client
-
+    sudo apk add postgresql-client
 fi
 
 #######

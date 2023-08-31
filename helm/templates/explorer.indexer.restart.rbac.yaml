@@ -4,8 +4,13 @@ metadata:
   name: restart-indexer
   namespace: {{ .Values.namespace }}
 rules:
-  - apiGroups: ["apps", "extensions"]
-    resources: ["deployments"]
-    resourceNames:
-      - {{ .Values.name }}-indexer
-    verbs: ["get", "patch"]
+  - apiGroups:
+    - ""
+    resources:
+    - pods
+    - pods/exec
+    verbs:
+    - get
+    - patch
+    - list
+    - create

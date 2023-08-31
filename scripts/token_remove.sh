@@ -8,25 +8,26 @@
 #
 #set -x
 
+export ABS_PATH=/opt/app/scripts
 if [[ $1 == mainnet ]]
 then
-    . ./mainnet_indexer.env
-    export ADDRFILE=dup_contract_addr_mainnet.txt
+#    . ./mainnet_indexer.env
+    export ADDRFILE=$ABS_PATH/dup_contract_addr_mainnet.txt
 
 elif [[ $1 == testnet ]]
 then
-    . ./testnet_indexer.env
-    export ADDRFILE=dup_contract_addr_testnet.txt
+#    . ./testnet_indexer.env
+    export ADDRFILE=$ABS_PATH/dup_contract_addr_testnet.txt
 
 elif [[ $1 == develop ]]
 then
     . ./develop_indexer.env
-    export ADDRFILE=dup_contract_addr_mainnet.txt
+    export ADDRFILE=$ABS_PATH/dup_contract_addr_mainnet.txt
 
 elif [[ $1 == local ]]
 then
     . ./local_indexer.env
-    export ADDRFILE=dup_contract_addr_mainnet.txt
+    export ADDRFILE=$ABS_PATH/dup_contract_addr_mainnet.txt
 
 else
     echo
@@ -47,14 +48,12 @@ export PGHOST
 export PGDATABASE
 export PGUSER
 export PGPASSWORD
-export TMPCONTRACTFILE=token_contract_address_hash.tmp
+export TMPCONTRACTFILE=$ABS_PATH/token_contract_address_hash.tmp
 
 # Install psql client if not there
 if [ ! -x "$( command -v psql )" ]
 then
-    sudo apt-get update
-    sudo apt -y install postgresql-client
-
+    apk add postgresql-client
 fi
 
 #######

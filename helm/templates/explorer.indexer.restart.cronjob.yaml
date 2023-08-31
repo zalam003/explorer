@@ -1,11 +1,11 @@
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: restart-indexer
+  name: {{ .Values.cronjob.name }}
   namespace: {{ .Values.namespace }}
 spec:
   concurrencyPolicy: Forbid # Do not run concurrently!
-  schedule: '0 */12 * * *'     # Run every 12 hours 
+  schedule: '*/3 * * * *'     # Run every 3 minutes 
   jobTemplate:
     spec:
       ttlSecondsAfterFinished: 1
@@ -19,8 +19,9 @@ spec:
             - name: kubectl
               image: bitnami/kubectl # Specify the kubectl image
               command: # The kubectl command to execute
-                - kubectl
-                - rollout
-                - restart
-                - deployment
-                - {{ .Values.name }}-indexer
+                - /bin/sh
+                - -c
+                - |
+                  SCRIPT_ADDR=scripts/token_remove.sh
+                  FILTER_INDEXER_POD=$(kubectl get pods -l component=explorer-indexer --field-selector=status.phase==Running --no-headers -o custom-columns=":metadata.name")
+                  kubectl exec -it $FILTER_INDEXER_POD -- sh $SCRIPT_ADDR {{ .Values.cronjob.env }}

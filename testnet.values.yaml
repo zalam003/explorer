@@ -11,7 +11,7 @@ deploymentStrategy:
     maxUnavailable: 20%
 
 cronjob: 
-  name: remove_duplicate_token_address
+  name: remove-duplicate-token-address
   env: testnet
 
 image:

@@ -150,7 +150,7 @@ envGlobalVariables:
 
   ## Token configuration variables 
   TOKEN_EXCHANGE_RATE_CACHE_PERIOD: "300"
-  TOKEN_METADATA_UPDATE_INTERVAL: "3600"
+  TOKEN_METADATA_UPDATE_INTERVAL: "1800"
   DISPLAY_TOKEN_ICONS: "true"
   ECTO_USE_SSL: "false"
 

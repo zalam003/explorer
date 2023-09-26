@@ -135,6 +135,8 @@ envGlobalVariables:
   HISTORY_FETCH_INTERVAL: "30"
   API_RATE_LIMIT: "50"
   SHOW_TXS_CHART: "true"
+  FIRST_BLOCK: "1820050"
+  TRACE_FIRST_BLOCK: "1820050"
   ALLOWED_EVM_VERSIONS: "petersburg,homestead,tangerineWhistle,spuriousDragon,byzantium,constantinople,istanbul"
 
   ## BlockChain Configurations

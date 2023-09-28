@@ -1,7 +1,7 @@
 FROM bitwalker/alpine-elixir-phoenix:1.14
 
-RUN apk update
-RUN apk upgrade
+# RUN apk update
+# RUN apk upgrade
 #RUN apk --no-cache --update add alpine-sdk make gcc gmp-dev automake libtool inotify-tools autoconf python3 file openjdk11
 RUN apk --no-cache --update add alpine-sdk gmp-dev automake libtool inotify-tools autoconf python3 file libstdc++ curl ca-certificates
 

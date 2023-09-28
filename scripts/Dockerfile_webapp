@@ -1,46 +1,23 @@
-FROM bitwalker/alpine-elixir-phoenix:1.14
+FROM bitwalker/alpine-elixir-phoenix:1.14 AS builder
 
-RUN apk update
-RUN apk upgrade
-RUN apk --no-cache --update add alpine-sdk make gcc gmp-dev automake libtool inotify-tools autoconf python3 file openjdk11
+WORKDIR /app
 
-# Get Rust
-RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+ENV MIX_ENV="prod"
 
-ARG MIX_ENV=prod
-ENV PATH="$HOME/.cargo/bin:/opt/mix:/usr/lib/jvm/java-11-openjdk/bin${PATH}"
-ENV RUSTFLAGS="-C target-feature=-crt-static"
-ENV LDFLAGS="-L/opt/app/_build/$MIX_ENV/lib -L/usr/local/lib -L/usr/local/lib/elixir/lib -L/usr/local/lib/erlang -L/usr/lib \
-    -I/usr/local/include -I/usr/include -I/usr/lib/erlang/lib/eldap-1.2.9/include ${LDFLAGS}"
-ENV LD_LIBRARY_PATH="/opt/app/_build/$MIX_ENV/lib:/usr/local/lib:/usr/local/lib/elixir/lib:/usr/local/lib/erlang:/usr/lib:$LD_LIBRARY_PATH"
-ENV LIBPATH="$LD_LIBRARY_PATH"
+RUN apk --no-cache --update add alpine-sdk gmp-dev automake libtool inotify-tools autoconf python3 file libstdc++ curl ca-certificates
 
-EXPOSE 4000
-ENV PORT=4000
-
-ARG SECRET_KEY_BASE=IWTVkfnfrKBta0U6p4UUbajb44wu5lYcrK0B6drT+dvnuTvSN18vliy3cxUnLXt3
-
-# wobserver interface
-ARG WOBSERVER_ENABLED=false
-
-# Enable both Indexer and Webapp
-#ENV DISABLE_INDEXER=false
-#ENV DISABLE_WEBAPP=false
-
-#
-ARG BLOCKSCOUT_PROTOCOL=https
-ARG BLOCK_TRANSFORMER=base
-#ARG GAS_PRICE=11
-ARG ETHEREUM_JSONRPC_TRANSPORT=http
-ARG COIN=NRG
-ARG ENABLE_TXS_STATS=true
-ARG SHOW_TXS_CHART=true
-ARG ALLOWED_EVM_VERSIONS=petersburg
-ARG ETHEREUM_JSONRPC_VARIANT=geth
-ARG COINGECKO_COIN_ID=energi
-ARG EMISSION_FORMAT=MNRG
-ARG MAX_SKIPPING_DISTANCE=2
-ARG CHECK_ORIGIN=true
+ARG CACHE_EXCHANGE_RATES_PERIOD
+ARG API_V1_READ_METHODS_DISABLED
+ARG DISABLE_WEBAPP
+ARG API_V1_WRITE_METHODS_DISABLED
+ARG CACHE_TOTAL_GAS_USAGE_COUNTER_ENABLED
+ARG ADMIN_PANEL_ENABLED
+ARG CACHE_ADDRESS_WITH_BALANCES_UPDATE_INTERVAL
+ARG SESSION_COOKIE_DOMAIN
+ARG MIXPANEL_TOKEN
+ARG MIXPANEL_URL
+ARG AMPLITUDE_API_KEY
+ARG AMPLITUDE_URL
 
 # Energi
 ARG LOGO=/images/EnergiLogoLight.png
@@ -54,52 +31,47 @@ ADD apps/explorer/mix.exs ./apps/explorer/
 ADD apps/ethereum_jsonrpc/mix.exs ./apps/ethereum_jsonrpc/
 ADD apps/indexer/mix.exs ./apps/indexer/
 
-ADD . .
+ENV MIX_HOME=/opt/mix
+RUN mix local.hex --force
+RUN mix do deps.get, local.rebar --force, deps.compile
 
-# create directory
-RUN if [[ ! -d apps/block_scout_web/priv/static ]]; then mkdir -p apps/block_scout_web/priv/static; fi
-RUN if [[ ! -d apps/ethereum_jsonrpc/priv/static ]]; then mkdir -p apps/ethereum_jsonrpc/priv/static; fi
-RUN if [[ ! -d apps/explorer/priv/static ]]; then mkdir -p apps/explorer/priv/static; fi
-RUN if [[ ! -d apps/indexer/priv/static ]]; then mkdir -p apps/indexer/priv/static; fi
-
-# Build deps
-RUN mix local.hex --force && echo "hex installed"
-RUN mix local.rebar --force && echo "rebar installed"
-
-# Get dependencies
-RUN mix deps.get
+ADD apps ./apps
+ADD config ./config
+ADD rel ./rel
+ADD *.exs ./
 
 RUN apk add --update nodejs npm
 
-# Add rebar3.config
-RUN ls -l
-#RUN mv scripts/rebar3.config deps/libsecp256k1/.
-#RUN cd deps/libsecp256k1 && ln -s rebar3.config rebar.config && rebar compile && cd -
-
-# Compile dependencies
-RUN mix deps.compile
-RUN echo "deps installed"
-
-# Build app
+# Run forderground build and phoenix digest
 RUN mix compile && npm install npm@latest
-RUN echo "app installed"
-
-#RUN npm install --global npm@8
 
 # Add blockscout npm deps
 RUN cd apps/block_scout_web/assets/ && \
-    npm install --force && \
-    node_modules/webpack/bin/webpack.js --mode production && \
-    cd -
-
-RUN cd apps/explorer/ && \
     npm install && \
-    cd -
+    npm run deploy && \
+    cd /app/apps/explorer/ && \
+    npm install
 
-# Remove dev packages
-RUN apk update && apk del --force-broken-world alpine-sdk make gcc gmp-dev automake libtool inotify-tools autoconf python3
-RUN rm -rf /opt/hex
-RUN rm -rf /var/cache/apk/*
-
-# Start app
+RUN export "CFLAGS=-I/usr/local/include -L/usr/local/lib" && cd deps/ex_secp256k1 && mix deps.get && mix compile
 RUN mix phx.digest
+
+RUN mkdir -p /opt/release \
+  && mix release blockscout \
+  && mv _build/${MIX_ENV}/rel/blockscout /opt/release
+
+##############################################################
+FROM bitwalker/alpine-elixir-phoenix:1.14
+
+ARG RELEASE_VERSION
+ENV RELEASE_VERSION=${RELEASE_VERSION}
+ARG BLOCKSCOUT_VERSION
+ENV BLOCKSCOUT_VERSION=${BLOCKSCOUT_VERSION}
+
+RUN apk --no-cache --update add jq curl
+
+WORKDIR /app
+
+COPY --from=builder /opt/release/blockscout .
+COPY --from=builder /app/apps/explorer/node_modules ./node_modules
+COPY --from=builder /app/config/config_helper.exs ./config/config_helper.exs
+COPY --from=builder /app/config/config_helper.exs /app/releases/${RELEASE_VERSION}/config_helper.exs

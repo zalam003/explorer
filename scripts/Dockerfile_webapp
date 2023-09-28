@@ -69,9 +69,12 @@ RUN mix local.rebar --force && echo "rebar installed"
 # Get dependencies
 RUN mix deps.get
 
+RUN apk add --update nodejs npm
+
 # Add rebar3.config
-RUN mv scripts/rebar3.config deps/libsecp256k1/.
-RUN cd deps/libsecp256k1 && ln -s rebar3.config rebar.config && rebar compile && cd -
+RUN pwd
+#RUN mv scripts/rebar3.config deps/libsecp256k1/.
+#RUN cd deps/libsecp256k1 && ln -s rebar3.config rebar.config && rebar compile && cd -
 
 # Compile dependencies
 RUN mix deps.compile

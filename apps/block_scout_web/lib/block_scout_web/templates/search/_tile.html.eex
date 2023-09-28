@@ -8,8 +8,15 @@
                     class="token-icon mr-1"
                     data-address-hash="<%= @result.address_hash %>"
                 >
-            <%= if System.get_env("DISPLAY_TOKEN_ICONS") === "true" and !is_nil(@token.symbol) do %>
-                <img width="15" height="15" style="min-height: 15px; min-width: 15px;" src="<%= "/images/tokens/#{BlockScoutWeb.TokensView.check_nrg_symbol(@token.symbol)}.svg" %>" alt="" onerror="this.onerror=null;this.src='/images/Placeholder.svg';" />
+                <%= if Application.get_env(:block_scout_web, :display_token_icons) do %>
+                    <% chain_id_for_token_icon = Application.get_env(:block_scout_web, :chain_id) %>
+                    <% address_hash = @result.address_hash %>
+                    <%=
+                        render BlockScoutWeb.TokensView,
+                        "_token_icon.html",
+                        chain_id: chain_id_for_token_icon,
+                        address: address_hash
+                    %>
                 <% end %>
                 </span>
             </td>

@@ -21,6 +21,8 @@ $text-truncate-color: #a3a4a4;
 $btn-full-primary-bg-dark-mode: $hover-dark-primary !default;
 $btn-full-primary-color-dark-mode: $white !default;
 $dark-stakes-banned-background: #3e314c;
+$dashboard-banner-network-stats-item-before-background-color-dark-mode: $dark-secondary !default;
+$header-links-background-color-dark-mode: $dark-light !default;
 
 // Switcher
 .dark-mode-changer {
@@ -88,6 +90,10 @@ $dark-stakes-banned-background: #3e314c;
 				fill: $input-search-icon;
 			}
 		}
+		.nav-submenu {
+			color: $labels-dark;
+			background-color: $header-links-background-color-dark-mode;
+		}
 	}
 
 	.navbar.navbar-primary .navbar-nav .nav-link {
@@ -144,7 +150,7 @@ $dark-stakes-banned-background: #3e314c;
 	// hero stats
 	.layout-container .dashboard-banner-container {
 		background-image: none;
-		background-color: $dark-light-bg;
+		background-color: $dark-bg !important;
 	}
 	.dashboard-banner-network-plain-container,
 	.dashboard-banner-network-plain-container::after {
@@ -154,14 +160,33 @@ $dark-stakes-banned-background: #3e314c;
 	.dashboard-banner-chart-legend .dashboard-banner-chart-legend-label {
 		color: $labels-light;
 	}
-	.dashboard-banner-chart-legend .dashboard-banner-chart-legend-item:nth-child(1)::before {
-		background-color: $dark-primary;
-	}
 	.dashboard-banner-network-stats-item::before {
-		background-color: $dark-secondary;
+		background-color: $dashboard-banner-network-stats-item-before-background-color-dark-mode !important;
 	}
-	.dashboard-banner-chart-legend .dashboard-banner-chart-legend-item:nth-child(2)::before {
-		background-color: #3b99d9;
+	.dashboard-banner-chart-legend .dashboard-banner-chart-legend-item {
+		&.price-per-day {
+			&::before {
+			  background-color: $dark-primary;
+			}
+		  }
+	  
+		  &.gas-price-oracle {
+			&::before {
+			  background-color: $dark-primary;
+			}
+		  }
+	  
+		  &.market-cap-per-day {
+			&::before {
+			  background-color:$dark-secondary;
+			}
+		  }
+	  
+		  &.tx-per-day {
+			&::before {
+			  background-color: $dashboard-line-color-transactions;
+			}
+		  }
 	}
 
 	// main container, layout, cards
@@ -207,13 +232,12 @@ $dark-stakes-banned-background: #3e314c;
 		color: $energi-text-green;
 	}
 
-	.tile {
-		border-top-color: $dark-gray;
-		border-bottom-color: $dark-gray;
-		border-right-color: $dark-gray;
-		background-color: rgba(71, 72, 73, 0.25);
-		border-radius: 0px 4px 4px 0px;
-		color: $labels-light;
+	.tile, .tile-code {
+		border-top-color: $dark-light;
+		border-bottom-color: $dark-light;
+		border-right-color: $dark-light;
+		background-color: $dark-light;
+		color: $labels-dark;
 		&:not([class^="tile tile-type"]) {
 			border-left-color: $dark-light;
 		}
@@ -440,6 +464,9 @@ $dark-stakes-banned-background: #3e314c;
 	.dropdown-item.active {
 		background-color: $dark-primary;
 	}
+	.dropdown-item.active.header,	.dropdown-item.header:hover,	.dropdown-item.header:focus {
+		background-color: $dark-light !important;
+	}
 	.btn-dropdown-line {
 		background-color: $dark-gray;
 		border-color: $dark-gray;
@@ -598,7 +625,7 @@ $dark-stakes-banned-background: #3e314c;
 	}
 
 	// download csv button
-	.download-all-transactions .download-all-transactions-link svg path {
+	.download-all-items .download-all-items-link svg path {
 		fill: $dark-primary;
 	}
 
@@ -629,63 +656,6 @@ $dark-stakes-banned-background: #3e314c;
 	.tooltip-pale-color.bs-tooltip-left .arrow::before,
 	.tooltip-pale-color.bs-tooltip-auto[x-placement^="left"] .arrow::before {
 		border-left-color: rgba($white, 0.5) !important;
-	}
-
-	//network select
-	.network-selector-overlay {
-		background-color: rgba($dark-bg, 0.9);
-	}
-	.network-selector {
-		background-color: $dark-light-bg;
-	}
-	.network-selector-title {
-		color: $white;
-	}
-	.network-selector-text {
-		color: $labels-dark;
-	}
-	.network-selector-close path {
-		fill: $white;
-	}
-	.network-selector-search-container {
-		background-color: $dark-light;
-	}
-	.network-selector-search-container path {
-		fill: $labels-dark;
-	}
-	.network-selector-search-input {
-		color: $white !important;
-		&::placeholder {
-			color: $labels-dark;
-		}
-	}
-	.network-selector-tab {
-		color: $labels-dark;
-		&:hover,
-		&.active {
-			color: $white;
-		}
-		&.active {
-			&:after {
-				background-color: $dark-primary;
-			}
-		}
-	}
-	.network-selector-item,
-	.network-selector-tabs-container {
-		border-bottom-color: darken($labels-dark, 30);
-	}
-	.network-selector-item-title {
-		color: $white;
-	}
-	.network-selector-item-type {
-		color: $labels-dark;
-	}
-	.radio .radio-icon {
-		border-color: $labels-dark;
-	}
-	.network-selector-item-url:hover .network-selector-item-type {
-		color: $white;
 	}
 
 	//coin dropdown
@@ -750,7 +720,7 @@ $dark-stakes-banned-background: #3e314c;
 		color: $white;
 	}
 
-	// info allert
+	// info alert
 	.alert-info {
 		color: $labels-dark;
 		background-color: $dark-light;
@@ -1503,15 +1473,6 @@ $dark-stakes-banned-background: #3e314c;
 }
 
 .dark-theme-applied .btn-no-border-link-to-tems {
-	background-color: transparent !important;
-	border-color: $dark-primary !important;
-	color: $dark-primary !important;
-	border-radius: 5px;
-}
-
-.dark-theme-applied .fontawesome-icon {
-	background-color: $white;
-	&:hover {
-		background-color: $hover-dark-primary;
-	}
+	border-color: $dark-primary;
+	color: $dark-primary;
 }

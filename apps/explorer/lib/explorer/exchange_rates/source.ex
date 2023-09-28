@@ -2,7 +2,10 @@ defmodule Explorer.ExchangeRates.Source do
   @moduledoc """
   Behaviour for fetching exchange rates from external sources.
   """
-  alias Explorer.ExchangeRates.{Source, Token}
+
+  alias Explorer.Chain.Hash
+  alias Explorer.ExchangeRates.Source.CoinGecko
+  alias Explorer.ExchangeRates.Token
   alias HTTPoison.{Error, Response}
   alias Explorer.Chain
 
@@ -13,7 +16,7 @@ defmodule Explorer.ExchangeRates.Source do
   def fetch_exchange_rates(source \\ exchange_rates_source()) do
     wnrg_token_address = Application.get_env(:explorer, :wnrg_token_address)
     source_url = source.source_url()
-    nrg_coin_details = fetch_exchange_rates_request(source, source_url)
+    nrg_coin_details = fetch_exchange_rates_request(source, source_url, source.headers())
     wnrg_price = fetch_token_price(wnrg_token_address)
 
     if(is_nil(wnrg_price)) do
@@ -30,14 +33,16 @@ defmodule Explorer.ExchangeRates.Source do
 
   @spec fetch_exchange_rates_for_token(String.t()) :: {:ok, [Token.t()]} | {:error, any}
   def fetch_exchange_rates_for_token(symbol) do
-    source_url = Source.CoinGecko.source_url(symbol)
-    fetch_exchange_rates_request(Source.CoinGecko, source_url)
+    source_url = CoinGecko.source_url(symbol)
+    headers = CoinGecko.headers()
+    fetch_exchange_rates_request(CoinGecko, source_url, headers)
   end
 
   @spec fetch_exchange_rates_for_token_address(String.t()) :: {:ok, [Token.t()]} | {:error, any}
   def fetch_exchange_rates_for_token_address(address_hash) do
-    source_url = Source.CoinGecko.source_url(address_hash)
-    fetch_exchange_rates_request(Source.CoinGecko, source_url)
+    source_url = CoinGecko.source_url(address_hash)
+    headers = CoinGecko.headers()
+    fetch_exchange_rates_request(CoinGecko, source_url, headers)
   end
 
   @spec fetch_energiswap_exchange_rates_for_tokens() :: [any]
@@ -110,18 +115,33 @@ defmodule Explorer.ExchangeRates.Source do
 
   defp fetch_exchange_rates_request(_source, source_url) when is_nil(source_url), do: {:error, "Source URL is nil"}
 
-  defp fetch_exchange_rates_request(source, source_url) do
-    case http_request(source_url) do
-      {:ok, result} = resp ->
-        if is_map(result) do
-          result_formatted =
-            result
-            |> source.format_data()
+  @spec fetch_token_hashes_with_market_data :: {:ok, [String.t()]} | {:error, any}
+  def fetch_token_hashes_with_market_data do
+    source_url = CoinGecko.source_url(:coins_list)
+    headers = CoinGecko.headers()
 
-          {:ok, result_formatted}
-        else
-          resp
-        end
+    case http_request(source_url, headers) do
+      {:ok, result} ->
+        {:ok,
+         result
+         |> CoinGecko.format_data()}
+
+      resp ->
+        resp
+    end
+  end
+
+  defp fetch_exchange_rates_request(_source, source_url, _headers) when is_nil(source_url),
+    do: {:error, "Source URL is nil"}
+
+  defp fetch_exchange_rates_request(source, source_url, headers) do
+    case http_request(source_url, headers) do
+      {:ok, result} when is_map(result) ->
+        result_formatted =
+          result
+          |> source.format_data()
+
+        {:ok, result_formatted}
 
       resp ->
         resp
@@ -131,7 +151,7 @@ defmodule Explorer.ExchangeRates.Source do
   @doc """
   Callback for api's to format the data returned by their query.
   """
-  @callback format_data(String.t()) :: [any]
+  @callback format_data(map() | list()) :: [any]
 
   @doc """
   Url for the api to query to get the market info.
@@ -139,6 +159,8 @@ defmodule Explorer.ExchangeRates.Source do
   @callback source_url :: String.t()
 
   @callback source_url(String.t()) :: String.t() | :ignore
+
+  @callback headers :: [any]
 
   def headers do
     [{"Content-Type", "application/json"}]

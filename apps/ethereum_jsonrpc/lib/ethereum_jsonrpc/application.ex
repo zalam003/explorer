@@ -6,6 +6,7 @@ defmodule EthereumJSONRPC.Application do
   use Application
 
   alias EthereumJSONRPC.{IPC, RequestCoordinator, RollingWindow}
+  alias EthereumJSONRPC.Utility.{EndpointAvailabilityChecker, EndpointAvailabilityObserver}
 
   @impl Application
   def start(_type, _args) do
@@ -15,8 +16,10 @@ defmodule EthereumJSONRPC.Application do
     max_connections = String.to_integer(System.get_env("ETHEREUM_JSONRPC_MAXCONN") || "100")
 
     [
-      :hackney_pool.child_spec(:ethereum_jsonrpc, recv_timeout: 60_000, timeout: 60_000, max_connections: max_connections),
-      Supervisor.child_spec({RollingWindow, [rolling_window_opts]}, id: RollingWindow.ErrorThrottle)
+      :hackney_pool.child_spec(:ethereum_jsonrpc, recv_timeout: 60_000, timeout: 60_000, max_connections: 1000),
+      Supervisor.child_spec({RollingWindow, [rolling_window_opts]}, id: RollingWindow.ErrorThrottle),
+      {EndpointAvailabilityObserver, []},
+      {EndpointAvailabilityChecker, []}
     ]
     |> add_throttle_rolling_window(config)
     |> add_ipc_client()

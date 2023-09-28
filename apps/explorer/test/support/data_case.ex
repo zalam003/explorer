@@ -34,9 +34,13 @@ defmodule Explorer.DataCase do
     ExVCR.Config.cassette_library_dir("test/support/fixture/vcr_cassettes")
 
     :ok = Ecto.Adapters.SQL.Sandbox.checkout(Explorer.Repo)
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Explorer.Repo.Account)
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Explorer.Repo.PolygonEdge)
 
     unless tags[:async] do
       Ecto.Adapters.SQL.Sandbox.mode(Explorer.Repo, {:shared, self()})
+      Ecto.Adapters.SQL.Sandbox.mode(Explorer.Repo.Account, {:shared, self()})
+      Ecto.Adapters.SQL.Sandbox.mode(Explorer.Repo.PolygonEdge, {:shared, self()})
     end
 
     Supervisor.terminate_child(Explorer.Supervisor, Explorer.Chain.Cache.BlockNumber.child_id())

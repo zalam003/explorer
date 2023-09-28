@@ -70,10 +70,6 @@ defmodule Explorer.ChainSpec.GenesisData do
         case fetch_spec(path) do
           {:ok, chain_spec} ->
             case variant do
-              EthereumJSONRPC.Parity ->
-                Importer.import_emission_rewards(chain_spec)
-                {:ok, _} = Importer.import_genesis_accounts(chain_spec)
-
               EthereumJSONRPC.Geth ->
                 {:ok, _} = GethImporter.import_genesis_accounts(chain_spec)
                 EnergiImporter.import_genesis_smart_contracts(chain_spec)
@@ -84,6 +80,7 @@ defmodule Explorer.ChainSpec.GenesisData do
             end
 
           {:error, reason} ->
+            # credo:disable-for-next-line
             Logger.warn(fn -> "Failed to fetch genesis data. #{inspect(reason)}" end)
         end
       end)
@@ -102,9 +99,8 @@ defmodule Explorer.ChainSpec.GenesisData do
 
   # sobelow_skip ["Traversal"]
   defp fetch_from_file(path) do
-    with {:ok, data} <- File.read(path),
-         {:ok, json} <- Jason.decode(data) do
-      {:ok, json}
+    with {:ok, data} <- File.read(path) do
+      Jason.decode(data)
     end
   end
 

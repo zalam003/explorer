@@ -3,11 +3,10 @@
     // The call stack of the EVM execution.
     callStack: [{}],
 
-    onlyCalls: true,
-    
-    // It is not practical to parse more, which is the case for special Energi snapshot transaction
-    CAP_INPUT_LENGTH: 8 * 1024,
-    
+    // Descended tracks whether we've just descended from an outer transaction into
+	// an inner call.
+	descended: false,
+
     // step is invoked for every opcode that the VM executes.
     step(log, db) {
         // Capture any errors immediately
@@ -90,6 +89,11 @@
     success(log, db) {
         const op = log.op.toString();
 
+        if (this.descended) {
+            this.topCall().gasBigInt = log.getGas();
+            this.descended = false;
+        }
+
         this.beforeOp(log, db);
 
         switch (op) {
@@ -168,6 +172,7 @@
             valueBigInt: bigInt(stackValue.toString(10))
         };
         this.callStack.push(call);
+        this.descended = true;
     },
 
     create2Op(log) {
@@ -183,6 +188,7 @@
             valueBigInt: bigInt(stackValue.toString(10))
         };
         this.callStack.push(call);
+        this.descended = true;
     },
 
     selfDestructOp(log, db) {
@@ -211,15 +217,16 @@
         const stackOffset = (op === 'DELEGATECALL' || op === 'STATICCALL' ? 0 : 1);
 
         const inputOffset = log.stack.peek(2 + stackOffset).valueOf();
-        const inputLength = this.capInputLength(log.stack.peek(3 + stackOffset).valueOf());
-        const inputEnd = inputOffset + inputLength;
+        const inputLength = log.stack.peek(3 + stackOffset).valueOf();
+        const inputEnd = Math.min(inputOffset + inputLength, log.memory.length());
+        const input = (inputLength == 0 ? '0x' : toHex(log.memory.slice(inputOffset, inputEnd)));
 
         const call = {
             type: 'call',
             callType: op.toLowerCase(),
             from: toHex(log.contract.getAddress()),
             to: toHex(to),
-            input: toHex(log.memory.slice(inputOffset, inputEnd)),
+            input: input,
             outputOffset: log.stack.peek(4 + stackOffset).valueOf(),
             outputLength: log.stack.peek(5 + stackOffset).valueOf()
         };
@@ -241,6 +248,7 @@
         }
 
         this.callStack.push(call);
+        this.descended = true;
     },
 
     revertOp() {
@@ -451,29 +459,25 @@
     },
 
     putGas(call) {
-        const gasBigInt = call.gasBigInt;
-        delete call.gasBigInt;
 
-        if (gasBigInt === undefined) {
-            gasBigInt = bigInt.zero;
+        if (call.gasBigInt === undefined) {
+            call.gas = '0x0';
+        } else {
+            call.gas = '0x' + call.gasBigInt.toString(16);
         }
 
-        call.gas = '0x' + gasBigInt.toString(16);
+        delete call.gasBigInt;
+
     },
 
     putGasUsed(call) {
-        const gasUsedBigInt = call.gasUsedBigInt;
-        delete call.gasUsedBigInt;
 
-        if (gasUsedBigInt === undefined) {
-            gasUsedBigInt = bigInt.zero;
+        if (call.gasUsedBigInt === undefined) {
+            call.gasUsed = '0x0';
+        } else {
+            call.gasUsed = '0x' + call.gasUsedBigInt.toString(16);
         }
 
-        call.gasUsed = '0x' + gasUsedBigInt.toString(16);
-    },
-
-    capInputLength(len) {
-        if (len > this.CAP_INPUT_LENGTH) return this.CAP_INPUT_LENGTH;
-        return len;
+        delete call.gasUsedBigInt;
     }
 }

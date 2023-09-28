@@ -6,19 +6,16 @@
       </span>
   </td>
   <td class="token-icon">
-    <%= if System.get_env("DISPLAY_TOKEN_ICONS") === "true" and !is_nil(@token.symbol) do %>
-      <div style="position: relative; display: flex; flex-direction: row;">
-        <%= if String.contains?(@token.symbol, "/") do %>
-          <div>
-            <img width="15" height="15" style="position: relative; margin-left: -5px; z-index: 2;" src="<%= "/images/tokens/#{BlockScoutWeb.TokensView.split_lp_token_symbol(@token.symbol,0)}.svg" %>" alt="" onerror="this.onerror=null;this.src='/images/Placeholder.svg';" />
-          </div>
-          <div>
-            <img width="15" height="15" style="position: relative; margin-left: -5px; z-index: 1;" src="<%= "/images/tokens/#{BlockScoutWeb.TokensView.split_lp_token_symbol(@token.symbol,1)}.svg" %>" alt="" onerror="this.onerror=null;this.src='/images/Placeholder.svg';" />
-          </div>
-        <% else %>
-          <img width="15" height="15" style="min-height: 15px; min-width: 15px;" src="<%= "/images/tokens/#{BlockScoutWeb.TokensView.check_nrg_symbol(@token.symbol)}.svg" %>" alt="" onerror="this.onerror=null;this.src='/images/Placeholder.svg';" />
-        <% end %>
-      </div>
+    <%= if Application.get_env(:block_scout_web, :display_token_icons) do %>
+      <% chain_id_for_token_icon = Application.get_env(:block_scout_web, :chain_id) %>
+      <% foreign_token_contract_address_hash = nil %>
+      <% token_hash_for_token_icon = if foreign_token_contract_address_hash, do: foreign_token_contract_address_hash, else: Address.checksum(@token.contract_address_hash) %>
+      <%=
+        render BlockScoutWeb.TokensView,
+        "_token_icon.html",
+        chain_id: chain_id_for_token_icon,
+        address: token_hash_for_token_icon
+      %>
     <% end %>
   </td>
   <td class="stakes-td">
@@ -35,6 +32,13 @@
       contract: true,
       use_custom_tooltip: false
     %>
+  </td>
+  <td class="stakes-td">
+    <%= if @token.circulating_market_cap do %>
+      <span data-selector="circulating-market-cap-usd" data-usd-value="<%= @token.circulating_market_cap %>"></span>
+    <% else %>
+      <span data-selector="circulating-market-cap-usd"><%= gettext "N/A" %></span>
+    <% end %>
   </td>
   <td class="stakes-td">
     <%= if decimals?(@token) do %>

@@ -1,11 +1,12 @@
 FROM bitwalker/alpine-elixir-phoenix:1.14
 
-RUN apk update
-RUN apk upgrade
-RUN apk --no-cache --update add alpine-sdk make gcc gmp-dev automake libtool inotify-tools autoconf python3 file openjdk11
+#RUN apk update
+#RUN apk upgrade
+#RUN apk --no-cache --update add alpine-sdk make gcc gmp-dev automake libtool inotify-tools autoconf python3 file openjdk11
+RUN apk --no-cache --update add alpine-sdk gmp-dev automake libtool inotify-tools autoconf python3 file libstdc++ curl ca-certificates
 
 # Get Rust
-RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+#RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 
 ARG MIX_ENV=prod
 ENV PATH="$HOME/.cargo/bin:/opt/mix:/usr/lib/jvm/java-11-openjdk/bin${PATH}"
@@ -69,11 +70,6 @@ RUN mix local.rebar --force && echo "rebar installed"
 RUN mix deps.get
 
 RUN apk add --update nodejs npm
-
-# Add rebar3.config
-RUN ls -l
-#RUN mv scripts/rebar3.config deps/libsecp256k1/.
-#RUN cd deps/libsecp256k1 && ln -s rebar3.config rebar.config && rebar compile && cd -
 
 # Compile dependencies
 RUN mix deps.compile

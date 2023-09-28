@@ -110,7 +110,7 @@ envWebappVariables:
 envGlobalVariables:
   ## Explorer Global Vars
   MIX_ENV: "prod"
-  BLOCKSCOUT_VERSION: "v4.1.1"
+  BLOCKSCOUT_VERSION: "v5.2.3"
   BLOCKSCOUT_PROTOCOL: "http"
   BLOCK_TRANSFORMER: "base"
   BLOCKSCOUT_HOST: "explorer.test.energi.network"

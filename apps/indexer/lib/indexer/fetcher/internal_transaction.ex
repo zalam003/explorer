@@ -235,8 +235,6 @@ defmodule Indexer.Fetcher.InternalTransaction do
         internal_transactions: internal_transactions_params_without_failed_creations
       })
 
-    latest_block = latest_block_number()
-    
     address_hash_to_block_number =
       Enum.into(addresses_params, %{}, fn %{fetched_coin_balance_block_number: block_number, hash: hash} ->
         {String.downcase(hash), block_number}

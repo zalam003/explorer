@@ -16,8 +16,6 @@ defmodule BlockScoutWeb.ChainController do
   alias Explorer.Counters.AverageBlockTime
   alias Explorer.Market
   alias Phoenix.View
-  alias EthereumJSONRPC
-  alias Explorer.Chain.Wei
 
   def show(conn, _params) do
     transaction_estimated_count = TransactionCache.estimated_count()
@@ -60,7 +58,7 @@ defmodule BlockScoutWeb.ChainController do
       transactions_path: recent_transactions_path(conn, :index),
       transaction_stats: transaction_stats,
       block_count: block_count,
-      gas_price: get_gas_price()
+      gas_price: Application.get_env(:block_scout_web, :gas_price)
     )
   end
 

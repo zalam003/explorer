@@ -81,8 +81,6 @@ RUN echo "app installed"
 # Add blockscout npm deps
 RUN cd apps/block_scout_web/assets/ && \
     npm install && \
-    find . -name Metamask.svg && \
-    false && \
     npm run deploy && \
     cd -
 

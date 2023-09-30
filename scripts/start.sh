@@ -20,8 +20,8 @@ if [[ -z $BASE_IMAGE_LATEST ]]
 then
     BASE_IMAGE_LATEST="explorer_base_image:latest"
 fi
-export ALPINE_VERSION=3.15.0
-export ERLANG_VERSION=24.3.3
+export ALPINE_VERSION=3.16.0
+export ERLANG_VERSION=25.3.2.6
 
 # Check script arguments
 while [[ $# -gt 0 ]]

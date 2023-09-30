@@ -23,9 +23,10 @@ ARG SECRET_KEY_BASE=IWTVkfnfrKBta0U6p4UUbajb44wu5lYcrK0B6drT+dvnuTvSN18vliy3cxUn
 # wobserver interface
 ARG WOBSERVER_ENABLED=false
 
-# Enable both Indexer and Webapp
-ENV DISABLE_INDEXER=false
+# Disable webapp and API
 ENV DISABLE_WEBAPP=true
+ENV API_V1_READ_METHODS_DISABLED=true
+ENV API_V1_WRITE_METHODS_DISABLED=true
 
 #
 ARG BLOCKSCOUT_PROTOCOL=https

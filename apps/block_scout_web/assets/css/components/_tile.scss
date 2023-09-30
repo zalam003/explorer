@@ -44,6 +44,7 @@ $tile-body-a-color: #5959d8 !default;
     }
 
     .tile-transaction-type-block {
+      background-color: rgba($color, 0.1);
       border-bottom: 1px solid $color;
       border-right: 1px solid $color;
       border-top: 1px solid $color;
@@ -608,19 +609,4 @@ $cube-quantity: 5;
     word-break: break-all;
     line-height: 20px;
   }
-}
-
-.btn-add-chain-to-mm, .btn-add-to-mm {
-  background-image: url("../static/images/Metamask.svg");
-  background-repeat: no-repeat;
-  background-size: 25px 25px;
-  position: absolute;
-}
-
-.btn-add-to-mm {
-  cursor: pointer;
-  display: inline-block;
-  height: 25px;
-  vertical-align: middle;
-  width: 25px;
 }

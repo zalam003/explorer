@@ -10,7 +10,7 @@ ENV LDFLAGS="-L/opt/app/_build/$MIX_ENV/lib -L/usr/local/lib -L/usr/local/lib/el
 ENV LD_LIBRARY_PATH="/opt/app/_build/$MIX_ENV/lib:/usr/local/lib:/usr/local/lib/elixir/lib:/usr/local/lib/erlang:/usr/lib:$LD_LIBRARY_PATH"
 ENV LIBPATH="$LD_LIBRARY_PATH"
 
-ENV PORT=4000
+ENV PORT=4001
 
 ARG SECRET_KEY_BASE=IWTVkfnfrKBta0U6p4UUbajb44wu5lYcrK0B6drT+dvnuTvSN18vliy3cxUnLXt3
 
@@ -74,7 +74,11 @@ RUN cd apps/explorer/ && \
     cd -
 
 # Build app
-RUN mix compile && npm install npm@latest
+RUN export "CFLAGS=-I/usr/local/include -L/usr/local/lib" && \
+    cd deps/ex_secp256k1 && \
+    mix deps.get && \
+    mix compile && npm install npm@latest && \
+    cd -
 RUN echo "app installed"
 
 # Remove dev packages

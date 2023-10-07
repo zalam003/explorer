@@ -74,9 +74,9 @@ RUN cd apps/block_scout_web/assets/ && \
 RUN export "CFLAGS=-I/usr/local/include -L/usr/local/lib" && cd deps/ex_secp256k1 && mix deps.get && mix compile
 RUN mix phx.digest
 
-RUN mkdir -p /opt/release \
-  && mix release blockscout \
-  && mv _build/${MIX_ENV}/rel/blockscout /opt/release
+# RUN mkdir -p /opt/release \
+#   && mix release blockscout \
+#   && mv _build/${MIX_ENV}/rel/blockscout /opt/release
 
 ##############################################################
 # FROM bitwalker/alpine-elixir-phoenix:1.14

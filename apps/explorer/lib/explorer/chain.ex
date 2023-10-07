@@ -3621,63 +3621,6 @@ defmodule Explorer.Chain do
     end
   end
 
-  @spec create_genesis_smart_contract(map()) :: {:ok, SmartContract.t()} | {:error, Ecto.Changeset.t()}
-  def create_genesis_smart_contract(attrs \\ %{}, external_libraries \\ []) do
-
-    new_contract = %SmartContract{}
-
-    smart_contract_changeset =
-      new_contract
-      |> SmartContract.changeset(attrs)
-      |> Changeset.put_change(:external_libraries, external_libraries)
-
-    address_hash = Changeset.get_field(smart_contract_changeset, :address_hash)
-
-    find_or_insert_address_from_hash(address_hash)
-
-    {:ok, contract_bytecode} = Explorer.Chain.Data.load(attrs.contract_bytecode)
-
-    # Enforce ShareLocks tables order (see docs: sharelocks.md)
-    insert_result =
-      Multi.new()
-      |> Multi.run(:set_address_verified, fn repo, _ -> set_address_verified(repo, address_hash) end)
-      |> Multi.run(:set_address_contract_code, fn repo, _ -> set_address_contract_code(repo, address_hash, contract_bytecode) end)
-      |> Multi.run(:clear_primary_address_names, fn repo, _ -> clear_primary_address_names(repo, address_hash) end)
-      |> Multi.run(:insert_address_name, fn repo, _ ->
-        name = Changeset.get_field(smart_contract_changeset, :name)
-        create_address_name(repo, name, address_hash)
-      end)
-      |> Multi.insert(:smart_contract, smart_contract_changeset)
-      |> Repo.transaction()
-
-    case insert_result do
-      {:ok, %{smart_contract: smart_contract}} ->
-        {:ok, smart_contract}
-
-      {:error, :smart_contract, changeset, _} ->
-        {:error, changeset}
-
-      {:error, :set_address_verified, message, _} ->
-        {:error, message}
-
-      {:error, :set_address_contract_code, message, _} ->
-        {:error, message}
-    end
-  end
-
-  defp set_address_contract_code(repo, address_hash, contract_code) do
-    query =
-      from(
-        address in Address,
-        where: address.hash == ^address_hash
-      )
-
-    case repo.update_all(query, set: [contract_code: contract_code]) do
-      {1, _} -> {:ok, []}
-      _ -> {:error, "There was an error setting the address contract code."}
-    end
-  end
-
   @doc """
   Updates a `t:SmartContract.t/0`.
 
@@ -5715,23 +5658,6 @@ defmodule Explorer.Chain do
   def combine_proxy_implementation_abi(_, _) do
     []
   end
-
-  def proxy_contract?(address_hash, abi) when not is_nil(abi) do
-    implementation_method_abi =
-      abi
-      |> Enum.find(fn method ->
-        Map.get(method, "name") == "impl" ||
-        Map.get(method, "name") == "implementation" ||
-          master_copy_pattern?(method)
-      end)
-
-    if implementation_method_abi ||
-         get_implementation_address_hash_eip_1967(address_hash) !== "0x0000000000000000000000000000000000000000",
-       do: true,
-       else: false
-  end
-
-  def proxy_contract?(_address_hash, abi) when is_nil(abi), do: false
 
   def gnosis_safe_contract?(abi) when not is_nil(abi) do
     implementation_method_abi =

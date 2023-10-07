@@ -62,7 +62,7 @@ fi
 # Catch all for testing only
 if [[ -z $DATABASE_URL ]]
 then
-    DATABASE_URL=postgresql://bsuser:QGpLYA3M72YGFS9COCkqD2asCp+OxFX17zoLC5Ffns=@block-explorer-dev-db.c70xizjgjbsm.us-west-2.rds.amazonaws.com:5432/BlockExplorerDevDB
+    DATABASE_URL=postgresql://explorer_mainnet_db:Block6scout123@127.0.0.1:5432/explorer_mainnet_db
 fi
 
 # Catch all for testing only

@@ -512,7 +512,7 @@ defmodule Explorer.Chain.Transaction do
       do: {{:error, :no_input_data}, full_abi_acc, methods_acc}
 
   if not Application.compile_env(:explorer, :decode_not_a_contract_calls) do
-    def decoded_input_data(%__MODULE__{to_address: %{contract_code: nil}}, _, _, full_abi_acc, methods_acc),
+    def decoded_input_data(%__MODULE__{to_address: %{contract_code: nil, smart_contract: nil}}, _, _, full_abi_acc, methods_acc),
       do: {{:error, :not_a_contract_call}, full_abi_acc, methods_acc}
   end
 

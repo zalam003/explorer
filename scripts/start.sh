@@ -270,6 +270,7 @@ case $TODO in
         echo "==> Droping DB and recreating DB schema"
         docker run --rm -i --name ${INDEXER}DROPDB \
             --env-file ${APPDIR}/scripts/${ENVFILE} \
+            --network host \
             --volume ${APPDIR}/logs:/opt/app/logs \
             ${INDEXER}:latest /bin/sh -c "mix do ecto.drop"
         ;;

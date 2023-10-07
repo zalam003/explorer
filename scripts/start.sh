@@ -174,6 +174,7 @@ case $TODO in
         fi
         docker run -d --name ${INDEXER}_${ENV} \
             --env-file ${APPDIR}/scripts/${ENVFILE} \
+            --network host \
             -v ${APPDIR}/scripts/config.exs:/opt/app/apps/indexer/config/config.exs:ro \
             --restart on-failure:3 \
             ${INDEXER}:latest /bin/sh -c "mix phx.server"
@@ -230,6 +231,7 @@ case $TODO in
         fi
         docker run --rm --name ${SCHEMA_NAME} \
             --env-file ${APPDIR}/scripts/${ENVFILE} \
+            --network host \
             --volume ${APPDIR}/logs:/opt/app/logs \
             ${INDEXER}:latest /bin/sh -c "mix do ecto.create, ecto.migrate"
         ;;

@@ -172,7 +172,7 @@ case $TODO in
         else
             ENVFILE="${ENV}.env"
         fi
-        docker run -d --name ${INDEXER}_${ENV} \
+        docker run -d --name ${INDEXER} \
             --env-file ${APPDIR}/scripts/${ENVFILE} \
             --network host \
             -v ${APPDIR}/scripts/config.exs:/opt/app/apps/indexer/config/config.exs:ro \

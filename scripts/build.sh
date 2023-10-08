@@ -23,24 +23,25 @@ then
     rm -rf apps/explorer/node_modules
 fi
 
-# Set env variables
+echo "Set env variables"
 . ./local_indexer.env
 
-# Compile the application:
+echo "Compile the application..."
+mix deps.get
 mix compile
 
-# Create and migrate database 
+echo "Create and migrate database..."
 mix do ecto.create, ecto.migrate
 
-# Install Node.js dependencies
+echo "Install Node.js dependencies..."
 cd apps/block_scout_web/assets; npm install && node_modules/webpack/bin/webpack.js --mode production; cd -
 cd apps/explorer && npm install; cd -
 
-# Build static assets for deployment 
+echo "Build static assets for deployment..."
 mix phx.digest
 
-# Enable HTTPS in development. The Phoenix server only runs with HTTPS
+echo "Enable HTTPS in development. The Phoenix server only runs with HTTPS..."
 cd apps/block_scout_web; mix phx.gen.cert blockscout blockscout.local; cd -
 
 # start the Phoenix Server. 
-mix phx.server
+#mix phx.server

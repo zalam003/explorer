@@ -4,7 +4,24 @@ export DATABASE_URL=postgresql://explorer_mainnet_db:Block6scout123@127.0.0.1:54
 export SECRET_KEY_BASE=IWTVkfnfrKBta0U6p4UUbajb44wu5lYcrK0B6drT+dvnuTvSN18vliy3cxUnLXt3
 
 # remove static assets from the previous build
+#../rel/commands/clear_build.sh
 mix phx.digest.clean
+if [ -d _build ]
+then
+    rm -rf _build
+fi
+if [-d deps ]
+then
+    rm -rf deps
+fi
+if [ -d apps/block_scout_web/assets/node_modules ]
+then
+    rm -rf apps/block_scout_web/assets/node_modules
+fi
+if [ -d apps/explorer/node_modules ]
+then
+    rm -rf apps/explorer/node_modules
+fi
 
 # Set env variables
 . ./local_indexer.env

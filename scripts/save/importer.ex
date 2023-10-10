@@ -1,4 +1,4 @@
-defmodule Explorer.ChainSpec.Energi.EnergiImporter do
+defmodule Explorer.ChainSpec.Energi.Importer do
   @moduledoc """
   Imports genesis data from energi chain spec file.
   """

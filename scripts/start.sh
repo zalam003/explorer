@@ -125,11 +125,11 @@ case $TODO in
         ;;
 
     build_local)
-        echo "==> Build blockscout indexer"
-        docker build -f ${APPDIR}/scripts/Dockerfile -t ${INDEXER}:$CI_COMMIT_SHA ../
+        echo "==> Build explorer ${CI_COMMIT_SHA}"
+        docker build -f ${APPDIR}/scripts/Dockerfile -t ${INDEXER}:${CI_COMMIT_SHA} ../
         docker stop ${INDEXER}
         docker rm ${INDEXER}
-        docker tag ${INDEXER}:$CI_COMMIT_SHA ${INDEXER}:latest
+        docker tag ${INDEXER}:${CI_COMMIT_SHA} ${INDEXER}:latest
         ;;
 
     run_webapp_local|start_webapp_local)

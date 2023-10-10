@@ -127,7 +127,10 @@ case $TODO in
     build_local)
         echo "==> Build explorer ${CI_COMMIT_SHA}"
         PREV_SHA=$(docker images | grep ${INDEXER} | grep -v latest | awk '{print $2}')
-        docker rmi ${INDEXER}:${PREV_SHA}
+        if [ ! -z ${PREV_SHA} ]
+        then
+            docker rmi ${INDEXER}:${PREV_SHA}
+        fi
 
         docker build -f ${APPDIR}/scripts/Dockerfile -t ${INDEXER}:${CI_COMMIT_SHA} ../
         docker stop ${INDEXER}

@@ -128,10 +128,11 @@ case $TODO in
         echo "==> Build explorer ${CI_COMMIT_SHA}"
         PREV_SHA=$(docker images | grep ${INDEXER} | grep -v latest | awk '{print $2}')
         docker rmi ${INDEXER}:${PREV_SHA}
-        
+
         docker build -f ${APPDIR}/scripts/Dockerfile -t ${INDEXER}:${CI_COMMIT_SHA} ../
         docker stop ${INDEXER}
         docker rm ${INDEXER}
+        docker rmi ${INDEXER}:latest
         docker tag ${INDEXER}:${CI_COMMIT_SHA} ${INDEXER}:latest
         ;;
 

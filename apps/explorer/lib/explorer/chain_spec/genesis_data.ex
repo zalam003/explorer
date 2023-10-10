@@ -9,7 +9,7 @@ defmodule Explorer.ChainSpec.GenesisData do
 
   alias Explorer.ChainSpec.Geth.Importer, as: GethImporter
   alias Explorer.ChainSpec.Parity.Importer
-  alias Explorer.ChainSpec.Energi.Importer as: EnergiImporter
+  alias Explorer.ChainSpec.Energi.Importer, as: EnergiImporter
   alias HTTPoison.Response
 
   @interval :timer.minutes(2)

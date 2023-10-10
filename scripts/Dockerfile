@@ -76,19 +76,30 @@ RUN if [[ ! -d apps/ethereum_jsonrpc/priv/static ]]; then mkdir -p apps/ethereum
 RUN if [[ ! -d apps/explorer/priv/static ]]; then mkdir -p apps/explorer/priv/static; fi
 RUN if [[ ! -d apps/indexer/priv/static ]]; then mkdir -p apps/indexer/priv/static; fi
 
-RUN apk add --update nodejs npm
+RUN apk add --update nodejs-current npm
+# Upgrade to nodejs 18.x
+RUN apk add nodejs-current
 
 # Run forderground build and phoenix digest
 RUN mix compile && npm install npm@latest
 
 # Add blockscout npm deps
 RUN cd apps/block_scout_web/assets/ && \
-    npm install && \
-    npm run deploy && \
+        npm install && \
+        npm run deploy && \
     cd /app/apps/explorer/ && \
-    npm install
+        npm install
 
-RUN export "CFLAGS=-I/usr/local/include -L/usr/local/lib" && cd deps/ex_secp256k1 && mix deps.get && mix compile
+RUN export "CFLAGS=-I/usr/local/include -L/usr/local/lib" && \
+    cd deps/ex_secp256k1 && \
+    mix deps.get && \
+    mix compile
+
+# Remove dev packages
+RUN apk update && apk del --force-broken-world alpine-sdk make gcc gmp-dev automake libtool inotify-tools autoconf python3
+RUN rm -rf /opt/hex
+RUN rm -rf /var/cache/apk/*
+
 RUN mix phx.digest
 
 # RUN mkdir -p /opt/release \

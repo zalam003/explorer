@@ -12,7 +12,7 @@ SCHEMA_NAME="explorer_schema"
 # Catch all for local test only
 if [[ -z $CI_COMMIT_SHA ]]
 then
-    CI_COMMIT_SHA=be123456
+    CI_COMMIT_SHA=$(git rev-parse --short=8 HEAD)
 fi
 
 # Base Image 
@@ -122,6 +122,14 @@ case $TODO in
             docker tag ${INDEXER}:$CI_COMMIT_SHA ${INDEXER}:latest
             docker rmi ${INDEXER}:$CI_COMMIT_SHA
         fi
+        ;;
+
+    build_local)
+        echo "==> Build blockscout indexer"
+        docker build -f ${APPDIR}/scripts/Dockerfile -t ${INDEXER}:$CI_COMMIT_SHA ../
+        docker stop ${INDEXER}
+        docker rm ${INDEXER}
+        docker tag ${INDEXER}:$CI_COMMIT_SHA ${INDEXER}:latest
         ;;
 
     run_webapp_local|start_webapp_local)

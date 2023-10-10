@@ -80,16 +80,18 @@ RUN apk add --update nodejs-current npm
 # Upgrade to nodejs 18.x
 RUN apk add nodejs-current
 
-# Run forderground build and phoenix digest
-RUN mix compile && npm install npm@latest
+# Run build and phoenix digest
+RUN mix compile
 
-# Add blockscout npm deps
+# Add npm deps
+RUN npm install npm@9
 RUN cd apps/block_scout_web/assets/ && \
         npm install && \
         npm run deploy && \
     cd /app/apps/explorer/ && \
         npm install
 
+# Build secp256k1 package
 RUN export "CFLAGS=-I/usr/local/include -L/usr/local/lib" && \
     cd deps/ex_secp256k1 && \
     mix deps.get && \

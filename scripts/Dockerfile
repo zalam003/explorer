@@ -70,6 +70,12 @@ ADD config ./config
 ADD rel ./rel
 ADD *.exs ./
 
+# create directory
+RUN if [[ ! -d apps/block_scout_web/priv/static ]]; then mkdir -p apps/block_scout_web/priv/static; fi
+RUN if [[ ! -d apps/ethereum_jsonrpc/priv/static ]]; then mkdir -p apps/ethereum_jsonrpc/priv/static; fi
+RUN if [[ ! -d apps/explorer/priv/static ]]; then mkdir -p apps/explorer/priv/static; fi
+RUN if [[ ! -d apps/indexer/priv/static ]]; then mkdir -p apps/indexer/priv/static; fi
+
 RUN apk add --update nodejs npm
 
 # Run forderground build and phoenix digest
